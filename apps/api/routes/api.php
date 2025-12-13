@@ -19,6 +19,8 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\AdminController;
 
+use App\Http\Controllers\SocialAuthController;
+
 // ... imports
 
 // Public Routes
@@ -26,6 +28,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [NewPasswordController::class, 'forgotPassword']);
 Route::post('/reset-password', [NewPasswordController::class, 'reset']);
+
+// Social Auth
+Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirectToProvider']);
+Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback']);
 
 // Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
