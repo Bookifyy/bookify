@@ -1,6 +1,6 @@
 FROM dunglas/frankenphp:php8.2
 
-ENV SERVER_NAME=:80
+
 
 RUN install-php-extensions \
     pcntl \
