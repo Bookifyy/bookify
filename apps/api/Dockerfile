@@ -32,5 +32,5 @@ RUN composer dump-autoload --optimize
 RUN chmod -R 777 storage bootstrap/cache
 
 # Start FrankenPHP
-# Start FrankenPHP with dynamic port, forced HTTP, and IPv4 binding
-CMD ["sh", "-c", "export SERVER_NAME=http://0.0.0.0:${PORT:-80} && frankenphp php-server"]
+# Start FrankenPHP forced on port 8000 (Hardcoded for debugging)
+CMD ["sh", "-c", "export SERVER_NAME=http://0.0.0.0:8000 && frankenphp php-server"]
