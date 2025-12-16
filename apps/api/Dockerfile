@@ -32,5 +32,5 @@ RUN composer dump-autoload --optimize
 RUN chmod -R 777 storage bootstrap/cache
 
 # Start FrankenPHP
-# Switch to standard PHP server for reliable port binding
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Switch to standard PHP server on the correct Railway port
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
