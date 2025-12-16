@@ -20,10 +20,13 @@ COPY composer.json composer.lock ./
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Install dependencies
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
 # Copy app files
 COPY . .
+
+# Run composer scripts (needs artisan)
+RUN composer dump-autoload --optimize
 
 # Permissions
 RUN chmod -R 777 storage bootstrap/cache
