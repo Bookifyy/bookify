@@ -27,7 +27,7 @@ use App\Http\Controllers\SocialAuthController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [NewPasswordController::class, 'forgotPassword']);
-Route::post('/reset-password', [NewPasswordController::class, 'reset']);
+Route::post('/reset-password', [NewPasswordController::class, 'reset'])->name('password.reset');
 
 // Social Auth
 Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirectToProvider']);
