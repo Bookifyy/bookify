@@ -14,21 +14,25 @@ class RoleSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'edit articles']);
-        Permission::create(['name' => 'delete articles']);
-        Permission::create(['name' => 'publish articles']);
-        Permission::create(['name' => 'unpublish articles']);
+        $permissions = [
+            'edit articles',
+            'delete articles',
+            'publish articles',
+            'unpublish articles',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
 
         // create roles and assign created permissions
+        Role::firstOrCreate(['name' => 'Student'])
+            ->givePermissionTo('edit articles');
 
-        // this can be done as separate statements
-        $role = Role::create(['name' => 'Student']);
-        $role->givePermissionTo('edit articles');
+        Role::firstOrCreate(['name' => 'Teacher'])
+            ->givePermissionTo(['publish articles', 'unpublish articles']);
 
-        $role = Role::create(['name' => 'Teacher']);
-        $role->givePermissionTo(['publish articles', 'unpublish articles']);
-
-        $role = Role::create(['name' => 'Admin']);
-        $role->givePermissionTo(Permission::all());
+        Role::firstOrCreate(['name' => 'Admin'])
+            ->givePermissionTo(Permission::all());
     }
 }
