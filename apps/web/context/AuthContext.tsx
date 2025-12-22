@@ -20,39 +20,79 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Helper to get cookie
+const getCookie = (name: string) => {
+    if (typeof document === 'undefined') return null;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+    return null;
+};
+
+// Helper to set cookie
+const setCookie = (name: string, value: string, days = 7) => {
+    if (typeof document === 'undefined') return;
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = `; expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${value}${expires}; path=/; SameSite=Lax`;
+};
+
+// Helper to remove cookie
+const removeCookie = (name: string) => {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=; Max-Age=-99999999; path=/;`;
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true); // Start loading true
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
-        // Check localStorage on mount
-        const storedToken = localStorage.getItem('token');
-        const storedUser = localStorage.getItem('user');
+        const initAuth = async () => {
+            const storedToken = getCookie('token');
 
-        if (storedToken && storedUser) {
-            setToken(storedToken);
-            setUser(JSON.parse(storedUser));
-        }
-        setLoading(false);
+            if (storedToken) {
+                setToken(storedToken);
+                try {
+                    // Fetch fresh user data from database
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/user`, {
+                        headers: {
+                            'Authorization': `Bearer ${storedToken}`,
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        setUser(userData);
+                    } else {
+                        // Token invalid/expired
+                        logout();
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch user:', error);
+                }
+            }
+            setLoading(false);
+        };
+
+        initAuth();
     }, []);
 
     const login = (newToken: string, newUser: User) => {
         setToken(newToken);
         setUser(newUser);
-        localStorage.setItem('token', newToken);
-        localStorage.setItem('user', JSON.stringify(newUser));
-        router.push('/'); // Redirect to home/dashboard
+        setCookie('token', newToken);
+        router.push('/');
     };
 
     const logout = () => {
         setToken(null);
         setUser(null);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-
-        // Optional: Call backend logout API here if needed
+        removeCookie('token');
         router.push('/login');
     };
 
