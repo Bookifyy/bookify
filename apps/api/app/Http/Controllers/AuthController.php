@@ -23,8 +23,6 @@ class AuthController extends Controller
             'password' => bcrypt($fields['password'])
         ]);
 
-        event(new \Illuminate\Auth\Events\Registered($user));
-
         $user->assignRole('Student'); // Default role
         $user->load('roles');
 
