@@ -126,21 +126,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Auth verification banner if needed */}
-      {user && !user.email_verified_at && (
-        <div className="rounded-lg bg-zinc-900 border border-zinc-800 p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h3 className="text-white font-medium">Verify your email address</h3>
-            <p className="text-sm text-zinc-500">Check your inbox to get full access to Bookify features.</p>
-          </div>
-          <Link
-            href="/verify-email"
-            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-          >
-            Verify Now
-          </Link>
-        </div>
-      )}
     </div>
   );
 }
