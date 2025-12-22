@@ -30,11 +30,16 @@ export default function AdminBooksPage() {
     });
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/subjects`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        fetch(`${apiUrl}/api/subjects`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json'
+            }
         })
             .then(res => res.json())
-            .then(setSubjects);
+            .then(setSubjects)
+            .catch(err => console.error('Failed to fetch subjects:', err));
     }, [token]);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -50,9 +55,13 @@ export default function AdminBooksPage() {
         if (files.cover_image) data.append('cover_image', files.cover_image);
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/books`, {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const res = await fetch(`${apiUrl}/api/books`, {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json'
+                },
                 body: data,
             });
 
