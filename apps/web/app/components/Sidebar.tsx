@@ -12,8 +12,10 @@ import {
     BarChart3,
     Moon,
     Sun,
-    User as UserIcon,
-    Settings
+    Settings,
+    ShieldCheck,
+    LogOut,
+    BookOpen
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -58,13 +60,47 @@ export function Sidebar() {
                         </Link>
                     );
                 })}
+
+                {user?.roles?.some((r: any) => r.name === 'Admin') && (
+                    <div className="pt-4 space-y-1">
+                        <p className="px-3 text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2">Management</p>
+                        <Link
+                            href="/admin/books"
+                            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${pathname === '/admin/books'
+                                ? 'bg-zinc-900 text-white'
+                                : 'hover:bg-zinc-900/50 hover:text-white'
+                                }`}
+                        >
+                            <ShieldCheck size={20} className={pathname === '/admin/books' ? 'text-indigo-400' : ''} />
+                            Admin Panel
+                        </Link>
+                    </div>
+                )}
             </nav>
 
-            {/* Footer Info */}
-            <div className="p-4 border-t border-zinc-900">
-                <div className="flex flex-col gap-1 text-[10px] text-zinc-600">
-                    <span>Bookify v0.4.0</span>
-                    <span>Month-1 Prototype</span>
+            {/* User Info & Logout */}
+            <div className="p-4 border-t border-zinc-900 space-y-4">
+                <div className="flex items-center gap-3 px-2">
+                    <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white uppercase">
+                        {user?.name?.[0] || 'U'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold text-white truncate">{user?.name}</p>
+                        <p className="text-[10px] text-zinc-500 truncate">{user?.email}</p>
+                    </div>
+                </div>
+                <button
+                    onClick={() => {
+                        const { logout } = require('../../context/AuthContext').useAuth();
+                        logout();
+                    }}
+                    className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all"
+                >
+                    <LogOut size={20} />
+                    Sign Out
+                </button>
+                <div className="flex flex-col gap-1 text-[10px] text-zinc-600 px-2">
+                    <span>Bookify v1.0.0</span>
                 </div>
             </div>
         </aside>

@@ -48,7 +48,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['role:Admin']], function () {
         Route::get('/admin/users', [AdminController::class, 'index']);
         Route::post('/admin/users/{id}/role', [AdminController::class, 'assignRole']);
+
+        // Book Management
+        Route::post('/books', [\App\Http\Controllers\BookController::class, 'store']);
     });
+
+    // General Book & Subject Routes
+    Route::get('/books', [\App\Http\Controllers\BookController::class, 'index']);
+    Route::get('/books/{book}', [\App\Http\Controllers\BookController::class, 'show']);
+    Route::get('/subjects', [\App\Http\Controllers\SubjectController::class, 'index']);
 });
 
 Route::get('/version', function () {
