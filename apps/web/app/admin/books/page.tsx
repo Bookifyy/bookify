@@ -125,6 +125,11 @@ export default function AdminBooksPage() {
                                         <option value="">Select Subject</option>
                                         {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                                     </select>
+                                    {subjects.length === 0 && !loading && (
+                                        <p className="text-[10px] text-amber-500 mt-1">
+                                            No subjects found. Please run the seeder or add subjects via database.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 

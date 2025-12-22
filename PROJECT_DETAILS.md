@@ -1,81 +1,80 @@
-# Bookify Technical Project Manifest
+# Bookify: The Deep Technical Deep-Dive
 
-This document provides a comprehensive breakdown of the architecture, technologies, and features implemented during the initial development phases of the Bookify platform.
-
----
-
-## 🚀 Tech Stack
-
-### Backend (API Layer)
-- **Framework**: Laravel 10+ (PHP 8.2)
-- **Database**: PostgreSQL (Structured for scalability)
-- **Authentication**: Laravel Sanctum (Token-based API auth)
-- **Authorization**: Spatie Laravel Permission (Admin vs. Student roles)
-- **File Storage**: Laravel Storage System (Configured for public/private disks)
-
-### Frontend (Application Layer)
-- **Framework**: Next.js 14+ (App Router, Rendering on Client)
-- **Styling**: Tailwind CSS (Custom Dark Premium Theme)
-- **Icons**: Lucide React
-- **State Management**: React Context API (`AuthContext`)
-- **Navigation**: Next.js App Router (File-based routing)
+This document provides a "micro-level" breakdown of every architectural decision, security layer, and component logic implemented for the Bookify platform.
 
 ---
 
-## 🏗️ Core Architecture & Implementation
-
-### 🛡️ Security & Auth Implementation
-- **Secure Cookie Strategy**: Unlike traditional `localStorage`, authentication tokens are stored in secure cookies (`token`) for better CSRF protection.
-- **Dynamic Layout Wrapper**: A `LayoutWrapper.tsx` component automatically handles:
-    - Redirection of unauthenticated users to `/login`.
-    - Hiding the Sidebar/Header for public guest routes.
-    - Preventing "flicker" using a smooth loading splash screen.
-- **RBAC (Role Based Access Control)**: Backend and Frontend are synchronized to hide management features (like the Admin Panel) unless the user is explicitly assigned the 'Admin' role.
-
-### 📚 Content Management System (CMS)
-- **Book Metadata Schema**: Implemented a relational database structure:
-    - `Subject`: Categorization (Calculus, Law, Sapiens, etc.)
-    - `Book`: Core metadata (Title, Author, ISBN, Description, Premium Status)
-    - `ReadingProgress`: Per-user tracking of pages and percentages.
-- **Admin Upload Interface**: A premium React form allowing:
-    - **Multi-part File Uploads**: Simultaneous upload of PDFs/EPUBs and Cover Images.
-    - **Validation**: Backend-enforced file types (mimes: pdf, epub, jpg, png) and size limits (20MB).
-
-### 🎨 Premium User UI/UX
-- **Unified Sidebar**: Persistent navigation with Lucide-styled icons and a dedicated "User Identity" footer for profile management and sign-out.
-- **Unified Header**: Integrated Search bar and profile/settings shortcuts.
-- **Discover Dashboard**: 
-    - Time-aware greetings (Morning/Afternoon/Evening).
-    - Horizontal scrollable feeds for "Continue Reading".
-    - Progress visualization using animated CSS progress bars.
-- **Book Detail Pages**: Dynamic routing (`/books/[id]`) generating high-fidelity overviews with metadata blurred hero backgrounds.
+## 🏗️ 1. Project Foundation (Monorepo)
+We are using a **Turborepo** monorepo structure. This allows us to keep the Backend and Frontend in one place while keeping them perfectly separated.
+- **`apps/api`**: The Laravel Backend.
+- **`apps/web`**: The Next.js Frontend.
 
 ---
 
-## 📁 Key Files & Modules Created
+## 🛡️ 2. Authentication: The "Gatekeeper" Strategy
+We avoided standard `localStorage` because it is vulnerable to XSS attacks. Instead, we built a **Secure Cookie-Based System**.
 
-### 🌐 Frontend (apps/web)
-- `context/AuthContext.tsx`: The "Heart" of the app; handles session persistence and user data fetching.
-- `app/components/LayoutWrapper.tsx`: The "Gatekeeper"; handles auth-aware layout rendering.
-- `app/admin/books/page.tsx`: The "Creator"; premium upload interface for content.
-- `app/books/[id]/page.tsx`: The "Display"; detailed book overview.
-- `app/components/BookCard.tsx`: Reusable premium visual building block.
+### **The AuthContext (`apps/web/context/AuthContext.tsx`)**
+- **Cookie Helpers**: Includes custom functions (`getCookie`, `setCookie`) to manage the `token` without external libraries.
+- **Freshness**: Every time you refresh the page, the app sends the cookie to the backend `/api/user` endpoint to get the latest user data (Roles, ID, Name).
+- **Centralized Logic**: `login()` and `logout()` functions manage both the cookie state and the React state simultaneously.
 
-### ⚙️ Backend (apps/api)
-- `app/Http/Controllers/BookController.php`: Handles listing, searching, and file storage logic.
-- `app/Http/Controllers/SubjectController.php`: Manages categories.
-- `database/migrations/`: Definitions for Subjects, Books, and Progress tables.
-- `database/seeders/BookSeeder.php`: Logic to populate the app with realistic startup content.
+### **The Gatekeeper (`apps/web/app/components/LayoutWrapper.tsx`)**
+Every single page goes through this wrapper.
+- **Public vs. Private**: It maintains a whitelist (`/login`, `/register`, etc.).
+- **Redirection Logic**: If it detects you are NOT logged in and trying to access a private page (like the Dashboard), it forces a `router.push('/login')`.
+- **UI Switching**: If you are logged in, it automatically injects the **Sidebar** and **Header** around your page. If you are on the Login page, it hides them for a clean UI.
+
+---
+
+## �️ 3. Database & Backend Logic
+We built a highly relational database in Laravel.
+
+### **Database Schema (Migrations)**
+1. **`subjects`**: The categories (ID, Name, Slug).
+2. **`books`**: Core metadata. Linked to `subjects` via `subject_id`.
+3. **`reading_progress`**: Tracks which user is reading which book, their `current_page`, and `% completion`.
+
+### **The Content Engine (`BookController.php`)**
+- **Advanced Indexing**: The `index` method handles three things at once:
+    - Lists all books.
+    - Filters by Category (Subject).
+    - Searches by Title or Author using SQL `LIKE` queries.
+- **File Storage Logic**: When you upload a book:
+    1. The PDF is stored in `storage/app/public/books`.
+    2. The Cover is stored in `storage/app/public/covers`.
+    3. We run `php artisan storage:link` to make these files accessible via a public URL (`/storage/books/...`).
 
 ---
 
-## 📈 Status Summary
+## 🎨 4. Frontend UI: Component Detail
 
-- **Phase 1 (Foundation)**: [COMPLETED]
-- **Phase 2 (Content Management)**: [COMPLETED]
-- **Phase 3 (E-Reader Core)**: [PENDING]
-- **Authentication Resilience**: [VERIFIED]
-- **Production Sync**: [ACTIVE] (All changes merged to `main` branch)
+### **Sidebar & Roles (`Sidebar.tsx`)**
+- **Admin Section**: Uses a role-check logic (`user.roles.some(...)`). If you don't have the 'Admin' role, the "Management" section literally doesn't exist in the DOM.
+- **Active States**: Uses `usePathname()` to detect which page you are on and "lights up" the icon in Indigo.
+
+### **Book Cards (`BookCard.tsx`)**
+- **Navigation**: Wrapped in a Next.js `<Link>`.
+- **Visuals**: Uses `aspect-[2/3]` to force a consistent book-cover ratio.
+- **Progress Layer**: Conditionally renders an Indigo progress bar at the bottom of the card only if the user has started reading that book.
+
+### **Admin Upload Form (`admin/books/page.tsx`)**
+- **FormData**: Instead of sending traditional JSON, we use `new FormData()`. This is REQUIRED to send actual binary files (PDFs/Images) over the API.
+- **Previews**: We handle state for the file names so you know exactly which file you have selected before hitting upload.
 
 ---
-*Documented by Antigravity AI*
+
+## 📈 5. Feature Progression Summary
+
+### **What is currently "Ready to Use":**
+1. **Dashboard**: Greeting, streaks, and "Continue Reading" logic.
+2. **Book Discovery**: Searching and filtering by category.
+3. **User Auth**: Registration, Login, and persistent sessions.
+4. **Admin CMS**: Ability to add new books to the platform.
+5. **Book Overviews**: Detailed pages for every book with blurred hero backgrounds.
+
+### **What we are building next:**
+- **The Reader Core**: Using `react-pdf` or similar to actually display the book content in the browser while preventing right-click/copy (DRM).
+
+---
+*Generated for: Bookify Development Team*

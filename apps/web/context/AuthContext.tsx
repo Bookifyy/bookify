@@ -58,8 +58,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (storedToken) {
                 setToken(storedToken);
                 try {
-                    // Fetch fresh user data from database
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/user`, {
+                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+                    const response = await fetch(`${apiUrl}/api/user`, {
                         headers: {
                             'Authorization': `Bearer ${storedToken}`,
                             'Accept': 'application/json'
@@ -69,12 +69,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     if (response.ok) {
                         const userData = await response.json();
                         setUser(userData);
-                    } else {
-                        // Token invalid/expired
+                    } else if (response.status === 401) {
+                        // Only logout if it's explicitly unauthorized
                         logout();
                     }
                 } catch (error) {
                     console.error('Failed to fetch user:', error);
+                    // On network error, we don't logout - keep the token and retry on next action or refresh
                 }
             }
             setLoading(false);

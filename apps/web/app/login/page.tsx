@@ -28,6 +28,10 @@ export default function LoginPage() {
             const data = await res.json();
 
             if (!res.ok) {
+                if (data.errors) {
+                    const firstError = Object.values(data.errors)[0] as string[];
+                    throw new Error(firstError[0] || data.message || 'Login failed');
+                }
                 throw new Error(data.message || 'Login failed');
             }
 

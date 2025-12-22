@@ -31,7 +31,7 @@ const menuItems = [
 
 export function Sidebar() {
     const pathname = usePathname();
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
 
     return (
         <aside className="fixed left-0 top-0 z-40 h-screen w-64 flex-col bg-black text-zinc-400 border-r border-zinc-900 hidden lg:flex">
@@ -90,10 +90,7 @@ export function Sidebar() {
                     </div>
                 </div>
                 <button
-                    onClick={() => {
-                        const { logout } = require('../../context/AuthContext').useAuth();
-                        logout();
-                    }}
+                    onClick={logout}
                     className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all"
                 >
                     <LogOut size={20} />
