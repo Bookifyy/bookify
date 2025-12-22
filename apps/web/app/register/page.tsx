@@ -142,6 +142,15 @@ export default function RegisterPage() {
                         </div>
                     </form>
 
+                    <div className="mt-4 flex items-center justify-center">
+                        <Link
+                            href="/forgot-password"
+                            className="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                        >
+                            Forgot your password?
+                        </Link>
+                    </div>
+
                     <div className="mt-6">
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
