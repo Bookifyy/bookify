@@ -23,17 +23,24 @@ use App\Http\Controllers\SocialAuthController;
 
 // ... imports
 
-// Public Routes
-Route::middleware(['throttle:auth'])->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+// --- Diagnostic Routes ---
+Route::get('/', function () {
+    return response()->json(['status' => 'Bookify API is running', 'time' => now()]);
 });
 
-// Diagnostic: Check Database
+Route::get('/version', function () {
+    return response()->json([
+        'version' => '1.0.0',
+        'php' => phpversion(),
+        'laravel' => app()->version(),
+        'db_connection' => config('database.default'),
+        'db_host' => config('database.connections.' . config('database.default') . '.host'),
+    ]);
+});
+
 Route::get('/db-check', function () {
     try {
         $tables = \Illuminate\Support\Facades\DB::select('SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != \'pg_catalog\' AND schemaname != \'information_schema\'');
-        // Handle MySQL fallback just in case
         if (empty($tables) && config('database.default') === 'mysql') {
             $tables = \Illuminate\Support\Facades\DB::select('SHOW TABLES');
         }
@@ -47,6 +54,13 @@ Route::get('/db-check', function () {
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
+});
+// --- End Diagnostic Routes ---
+
+// Public Routes
+Route::middleware(['throttle:auth'])->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
 });
 
 Route::post('/forgot-password', [NewPasswordController::class, 'forgotPassword']);

@@ -34,4 +34,5 @@ RUN chmod -R 777 storage bootstrap/cache
 
 # Start FrankenPHP
 # Run migrations and seeds, then start server (ensures roles exist)
-CMD ["sh", "-c", "echo \"[DEBUG] RAILWAY PORT IS: '$PORT'\"; php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+# Using '|| true' to ensure server starts even if DB isn't ready immediately
+CMD ["sh", "-c", "php artisan migrate --force || true && php artisan db:seed --force || true && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
