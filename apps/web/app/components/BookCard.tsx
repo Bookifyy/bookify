@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { resolveAssetUrl } from '../lib/utils';
 
 interface BookCardProps {
     id: number;
@@ -16,9 +17,7 @@ export function BookCard({ id, title, author, coverImage, progress }: BookCardPr
         <Link href={`/books/${id}`} className="block group cursor-pointer">
             <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-zinc-800 shadow-lg transition-transform duration-300 group-hover:-translate-y-1">
                 <img
-                    src={coverImage.startsWith('http')
-                        ? coverImage
-                        : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${coverImage.startsWith('/') ? '' : '/'}${coverImage}`}
+                    src={resolveAssetUrl(coverImage)}
                     alt={title}
                     className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-80"
                 />

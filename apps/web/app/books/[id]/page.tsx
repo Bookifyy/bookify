@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
 import { Play, Clock, BookOpen, Star, Share2, ArrowLeft } from 'lucide-react';
-import Image from 'next/image';
+import { resolveAssetUrl, getApiUrl } from '../../lib/utils';
 
 interface Book {
     id: number;
@@ -22,9 +22,10 @@ export default function BookDetailPage() {
     const router = useRouter();
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
+    const [addingToLibrary, setAddingToLibrary] = useState(false);
 
     useEffect(() => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const apiUrl = getApiUrl();
         fetch(`${apiUrl}/api/books/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -39,15 +40,33 @@ export default function BookDetailPage() {
             .catch(() => setLoading(false));
     }, [id, token]);
 
+    const addToLibrary = async () => {
+        if (!token || !book) return;
+        setAddingToLibrary(true);
+        try {
+            const apiUrl = getApiUrl();
+            const res = await fetch(`${apiUrl}/api/library/add`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ book_id: book.id })
+            });
+
+            if (res.ok) {
+                alert('Added to your library!');
+            }
+        } catch (err) {
+            console.error('Failed to add to library:', err);
+        } finally {
+            setAddingToLibrary(false);
+        }
+    };
+
     if (loading) return <div className="p-8 text-zinc-500">Loading book details...</div>;
     if (!book) return <div className="p-8 text-red-500">Book not found.</div>;
-
-    const getImageUrl = (path: string) => {
-        if (!path) return '';
-        if (path.startsWith('http')) return path;
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        return `${apiUrl}${path}`;
-    };
 
     return (
         <div className="min-h-screen bg-black text-white">
@@ -55,7 +74,7 @@ export default function BookDetailPage() {
             <div className="relative h-[400px] w-full overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center blur-3xl opacity-30 scale-110"
-                    style={{ backgroundImage: `url(${getImageUrl(book.cover_image)})` }}
+                    style={{ backgroundImage: `url(${resolveAssetUrl(book.cover_image)})` }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
@@ -70,7 +89,7 @@ export default function BookDetailPage() {
                     <div className="flex flex-col md:flex-row gap-8 items-end mb-8">
                         <div className="relative w-48 h-72 flex-shrink-0 shadow-2xl shadow-black rounded-lg overflow-hidden border border-zinc-800">
                             <img
-                                src={getImageUrl(book.cover_image)}
+                                src={resolveAssetUrl(book.cover_image)}
                                 alt={book.title}
                                 className="w-full h-full object-cover"
                             />
@@ -96,8 +115,12 @@ export default function BookDetailPage() {
                                 >
                                     <Play size={20} fill="black" /> Start Reading
                                 </button>
-                                <button className="bg-zinc-900 border border-zinc-800 px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors">
-                                    <Star size={20} /> Add to Library
+                                <button
+                                    onClick={addToLibrary}
+                                    disabled={addingToLibrary}
+                                    className="bg-zinc-900 border border-zinc-800 px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors disabled:opacity-50"
+                                >
+                                    {addingToLibrary ? 'Adding...' : <><Star size={20} /> Add to Library</>}
                                 </button>
                                 <button className="p-3 bg-zinc-900 border border-zinc-800 rounded-full hover:bg-zinc-800 transition-colors">
                                     <Share2 size={20} />

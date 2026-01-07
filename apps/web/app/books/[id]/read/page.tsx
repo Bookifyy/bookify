@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../../context/AuthContext';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ZoomIn, ZoomOut, ArrowLeft, Loader2 } from 'lucide-react';
+import { resolveAssetUrl, getApiUrl } from '../../../../lib/utils';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
@@ -15,6 +16,10 @@ interface Book {
     id: number;
     title: string;
     file_path: string;
+    progress?: {
+        current_page: number;
+        total_pages: number;
+    };
 }
 
 export default function ReaderPage() {
@@ -29,7 +34,7 @@ export default function ReaderPage() {
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     useEffect(() => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const apiUrl = getApiUrl();
         fetch(`${apiUrl}/api/books/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -39,10 +44,41 @@ export default function ReaderPage() {
             .then(res => res.json())
             .then(data => {
                 setBook(data);
+                if (data.progress?.current_page) {
+                    setPageNumber(data.progress.current_page);
+                }
                 setLoading(false);
             })
             .catch(() => setLoading(false));
     }, [id, token]);
+
+    // Save progress when page changes
+    useEffect(() => {
+        if (!token || !id || loading || !numPages) return;
+
+        const saveProgress = async () => {
+            const apiUrl = getApiUrl();
+            try {
+                await fetch(`${apiUrl}/api/books/${id}/progress`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        current_page: pageNumber,
+                        total_pages: numPages
+                    })
+                });
+            } catch (err) {
+                console.error('Failed to save progress:', err);
+            }
+        };
+
+        const timer = setTimeout(saveProgress, 2000); // Debounce save
+        return () => clearTimeout(timer);
+    }, [pageNumber, id, token, loading, numPages]);
 
     function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
         setNumPages(numPages);
@@ -71,10 +107,7 @@ export default function ReaderPage() {
 
     if (!book) return <div className="p-8 text-red-500">Book not found.</div>;
 
-    // Use absolute URL from backend
-    const pdfUrl = book.file_path.startsWith('http')
-        ? book.file_path
-        : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:8000'}${book.file_path}`;
+    const pdfUrl = resolveAssetUrl(book.file_path);
 
     return (
         <div className="min-h-screen bg-zinc-950 text-white flex flex-col overflow-hidden select-none">

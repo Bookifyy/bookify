@@ -3,76 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { BookCard } from './components/BookCard';
+import { resolveAssetUrl, getApiUrl } from './lib/utils';
 import { Zap, ChevronRight, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
 
-const mockContinueReading = [
-  {
-    id: 1,
-    title: 'Calculus: Early Transcendentals',
-    author: 'James Stewart',
-    coverImage: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&q=80&w=400',
-    progress: 67,
-  },
-  {
-    id: 2,
-    title: 'The Quantum World',
-    author: 'Kenneth W. Ford',
-    coverImage: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=400',
-    progress: 23,
-  },
-  {
-    id: 3,
-    title: 'Sapiens: A Brief History',
-    author: 'Yuval Noah Harari',
-    coverImage: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&q=80&w=400',
-    progress: 89,
-  },
-  {
-    id: 4,
-    title: 'Pride and Prejudice',
-    author: 'Jane Austen',
-    coverImage: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=400',
-    progress: 45,
-  },
-  {
-    id: 5,
-    title: 'Meditations',
-    author: 'Marcus Aurelius',
-    coverImage: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=400',
-    progress: 12,
-  },
-];
-
-const mockWeeklyMix = [
-  {
-    id: 3,
-    title: 'Sapiens: A Brief History',
-    author: 'Yuval Noah Harari',
-    coverImage: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&q=80&w=400',
-    progress: 89,
-  },
-  {
-    id: 4,
-    title: 'Pride and Prejudice',
-    author: 'Jane Austen',
-    coverImage: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=400',
-    progress: 45,
-  },
-  {
-    id: 5,
-    title: 'Meditations',
-    author: 'Marcus Aurelius',
-    coverImage: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=400',
-    progress: 12,
-  },
-];
+// No mock data needed for books anymore
 
 export default function Home() {
   const { user, token } = useAuth();
   const [greeting, setGreeting] = useState('');
   const [books, setBooks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [continueReading, setContinueReading] = useState<any[]>([]);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -82,7 +24,7 @@ export default function Home() {
 
     const fetchBooks = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const apiUrl = getApiUrl();
         const res = await fetch(`${apiUrl}/api/books?limit=5`, {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -100,7 +42,28 @@ export default function Home() {
       }
     };
 
-    if (token) fetchBooks();
+    const fetchLibrary = async () => {
+      try {
+        const apiUrl = getApiUrl();
+        const res = await fetch(`${apiUrl}/api/library`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setContinueReading(data.slice(0, 5));
+        }
+      } catch (err) {
+        console.error('Failed to fetch library:', err);
+      }
+    };
+
+    if (token) {
+      fetchBooks();
+      fetchLibrary();
+    }
   }, [token]);
 
   return (
@@ -153,22 +116,31 @@ export default function Home() {
         )}
       </section>
 
-      {/* Continue Reading (Mocked for now as we haven't implemented progress tracking yet) */}
-      <section className="space-y-6 opacity-60 grayscale-[0.5]">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 rounded p-1">
-              <LayoutGrid size={14} className="text-white" />
+      {/* Continue Reading Section */}
+      {continueReading.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="bg-indigo-600 rounded p-1">
+                <LayoutGrid size={14} className="text-white" />
+              </div>
+              <h2 className="text-lg font-semibold text-white">Continue Reading</h2>
             </div>
-            <h2 className="text-lg font-semibold text-white">Your Weekly Study Mix (Demo)</h2>
           </div>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {mockWeeklyMix.map((book) => (
-            <BookCard key={book.id} {...book} />
-          ))}
-        </div>
-      </section>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {continueReading.map((item) => (
+              <BookCard
+                key={item.id}
+                id={item.book.id}
+                title={item.book.title}
+                author={item.book.author}
+                coverImage={item.book.cover_image}
+                progress={parseFloat(item.percentage_completed)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
     </div>
   );

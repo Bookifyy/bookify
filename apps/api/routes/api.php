@@ -123,13 +123,17 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         $books = $query->paginate(20);
 
-        // Map to ensure absolute URLs
+        // Map to ensure relative URLs starting with /storage
         $books->through(function ($book) {
             if ($book->cover_image && !str_starts_with($book->cover_image, 'http')) {
-                $book->cover_image = url(Storage::url(str_replace('/storage/', '', $book->cover_image)));
+                $path = str_replace(url('/'), '', $book->cover_image);
+                $path = str_replace('/storage/', '', $path);
+                $book->cover_image = '/storage/' . ltrim($path, '/');
             }
             if ($book->file_path && !str_starts_with($book->file_path, 'http')) {
-                $book->file_path = url(Storage::url(str_replace('/storage/', '', $book->file_path)));
+                $path = str_replace(url('/'), '', $book->file_path);
+                $path = str_replace('/storage/', '', $path);
+                $book->file_path = '/storage/' . ltrim($path, '/');
             }
             return $book;
         });
@@ -140,13 +144,22 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/books/{book}', function (Book $book) {
         $book->load('subject');
         if ($book->cover_image && !str_starts_with($book->cover_image, 'http')) {
-            $book->cover_image = url(Storage::url(str_replace('/storage/', '', $book->cover_image)));
+            $path = str_replace(url('/'), '', $book->cover_image);
+            $path = str_replace('/storage/', '', $path);
+            $book->cover_image = '/storage/' . ltrim($path, '/');
         }
         if ($book->file_path && !str_starts_with($book->file_path, 'http')) {
-            $book->file_path = url(Storage::url(str_replace('/storage/', '', $book->file_path)));
+            $path = str_replace(url('/'), '', $book->file_path);
+            $path = str_replace('/storage/', '', $path);
+            $book->file_path = '/storage/' . ltrim($path, '/');
         }
         return $book;
     });
+
+    // Library & Progress
+    Route::get('/library', [\App\Http\Controllers\LibraryController::class, 'index']);
+    Route::post('/library/add', [\App\Http\Controllers\LibraryController::class, 'add']);
+    Route::post('/books/{id}/progress', [\App\Http\Controllers\LibraryController::class, 'updateProgress']);
     Route::get('/subjects', [\App\Http\Controllers\SubjectController::class, 'index']);
 });
 

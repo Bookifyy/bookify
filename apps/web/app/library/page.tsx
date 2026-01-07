@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { BookCard } from '../components/BookCard';
+import { resolveAssetUrl, getApiUrl } from '../lib/utils';
 import { Loader2, Library as LibraryIcon } from 'lucide-react';
 
 export default function LibraryPage() {
@@ -13,8 +14,8 @@ export default function LibraryPage() {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-                const res = await fetch(`${apiUrl}/api/books`, {
+                const apiUrl = getApiUrl();
+                const res = await fetch(`${apiUrl}/api/library`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json'
@@ -22,11 +23,10 @@ export default function LibraryPage() {
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    // Laravel pagination returns data in a 'data' array
-                    setBooks(data.data || []);
+                    setBooks(data);
                 }
             } catch (err) {
-                console.error('Failed to fetch books:', err);
+                console.error('Failed to fetch library books:', err);
             } finally {
                 setLoading(false);
             }
@@ -55,13 +55,14 @@ export default function LibraryPage() {
                 </div>
             ) : books.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-                    {books.map((book) => (
+                    {books.map((item) => (
                         <BookCard
-                            key={book.id}
-                            id={book.id}
-                            title={book.title}
-                            author={book.author}
-                            coverImage={book.cover_image}
+                            key={item.id}
+                            id={item.book.id}
+                            title={item.book.title}
+                            author={item.book.author}
+                            coverImage={item.book.cover_image}
+                            progress={parseFloat(item.percentage_completed)}
                         />
                     ))}
                 </div>
