@@ -49,7 +49,11 @@ export default function AdminBooksPage() {
 
         const data = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
-            data.append(key, value.toString());
+            if (key === 'is_premium') {
+                data.append(key, value ? '1' : '0');
+            } else {
+                data.append(key, value.toString());
+            }
         });
         if (files.book_file) data.append('book_file', files.book_file);
         if (files.cover_image) data.append('cover_image', files.cover_image);

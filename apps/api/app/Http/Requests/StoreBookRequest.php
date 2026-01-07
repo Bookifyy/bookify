@@ -17,6 +17,18 @@ class StoreBookRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'is_premium' => filter_var($this->is_premium, FILTER_VALIDATE_BOOLEAN),
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
