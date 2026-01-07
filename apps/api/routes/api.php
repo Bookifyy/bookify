@@ -46,19 +46,34 @@ Route::get('/db-check', function () {
             $tables = \Illuminate\Support\Facades\DB::select('SHOW TABLES');
         }
 
+        $books = Book::with('subject')->latest()->limit(5)->get();
+
         return response()->json([
-            'connection' => config('database.default'),
-            'database' => \Illuminate\Support\Facades\DB::connection()->getDatabaseName(),
-            'tables' => $tables,
-            'subjects_count' => \Illuminate\Support\Facades\DB::table('subjects')->count(),
+            'status' => 'success',
+            'app_url' => config('app.url'),
+            'env' => config('app.env'),
+            'db' => [
+                'connection' => config('database.default'),
+                'database' => \Illuminate\Support\Facades\DB::connection()->getDatabaseName(),
+                'tables' => $tables,
+                'subjects_count' => Subject::count(),
+                'books_count' => Book::count(),
+            ],
+            'last_5_books' => $books,
             'storage' => [
+                'books_path' => storage_path('app/public/books'),
                 'books_exists' => File::exists(storage_path('app/public/books')),
                 'books_writable' => is_writable(storage_path('app/public/books')),
-                'root_writable' => is_writable(storage_path('app')),
+                'public_disk_root' => config('filesystems.disks.public.root'),
             ]
         ]);
     } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()], 500);
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ], 500);
     }
 });
 // --- End Diagnostic Routes ---
