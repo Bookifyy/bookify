@@ -5,6 +5,7 @@ FROM dunglas/frankenphp:php8.2
 RUN install-php-extensions \
     pcntl \
     pdo_pgsql \
+    pdo_mysql \
     gd \
     intl \
     zip \

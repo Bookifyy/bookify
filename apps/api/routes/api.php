@@ -87,6 +87,7 @@ Route::get('/version', function () {
         'version' => '1.0.0',
         'php' => phpversion(),
         'laravel' => app()->version(),
-        'db_connection' => \Illuminate\Support\Facades\DB::connection()->getDatabaseName() ? 'connected' : 'failed'
+        'db_connection' => config('database.default'),
+        'db_host' => config('database.connections.' . config('database.default') . '.host'),
     ]);
 });
