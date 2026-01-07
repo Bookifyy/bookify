@@ -24,8 +24,12 @@ export default function BookDetailPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/books/${id}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        fetch(`${apiUrl}/api/books/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json'
+            }
         })
             .then(res => res.json())
             .then(data => {
@@ -38,13 +42,20 @@ export default function BookDetailPage() {
     if (loading) return <div className="p-8 text-zinc-500">Loading book details...</div>;
     if (!book) return <div className="p-8 text-red-500">Book not found.</div>;
 
+    const getImageUrl = (path: string) => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path;
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        return `${apiUrl}${path}`;
+    };
+
     return (
         <div className="min-h-screen bg-black text-white">
             {/* Hero Section */}
             <div className="relative h-[400px] w-full overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center blur-3xl opacity-30 scale-110"
-                    style={{ backgroundImage: `url(${book.cover_image})` }}
+                    style={{ backgroundImage: `url(${getImageUrl(book.cover_image)})` }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
@@ -59,7 +70,7 @@ export default function BookDetailPage() {
                     <div className="flex flex-col md:flex-row gap-8 items-end mb-8">
                         <div className="relative w-48 h-72 flex-shrink-0 shadow-2xl shadow-black rounded-lg overflow-hidden border border-zinc-800">
                             <img
-                                src={book.cover_image}
+                                src={getImageUrl(book.cover_image)}
                                 alt={book.title}
                                 className="w-full h-full object-cover"
                             />

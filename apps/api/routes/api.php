@@ -114,8 +114,39 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     // General Book & Subject Routes
-    Route::get('/books', [\App\Http\Controllers\BookController::class, 'index']);
-    Route::get('/books/{book}', [\App\Http\Controllers\BookController::class, 'show']);
+    Route::get('/books', function (Request $request) {
+        $query = Book::with('subject')->latest();
+
+        if ($request->has('subject_id')) {
+            $query->where('subject_id', $request->subject_id);
+        }
+
+        $books = $query->paginate(20);
+
+        // Map to ensure absolute URLs
+        $books->through(function ($book) {
+            if ($book->cover_image && !str_starts_with($book->cover_image, 'http')) {
+                $book->cover_image = url(Storage::url(str_replace('/storage/', '', $book->cover_image)));
+            }
+            if ($book->file_path && !str_starts_with($book->file_path, 'http')) {
+                $book->file_path = url(Storage::url(str_replace('/storage/', '', $book->file_path)));
+            }
+            return $book;
+        });
+
+        return $books;
+    });
+
+    Route::get('/books/{book}', function (Book $book) {
+        $book->load('subject');
+        if ($book->cover_image && !str_starts_with($book->cover_image, 'http')) {
+            $book->cover_image = url(Storage::url(str_replace('/storage/', '', $book->cover_image)));
+        }
+        if ($book->file_path && !str_starts_with($book->file_path, 'http')) {
+            $book->file_path = url(Storage::url(str_replace('/storage/', '', $book->file_path)));
+        }
+        return $book;
+    });
     Route::get('/subjects', [\App\Http\Controllers\SubjectController::class, 'index']);
 });
 

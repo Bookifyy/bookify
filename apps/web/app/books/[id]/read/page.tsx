@@ -29,8 +29,8 @@ export default function ReaderPage() {
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     useEffect(() => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
-        fetch(`${apiUrl}/books/${id}`, {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        fetch(`${apiUrl}/api/books/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'
