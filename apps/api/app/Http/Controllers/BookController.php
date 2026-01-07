@@ -45,26 +45,38 @@ class BookController extends Controller
 
     public function store(StoreBookRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        // Handle File Upload
-        if ($request->hasFile('book_file')) {
-            $path = $request->file('book_file')->store('books', 'public');
-            $validated['file_path'] = Storage::url($path);
+            // Handle File Upload
+            if ($request->hasFile('book_file')) {
+                $path = $request->file('book_file')->store('books', 'public');
+                $validated['file_path'] = Storage::url($path);
+            }
+
+            // Handle Cover Image
+            if ($request->hasFile('cover_image')) {
+                $coverPath = $request->file('cover_image')->store('covers', 'public');
+                $validated['cover_image'] = Storage::url($coverPath);
+            }
+
+            // Ensure is_premium is a boolean (handles string "true"/"false" from FormData)
+            if (isset($validated['is_premium'])) {
+                $validated['is_premium'] = filter_var($validated['is_premium'], FILTER_VALIDATE_BOOLEAN);
+            }
+
+            $book = Book::create($validated);
+
+            return response()->json([
+                'message' => 'Book uploaded successfully',
+                'book' => $book->load('subject')
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Upload failed: ' . $e->getMessage(),
+                'trace' => config('app.debug') ? $e->getTraceAsString() : null
+            ], 500);
         }
-
-        // Handle Cover Image
-        if ($request->hasFile('cover_image')) {
-            $coverPath = $request->file('cover_image')->store('covers', 'public');
-            $validated['cover_image'] = Storage::url($coverPath);
-        }
-
-        $book = Book::create($validated);
-
-        return response()->json([
-            'message' => 'Book uploaded successfully',
-            'book' => $book->load('subject')
-        ], 201);
     }
 
     /**
