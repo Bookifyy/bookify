@@ -69,15 +69,39 @@ const mockWeeklyMix = [
 ];
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [greeting, setGreeting] = useState('');
+  const [books, setBooks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting('Good morning');
     else if (hour < 18) setGreeting('Good afternoon');
     else setGreeting('Good evening');
-  }, []);
+
+    const fetchBooks = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const res = await fetch(`${apiUrl}/api/books?limit=5`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setBooks(data.data || []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch home books:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (token) fetchBooks();
+  }, [token]);
 
   return (
     <div className="p-8 pb-16 space-y-12 max-w-[1400px] mx-auto">
@@ -91,33 +115,53 @@ export default function Home() {
         <p className="text-sm text-zinc-500">Keep your streak going</p>
       </section>
 
-      {/* Continue Reading */}
+      {/* Recommended Section (Real Data) */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Continue Reading</h2>
+          <h2 className="text-lg font-semibold text-white">Recommended for You</h2>
           <Link href="/library" className="text-xs font-medium text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
             See all <ChevronRight size={14} />
           </Link>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {mockContinueReading.map((book) => (
-            <BookCard key={book.id} {...book} />
-          ))}
-        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} className="space-y-4 animate-pulse">
+                <div className="aspect-[2/3] w-full bg-zinc-800 rounded-md" />
+                <div className="h-4 w-3/4 bg-zinc-800 rounded" />
+                <div className="h-3 w-1/2 bg-zinc-800 rounded" />
+              </div>
+            ))}
+          </div>
+        ) : books.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {books.map((book) => (
+              <BookCard
+                key={book.id}
+                id={book.id}
+                title={book.title}
+                author={book.author}
+                coverImage={book.cover_image}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-zinc-900/30 rounded-xl py-12 text-center text-zinc-500 border border-zinc-800/50 border-dashed">
+            Visit the Admin Panel to upload your first book!
+          </div>
+        )}
       </section>
 
-      {/* Weekly Study Mix */}
-      <section className="space-y-6">
+      {/* Continue Reading (Mocked for now as we haven't implemented progress tracking yet) */}
+      <section className="space-y-6 opacity-60 grayscale-[0.5]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="bg-blue-600 rounded p-1">
               <LayoutGrid size={14} className="text-white" />
             </div>
-            <h2 className="text-lg font-semibold text-white">Your Weekly Study Mix</h2>
+            <h2 className="text-lg font-semibold text-white">Your Weekly Study Mix (Demo)</h2>
           </div>
-          <Link href="/collections" className="text-xs font-medium text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
-            See all <ChevronRight size={14} />
-          </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {mockWeeklyMix.map((book) => (

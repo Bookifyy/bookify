@@ -71,7 +71,7 @@ export default function AdminBooksPage() {
 
             if (res.ok) {
                 setSuccess(true);
-                setTimeout(() => router.push('/'), 2000);
+                setTimeout(() => router.push('/library'), 2000);
             } else {
                 let message = 'Failed to upload book';
                 const clonedRes = res.clone();
