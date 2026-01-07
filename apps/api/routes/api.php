@@ -29,6 +29,26 @@ Route::middleware(['throttle:auth'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
+// Diagnostic: Check Database
+Route::get('/db-check', function () {
+    try {
+        $tables = \Illuminate\Support\Facades\DB::select('SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != \'pg_catalog\' AND schemaname != \'information_schema\'');
+        // Handle MySQL fallback just in case
+        if (empty($tables) && config('database.default') === 'mysql') {
+            $tables = \Illuminate\Support\Facades\DB::select('SHOW TABLES');
+        }
+
+        return response()->json([
+            'connection' => config('database.default'),
+            'database' => \Illuminate\Support\Facades\DB::connection()->getDatabaseName(),
+            'tables' => $tables,
+            'subjects_count' => \Illuminate\Support\Facades\DB::table('subjects')->count(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
 Route::post('/forgot-password', [NewPasswordController::class, 'forgotPassword']);
 Route::post('/reset-password', [NewPasswordController::class, 'reset'])->name('password.reset');
 
