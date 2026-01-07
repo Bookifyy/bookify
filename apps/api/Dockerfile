@@ -43,4 +43,4 @@ RUN chmod -R 777 storage bootstrap/cache
 # Start FrankenPHP
 # Run migrations and seeds, then start server (ensures roles exist)
 # Using '|| true' to ensure server starts even if DB isn't ready immediately
-CMD ["sh", "-c", "php artisan storage:link --force || true && chmod -R 777 storage bootstrap/cache && php artisan migrate --force || true && php artisan db:seed --force || true && frankenphp php-server --listen :${PORT:-8000}"]
+CMD ["sh", "-c", "php artisan storage:link --force || true && chmod -R 777 storage bootstrap/cache && php artisan migrate --force || true && php artisan db:seed --force || true && frankenphp php-server --listen :${PORT:-8000} --root public/"]
