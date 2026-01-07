@@ -70,14 +70,20 @@ export default function AdminBooksPage() {
                 setTimeout(() => router.push('/'), 2000);
             } else {
                 let message = 'Failed to upload book';
-                const clonedRes = res.clone(); // Clone to read as text if JSON fails
+                const clonedRes = res.clone();
                 try {
                     const errData = await res.json();
-                    message = errData.message || message;
+                    if (errData.errors) {
+                        // Laravel validation errors object
+                        const errorDetails = Object.values(errData.errors).flat().join(', ');
+                        message = `Validation Error: ${errorDetails}`;
+                    } else {
+                        message = errData.message || message;
+                    }
                 } catch (e) {
                     const errorText = await clonedRes.text();
                     if (res.status === 413) message = 'File too large (Server limit exceeded)';
-                    else message = `Server Error (${res.status}): ${errorText.substring(0, 100)}... Check if the file is too large or server is down.`;
+                    else message = `Server Error (${res.status}): ${errorText.substring(0, 100)}...`;
                 }
                 setError(message);
             }
