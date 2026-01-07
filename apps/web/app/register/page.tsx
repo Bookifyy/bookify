@@ -30,6 +30,11 @@ export default function RegisterPage() {
             const data = await res.json();
 
             if (!res.ok) {
+                if (res.status === 422 && data.errors) {
+                    // Extract all validation errors and join them
+                    const validationErrors = Object.values(data.errors).flat().join(' ');
+                    throw new Error(validationErrors || data.message || 'Validation failed');
+                }
                 throw new Error(data.message || 'Registration failed');
             }
 

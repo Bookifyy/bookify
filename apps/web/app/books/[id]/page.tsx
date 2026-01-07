@@ -79,7 +79,10 @@ export default function BookDetailPage() {
                             <p className="text-xl text-zinc-400 font-medium">{book.author}</p>
 
                             <div className="flex flex-wrap gap-4 pt-4">
-                                <button className="bg-white text-black px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-200 transition-colors">
+                                <button
+                                    onClick={() => router.push(`/books/${id}/read`)}
+                                    className="bg-white text-black px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-200 transition-colors"
+                                >
                                     <Play size={20} fill="black" /> Start Reading
                                 </button>
                                 <button className="bg-zinc-900 border border-zinc-800 px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors">

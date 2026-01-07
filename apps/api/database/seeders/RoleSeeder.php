@@ -32,7 +32,19 @@ class RoleSeeder extends Seeder
         Role::firstOrCreate(['name' => 'Teacher'])
             ->givePermissionTo(['publish articles', 'unpublish articles']);
 
-        Role::firstOrCreate(['name' => 'Admin'])
-            ->givePermissionTo(Permission::all());
+        // Create or find the Admin role and assign all permissions
+        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
+        $adminRole->givePermissionTo(Permission::all());
+
+        // Create or find the Admin user and assign the role
+        $admin = \App\Models\User::firstOrCreate(
+            ['email' => 'predit@gmail.com'],
+            [
+                'name' => 'PreDit Admin',
+                'password' => \Illuminate\Support\Facades\Hash::make('pr@1122'),
+                'email_verified_at' => now(),
+            ]
+        );
+        $admin->assignRole($adminRole);
     }
 }

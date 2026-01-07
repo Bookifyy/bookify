@@ -24,8 +24,11 @@ use App\Http\Controllers\SocialAuthController;
 // ... imports
 
 // Public Routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware(['throttle:auth'])->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
+
 Route::post('/forgot-password', [NewPasswordController::class, 'forgotPassword']);
 Route::post('/reset-password', [NewPasswordController::class, 'reset'])->name('password.reset');
 
@@ -64,6 +67,6 @@ Route::get('/version', function () {
         'version' => '1.0.0',
         'php' => phpversion(),
         'laravel' => app()->version(),
-        'db_connection' => \Illuminate\Support\Facades\DB::connection()->getPdo() ? 'connected' : 'failed'
+        'db_connection' => \Illuminate\Support\Facades\DB::connection()->getDatabaseName() ? 'connected' : 'failed'
     ]);
 });
