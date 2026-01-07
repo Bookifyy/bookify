@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\AuthController;
+use App\Models\Book;
+use App\Models\Subject;
 
 /*
 |--------------------------------------------------------------------------
