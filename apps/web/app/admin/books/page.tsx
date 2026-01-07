@@ -70,13 +70,14 @@ export default function AdminBooksPage() {
                 setTimeout(() => router.push('/'), 2000);
             } else {
                 let message = 'Failed to upload book';
+                const clonedRes = res.clone(); // Clone to read as text if JSON fails
                 try {
                     const errData = await res.json();
                     message = errData.message || message;
                 } catch (e) {
-                    // If response is not JSON (e.g. 413 Payload Too Large HTML)
+                    const errorText = await clonedRes.text();
                     if (res.status === 413) message = 'File too large (Server limit exceeded)';
-                    else message = `Server Error (${res.status}): Please check if the file is too large.`;
+                    else message = `Server Error (${res.status}): ${errorText.substring(0, 100)}... Check if the file is too large or server is down.`;
                 }
                 setError(message);
             }

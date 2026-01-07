@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\File;
 use App\Http\Controllers\AuthController;
 
 /*
@@ -50,9 +51,14 @@ Route::get('/db-check', function () {
             'database' => \Illuminate\Support\Facades\DB::connection()->getDatabaseName(),
             'tables' => $tables,
             'subjects_count' => \Illuminate\Support\Facades\DB::table('subjects')->count(),
+            'storage' => [
+                'books_exists' => File::exists(storage_path('app/public/books')),
+                'books_writable' => is_writable(storage_path('app/public/books')),
+                'root_writable' => is_writable(storage_path('app')),
+            ]
         ]);
     } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
+        return response()->json(['error' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()], 500);
     }
 });
 // --- End Diagnostic Routes ---
