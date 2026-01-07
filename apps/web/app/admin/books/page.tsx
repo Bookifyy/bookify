@@ -69,11 +69,20 @@ export default function AdminBooksPage() {
                 setSuccess(true);
                 setTimeout(() => router.push('/'), 2000);
             } else {
-                const errData = await res.json();
-                setError(errData.message || 'Failed to upload book');
+                let message = 'Failed to upload book';
+                try {
+                    const errData = await res.json();
+                    message = errData.message || message;
+                } catch (e) {
+                    // If response is not JSON (e.g. 413 Payload Too Large HTML)
+                    if (res.status === 413) message = 'File too large (Server limit exceeded)';
+                    else message = `Server Error (${res.status}): Please check if the file is too large.`;
+                }
+                setError(message);
             }
-        } catch (err) {
-            setError('An error occurred during upload.');
+        } catch (err: any) {
+            console.error('Upload Error:', err);
+            setError(err.message || 'An error occurred during upload. Check your connection.');
         } finally {
             setLoading(false);
         }
