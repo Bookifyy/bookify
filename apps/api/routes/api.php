@@ -153,6 +153,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/library', [\App\Http\Controllers\LibraryController::class, 'index']);
     Route::post('/library/add', [\App\Http\Controllers\LibraryController::class, 'add']);
     Route::post('/books/{id}/progress', [\App\Http\Controllers\LibraryController::class, 'updateProgress']);
+    Route::get('/books/{book}/view', function (Book $book) {
+        // Strip /storage/ if present to get the raw path
+        $path = str_replace('/storage/', '', $book->file_path);
+        if (!\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+            abort(404, 'File not found at: ' . $path);
+        }
+        return \Illuminate\Support\Facades\Storage::disk('public')->response($path);
+    });
+
     Route::get('/subjects', [\App\Http\Controllers\SubjectController::class, 'index']);
 });
 

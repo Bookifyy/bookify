@@ -144,7 +144,10 @@ export default function ReaderPage() {
             <main className="flex-1 overflow-auto bg-zinc-900 flex justify-center p-4 md:p-8 custom-scrollbar relative">
                 <div className="shadow-2xl shadow-black rounded-sm overflow-hidden bg-white">
                     <Document
-                        file={pdfUrl}
+                        file={{
+                            url: `${getApiUrl()}/api/books/${id}/view`,
+                            httpHeaders: { 'Authorization': `Bearer ${token}` }
+                        }}
                         onLoadSuccess={onDocumentLoadSuccess}
                         loading={
                             <div className="w-[600px] aspect-[1/1.4] bg-zinc-800 animate-pulse flex flex-col items-center justify-center text-zinc-500 gap-4">
