@@ -51,13 +51,13 @@ class BookController extends Controller
             // Handle File Upload
             if ($request->hasFile('book_file')) {
                 $path = $request->file('book_file')->store('books', 'public');
-                $validated['file_path'] = url(Storage::url($path));
+                $validated['file_path'] = Storage::url($path);
             }
 
             // Handle Cover Image
             if ($request->hasFile('cover_image')) {
                 $coverPath = $request->file('cover_image')->store('covers', 'public');
-                $validated['cover_image'] = url(Storage::url($coverPath));
+                $validated['cover_image'] = Storage::url($coverPath);
             }
 
             // Ensure is_premium is a boolean (handles string "true"/"false" from FormData)

@@ -4,7 +4,9 @@ export const getApiUrl = () => {
 
 export const resolveAssetUrl = (path: string | null | undefined) => {
     if (!path) return '';
-    if (path.startsWith('http')) return path;
+    if (path.startsWith('http')) {
+        return path.replace('http://', 'https://');
+    }
 
     const baseUrl = getApiUrl();
     // Ensure the path starts with a slash

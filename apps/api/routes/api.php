@@ -116,15 +116,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         // Map to ensure relative URLs starting with /storage
         $books->through(function ($book) {
-            if ($book->cover_image && !str_starts_with($book->cover_image, 'http')) {
-                $path = str_replace(url('/'), '', $book->cover_image);
-                $path = str_replace('/storage/', '', $path);
-                $book->cover_image = '/storage/' . ltrim($path, '/');
+            if ($book->cover_image) {
+                $path = parse_url($book->cover_image, PHP_URL_PATH) ?? $book->cover_image;
+                $book->cover_image = '/' . ltrim($path, '/');
+                if (!str_starts_with($book->cover_image, '/storage') && !str_starts_with($book->cover_image, 'http')) {
+                    $book->cover_image = '/storage/' . ltrim($book->cover_image, '/');
+                }
             }
-            if ($book->file_path && !str_starts_with($book->file_path, 'http')) {
-                $path = str_replace(url('/'), '', $book->file_path);
-                $path = str_replace('/storage/', '', $path);
-                $book->file_path = '/storage/' . ltrim($path, '/');
+            if ($book->file_path) {
+                $path = parse_url($book->file_path, PHP_URL_PATH) ?? $book->file_path;
+                $book->file_path = '/' . ltrim($path, '/');
+                if (!str_starts_with($book->file_path, '/storage') && !str_starts_with($book->file_path, 'http')) {
+                    $book->file_path = '/storage/' . ltrim($book->file_path, '/');
+                }
             }
             return $book;
         });
@@ -134,15 +138,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/books/{book}', function (Book $book) {
         $book->load('subject');
-        if ($book->cover_image && !str_starts_with($book->cover_image, 'http')) {
-            $path = str_replace(url('/'), '', $book->cover_image);
-            $path = str_replace('/storage/', '', $path);
-            $book->cover_image = '/storage/' . ltrim($path, '/');
+        if ($book->cover_image) {
+            $path = parse_url($book->cover_image, PHP_URL_PATH) ?? $book->cover_image;
+            $book->cover_image = '/' . ltrim($path, '/');
         }
-        if ($book->file_path && !str_starts_with($book->file_path, 'http')) {
-            $path = str_replace(url('/'), '', $book->file_path);
-            $path = str_replace('/storage/', '', $path);
-            $book->file_path = '/storage/' . ltrim($path, '/');
+        if ($book->file_path) {
+            $path = parse_url($book->file_path, PHP_URL_PATH) ?? $book->file_path;
+            $book->file_path = '/' . ltrim($path, '/');
         }
         return $book;
     });
