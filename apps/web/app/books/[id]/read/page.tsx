@@ -144,15 +144,24 @@ export default function ReaderPage() {
             <main className="flex-1 overflow-auto bg-zinc-900 flex justify-center p-4 md:p-8 custom-scrollbar relative">
                 <div className="shadow-2xl shadow-black rounded-sm overflow-hidden bg-white">
                     <Document
-                        file={{
-                            url: `${getApiUrl()}/api/books/${id}/view`,
-                            httpHeaders: { 'Authorization': `Bearer ${token}` }
-                        }}
+                        file={pdfBlob}
                         onLoadSuccess={onDocumentLoadSuccess}
                         loading={
                             <div className="w-[600px] aspect-[1/1.4] bg-zinc-800 animate-pulse flex flex-col items-center justify-center text-zinc-500 gap-4">
                                 <Loader2 className="animate-spin text-zinc-600" size={32} />
                                 <span className="text-sm font-medium">Rendering PDF...</span>
+                            </div>
+                        }
+                        error={
+                            <div className="w-[600px] aspect-[1/1.4] flex flex-col items-center justify-center text-red-500 p-8 text-center bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl">
+                                <p className="font-bold mb-4 text-lg">Unable to load PDF</p>
+                                <p className="text-sm text-zinc-400 mb-6">This could be due to a server error or an invalid file. Please try re-uploading the book or checking your connection.</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="px-6 py-2 bg-indigo-600 text-white rounded-full font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/20"
+                                >
+                                    Retry Loading
+                                </button>
                             </div>
                         }
                     >
