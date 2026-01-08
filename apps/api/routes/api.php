@@ -31,15 +31,6 @@ Route::get('/', function () {
     return response()->json(['status' => 'Bookify API is running', 'time' => now()]);
 });
 
-Route::get('/version', function () {
-    return response()->json([
-        'version' => '1.0.0',
-        'php' => phpversion(),
-        'laravel' => app()->version(),
-        'db_connection' => config('database.default'),
-        'db_host' => config('database.connections.' . config('database.default') . '.host'),
-    ]);
-});
 
 Route::get('/db-check', function () {
     try {
@@ -163,12 +154,3 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/subjects', [\App\Http\Controllers\SubjectController::class, 'index']);
 });
 
-Route::get('/version', function () {
-    return response()->json([
-        'version' => '1.0.0',
-        'php' => phpversion(),
-        'laravel' => app()->version(),
-        'db_connection' => config('database.default'),
-        'db_host' => config('database.connections.' . config('database.default') . '.host'),
-    ]);
-});
