@@ -32,6 +32,8 @@ export default function ReaderPage() {
     const [scale, setScale] = useState(1.0);
     const [loading, setLoading] = useState(true);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [retryCount, setRetryCount] = useState(0);
     const [pdfBlob, setPdfBlob] = useState<string | null>(null);
 
     useEffect(() => {
@@ -39,6 +41,8 @@ export default function ReaderPage() {
 
         const apiUrl = getApiUrl();
         setLoading(true);
+        setError(null);
+        setPdfBlob(null);
 
         fetch(`${apiUrl}/api/books/${id}`, {
             headers: {
@@ -55,7 +59,7 @@ export default function ReaderPage() {
 
                 // Fetch the PDF blob securely via the proxy
                 try {
-                    console.log('Fetching PDF blob for book:', id);
+                    console.log(`Fetching PDF blob for book: ${id}, attempt: ${retryCount + 1}`);
                     const pdfRes = await fetch(`${apiUrl}/api/books/${id}/view`, {
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -64,20 +68,28 @@ export default function ReaderPage() {
                     });
 
                     if (pdfRes.ok) {
+                        const contentType = pdfRes.headers.get('content-type');
+                        if (!contentType?.includes('application/pdf') && !contentType?.includes('application/octet-stream')) {
+                            console.warn('Unexpected content type:', contentType);
+                        }
                         const blob = await pdfRes.blob();
                         const url = URL.createObjectURL(blob);
                         setPdfBlob(url);
                     } else {
-                        console.error('Failed to load PDF asset:', pdfRes.status);
+                        const errorData = await pdfRes.text().catch(() => 'Unknown error');
+                        console.error('Failed to load PDF asset:', pdfRes.status, errorData);
+                        setError(`Server error (${pdfRes.status}). Please try re-uploading the book.`);
                     }
-                } catch (err) {
+                } catch (err: any) {
                     console.error('Network error loading PDF:', err);
+                    setError('Network error. Check your connection or the server status.');
                 }
 
                 setLoading(false);
             })
             .catch((err) => {
                 console.error('Failed to fetch book metadata:', err);
+                setError('Could not load book information.');
                 setLoading(false);
             });
 
@@ -86,7 +98,11 @@ export default function ReaderPage() {
                 URL.revokeObjectURL(pdfBlob);
             }
         };
-    }, [id, token]);
+    }, [id, token, retryCount, pdfBlob]); // Added pdfBlob to deps for cleanup logic, or just handle it better
+
+    const handleRetry = () => {
+        setRetryCount(prev => prev + 1);
+    };
 
     // Save progress when page changes
     useEffect(() => {
@@ -191,9 +207,9 @@ export default function ReaderPage() {
                         error={
                             <div className="w-[600px] aspect-[1/1.4] flex flex-col items-center justify-center text-red-500 p-8 text-center bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl">
                                 <p className="font-bold mb-4 text-lg">Unable to load PDF</p>
-                                <p className="text-sm text-zinc-400 mb-6">This could be due to a server error or an invalid file. Please try re-uploading the book or checking your connection.</p>
+                                <p className="text-sm text-zinc-400 mb-6">{error || 'This could be due to a server error or an invalid file. Please try re-uploading the book.'}</p>
                                 <button
-                                    onClick={() => window.location.reload()}
+                                    onClick={handleRetry}
                                     className="px-6 py-2 bg-indigo-600 text-white rounded-full font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/20"
                                 >
                                     Retry Loading
@@ -201,13 +217,19 @@ export default function ReaderPage() {
                             </div>
                         }
                     >
-                        <Page
-                            pageNumber={pageNumber}
-                            scale={scale}
-                            renderAnnotationLayer={false}
-                            renderTextLayer={true}
-                            loading={null}
-                        />
+                        {pdfBlob && (
+                            <Page
+                                pageNumber={pageNumber}
+                                scale={scale}
+                                renderAnnotationLayer={false}
+                                renderTextLayer={true}
+                                loading={
+                                    <div className="w-[600px] aspect-[1/1.4] bg-zinc-800 animate-pulse flex items-center justify-center">
+                                        <Loader2 className="animate-spin text-zinc-600" size={32} />
+                                    </div>
+                                }
+                            />
+                        )}
                     </Document>
                 </div>
             </main>
