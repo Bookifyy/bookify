@@ -40,9 +40,40 @@ export default function ReaderPage() {
         if (!token || !id) return;
 
         const apiUrl = getApiUrl();
+        let currentUrl: string | null = null;
         setLoading(true);
         setError(null);
         setPdfBlob(null);
+
+        const fetchPdf = async () => {
+            try {
+                console.log(`Fetching PDF blob for book: ${id}, attempt: ${retryCount + 1}`);
+                const pdfRes = await fetch(`${apiUrl}/api/books/${id}/view`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json, application/pdf'
+                    }
+                });
+
+                if (pdfRes.ok) {
+                    const contentType = pdfRes.headers.get('content-type');
+                    if (!contentType?.includes('application/pdf') && !contentType?.includes('application/octet-stream')) {
+                        console.warn('Unexpected content type:', contentType);
+                    }
+                    const blob = await pdfRes.blob();
+                    currentUrl = URL.createObjectURL(blob);
+                    setPdfBlob(currentUrl);
+                } else {
+                    const errorData = await pdfRes.text().catch(() => 'Unknown error');
+                    console.error('Failed to load PDF asset:', pdfRes.status, errorData);
+                    setError(`Server error (${pdfRes.status}). Please try re-uploading the book.`);
+                }
+            } catch (err: any) {
+                console.error('Network error loading PDF:', err);
+                setError('Network error. Check your connection or the server status.');
+            }
+            setLoading(false);
+        };
 
         fetch(`${apiUrl}/api/books/${id}`, {
             headers: {
@@ -56,36 +87,7 @@ export default function ReaderPage() {
                 if (data.progress?.current_page) {
                     setPageNumber(data.progress.current_page);
                 }
-
-                // Fetch the PDF blob securely via the proxy
-                try {
-                    console.log(`Fetching PDF blob for book: ${id}, attempt: ${retryCount + 1}`);
-                    const pdfRes = await fetch(`${apiUrl}/api/books/${id}/view`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Accept': 'application/json, application/pdf'
-                        }
-                    });
-
-                    if (pdfRes.ok) {
-                        const contentType = pdfRes.headers.get('content-type');
-                        if (!contentType?.includes('application/pdf') && !contentType?.includes('application/octet-stream')) {
-                            console.warn('Unexpected content type:', contentType);
-                        }
-                        const blob = await pdfRes.blob();
-                        const url = URL.createObjectURL(blob);
-                        setPdfBlob(url);
-                    } else {
-                        const errorData = await pdfRes.text().catch(() => 'Unknown error');
-                        console.error('Failed to load PDF asset:', pdfRes.status, errorData);
-                        setError(`Server error (${pdfRes.status}). Please try re-uploading the book.`);
-                    }
-                } catch (err: any) {
-                    console.error('Network error loading PDF:', err);
-                    setError('Network error. Check your connection or the server status.');
-                }
-
-                setLoading(false);
+                await fetchPdf();
             })
             .catch((err) => {
                 console.error('Failed to fetch book metadata:', err);
@@ -94,11 +96,11 @@ export default function ReaderPage() {
             });
 
         return () => {
-            if (pdfBlob) {
-                URL.revokeObjectURL(pdfBlob);
+            if (currentUrl) {
+                URL.revokeObjectURL(currentUrl);
             }
         };
-    }, [id, token, retryCount, pdfBlob]); // Added pdfBlob to deps for cleanup logic, or just handle it better
+    }, [id, token, retryCount]);
 
     const handleRetry = () => {
         setRetryCount(prev => prev + 1);
