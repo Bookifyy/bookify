@@ -32,9 +32,12 @@ export default function ReaderPage() {
     const [scale, setScale] = useState(1.0);
     const [loading, setLoading] = useState(true);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [pdfBlob, setPdfBlob] = useState<string | null>(null);
 
     useEffect(() => {
         const apiUrl = getApiUrl();
+        setLoading(true);
+
         fetch(`${apiUrl}/api/books/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -42,14 +45,41 @@ export default function ReaderPage() {
             }
         })
             .then(res => res.json())
-            .then(data => {
+            .then(async (data) => {
                 setBook(data);
                 if (data.progress?.current_page) {
                     setPageNumber(data.progress.current_page);
                 }
+
+                // Fetch the PDF blob securely via the proxy
+                try {
+                    const pdfRes = await fetch(`${apiUrl}/api/books/${id}/view`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (pdfRes.ok) {
+                        const blob = await pdfRes.blob();
+                        const url = URL.createObjectURL(blob);
+                        setPdfBlob(url);
+                    } else {
+                        console.error('Failed to load PDF asset:', pdfRes.status);
+                    }
+                } catch (err) {
+                    console.error('Network error loading PDF:', err);
+                }
+
                 setLoading(false);
             })
-            .catch(() => setLoading(false));
+            .catch((err) => {
+                console.error('Failed to fetch book metadata:', err);
+                setLoading(false);
+            });
+
+        return () => {
+            if (pdfBlob) {
+                URL.revokeObjectURL(pdfBlob);
+            }
+        };
     }, [id, token]);
 
     // Save progress when page changes
