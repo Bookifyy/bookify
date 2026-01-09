@@ -35,6 +35,8 @@ export default function ReaderPage() {
     const [pdfBlob, setPdfBlob] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!token || !id) return;
+
         const apiUrl = getApiUrl();
         setLoading(true);
 
@@ -53,8 +55,12 @@ export default function ReaderPage() {
 
                 // Fetch the PDF blob securely via the proxy
                 try {
+                    console.log('Fetching PDF blob for book:', id);
                     const pdfRes = await fetch(`${apiUrl}/api/books/${id}/view`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Accept': 'application/json, application/pdf'
+                        }
                     });
 
                     if (pdfRes.ok) {

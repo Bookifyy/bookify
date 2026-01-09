@@ -154,10 +154,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/library/add', [\App\Http\Controllers\LibraryController::class, 'add']);
     Route::post('/books/{id}/progress', [\App\Http\Controllers\LibraryController::class, 'updateProgress']);
     Route::get('/books/{book}/view', function (Book $book) {
-        // Strip /storage/ if present to get the raw path
-        $path = str_replace('/storage/', '', $book->file_path);
+        $path = $book->file_path;
+
+        // If it's an absolute URL, extract the path part
+        if (str_starts_with($path, 'http')) {
+            $path = parse_url($path, PHP_URL_PATH);
+        }
+
+        // Strip /storage/ if present to get the path relative to public disk
+        $path = str_replace('/storage/', '', $path);
+        $path = ltrim($path, '/');
+
         if (!\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
-            abort(404, 'File not found at: ' . $path);
+            abort(404, 'File not found on storage: ' . $path);
         }
         return \Illuminate\Support\Facades\Storage::disk('public')->response($path);
     });
