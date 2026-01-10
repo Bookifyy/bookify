@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../../context/AuthContext';
 import { Document, Page, pdfjs } from 'react-pdf';
@@ -35,6 +35,30 @@ export default function ReaderPage() {
     const [error, setError] = useState<string | null>(null);
     const [retryCount, setRetryCount] = useState(0);
     const [pdfBlob, setPdfBlob] = useState<string | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined);
+
+    // Responsive width calculation
+    useEffect(() => {
+        const updateWidth = () => {
+            if (containerRef.current) {
+                // Subtract padding for a better fit
+                const padding = window.innerWidth < 768 ? 16 : 64;
+                setContainerWidth(containerRef.current.offsetWidth - padding);
+            }
+        };
+
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+
+        // Initial delay to ensure DOM is settled
+        const timer = setTimeout(updateWidth, 500);
+
+        return () => {
+            window.removeEventListener('resize', updateWidth);
+            clearTimeout(timer);
+        };
+    }, []);
 
     useEffect(() => {
         if (!token || !id) return;
@@ -196,10 +220,14 @@ export default function ReaderPage() {
 
             {/* Reader Canvas */}
             <main className="flex-1 overflow-auto bg-zinc-900 flex justify-center p-4 md:p-8 custom-scrollbar relative">
-                <div className="shadow-2xl shadow-black rounded-sm overflow-hidden bg-white">
+                <div ref={containerRef} className="w-full max-w-4xl mx-auto flex justify-center">
                     <Document
                         file={pdfBlob}
                         onLoadSuccess={onDocumentLoadSuccess}
+                        onLoadError={(err) => {
+                            console.error('PDF Load Error:', err);
+                            setError(`PDF Engine Error: ${err.message}. Please try a hard refresh (Ctrl+F5).`);
+                        }}
                         loading={
                             <div className="w-[600px] aspect-[1/1.4] bg-zinc-800 animate-pulse flex flex-col items-center justify-center text-zinc-500 gap-4">
                                 <Loader2 className="animate-spin text-zinc-600" size={32} />
@@ -223,10 +251,12 @@ export default function ReaderPage() {
                             <Page
                                 pageNumber={pageNumber}
                                 scale={scale}
+                                width={containerWidth}
                                 renderAnnotationLayer={false}
                                 renderTextLayer={true}
+                                className="shadow-2xl shadow-black"
                                 loading={
-                                    <div className="w-[600px] aspect-[1/1.4] bg-zinc-800 animate-pulse flex items-center justify-center">
+                                    <div className="w-full aspect-[1/1.4] bg-zinc-800 animate-pulse flex items-center justify-center">
                                         <Loader2 className="animate-spin text-zinc-600" size={32} />
                                     </div>
                                 }
