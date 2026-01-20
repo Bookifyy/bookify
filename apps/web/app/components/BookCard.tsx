@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { resolveAssetUrl } from '../lib/utils';
@@ -14,6 +15,10 @@ interface BookCardProps {
 }
 
 export function BookCard({ id, title, author, coverImage, progress, onClick }: BookCardProps) {
+    const [hasError, setHasError] = useState(false);
+
+    if (hasError) return null;
+
     return (
         <Link
             href={`/books/${id}`}
@@ -25,6 +30,7 @@ export function BookCard({ id, title, author, coverImage, progress, onClick }: B
                     src={resolveAssetUrl(coverImage)}
                     alt={title}
                     className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-80"
+                    onError={() => setHasError(true)}
                 />
                 {progress !== undefined && (
                     <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-700">
