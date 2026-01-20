@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
+import { getApiUrl } from '../lib/utils';
 
 export default function RegisterPage() {
     const { login } = useAuth();
@@ -17,7 +18,7 @@ export default function RegisterPage() {
         setError('');
 
         try {
-            import { getApiUrl } from '../lib/utils';
+            // ... (removed import)
 
             // ...
 
