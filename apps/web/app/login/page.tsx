@@ -15,7 +15,11 @@ export default function LoginPage() {
         setError('');
 
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            import { getApiUrl } from '../lib/utils';
+
+            // ...
+
+            const apiUrl = getApiUrl();
             const res = await fetch(`${apiUrl}/api/login`, {
                 method: 'POST',
                 headers: {
