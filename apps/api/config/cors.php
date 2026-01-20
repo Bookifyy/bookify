@@ -21,10 +21,13 @@ return [
 
     'allowed_origins' => [
         env('FRONTEND_URL', 'http://localhost:3000'),
-        'http://localhost:3000'
+        'http://localhost:3000',
+        'https://bookify-web-*.vercel.app' // Allow Vercel preview deployments
     ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        '#^https://bookify-web-.*\.vercel\.app$#'
+    ],
 
     'allowed_headers' => ['*'],
 

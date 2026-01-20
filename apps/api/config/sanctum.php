@@ -14,9 +14,10 @@ return [
     */
 
     'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s',
+        '%s%s%s',
         'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
-        env('APP_URL') ? ','.parse_url(env('APP_URL'), PHP_URL_HOST) : ''
+        env('APP_URL') ? ',' . parse_url(env('APP_URL'), PHP_URL_HOST) : '',
+        isset($_SERVER['HTTP_ORIGIN']) && preg_match('#^https://bookify-web-.*\.vercel\.app$#', $_SERVER['HTTP_ORIGIN'], $matches) ? ',' . parse_url($matches[0], PHP_URL_HOST) : ''
     ))),
 
     /*
