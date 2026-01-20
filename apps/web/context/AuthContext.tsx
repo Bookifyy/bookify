@@ -95,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(null);
         setUser(null);
         removeCookie('token');
-        router.push('/login');
+        router.push('/onboarding');
     };
 
     return (

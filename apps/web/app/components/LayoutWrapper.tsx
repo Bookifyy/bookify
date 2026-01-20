@@ -6,7 +6,7 @@ import { Header } from './Header';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, ReactNode } from 'react';
 
-const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
+const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password', '/onboarding'];
 
 export function LayoutWrapper({ children }: { children: ReactNode }) {
     const { user, loading } = useAuth();
@@ -17,7 +17,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         if (!loading && !user && !isPublicRoute) {
-            router.push('/login');
+            router.push('/onboarding');
         } else if (!loading && user && pathname === '/onboarding') {
             router.push('/');
         }
