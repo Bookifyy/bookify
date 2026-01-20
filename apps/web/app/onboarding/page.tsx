@@ -64,10 +64,10 @@ export default function OnboardingPage() {
                         <div
                             key={slide.id}
                             className={`absolute inset-0 transition-all duration-500 ease-in-out transform ${index === currentSlide
-                                    ? 'opacity-100 translate-x-0 scale-100'
-                                    : index < currentSlide
-                                        ? 'opacity-0 -translate-x-full scale-95'
-                                        : 'opacity-0 translate-x-full scale-95'
+                                ? 'opacity-100 translate-x-0 scale-100'
+                                : index < currentSlide
+                                    ? 'opacity-0 -translate-x-full scale-95'
+                                    : 'opacity-0 translate-x-full scale-95'
                                 }`}
                         >
                             <Image
@@ -104,7 +104,7 @@ export default function OnboardingPage() {
             </div>
 
             {/* Bottom Action Bar */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/90 to-transparent">
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/90 to-transparent z-20">
                 <button
                     onClick={handleNext}
                     className="w-full bg-blue-700 hover:bg-blue-600 active:scale-[0.98] transition-all text-white font-medium py-3.5 rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
