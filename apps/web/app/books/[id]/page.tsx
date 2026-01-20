@@ -14,6 +14,11 @@ interface Book {
     cover_image: string;
     subject: { name: string };
     is_premium: boolean;
+    progress?: {
+        current_page: number;
+        total_pages: number;
+        percentage_completed: number;
+    };
 }
 
 export default function BookDetailPage() {
