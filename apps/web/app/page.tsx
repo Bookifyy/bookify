@@ -6,11 +6,13 @@ import { BookCard } from './components/BookCard';
 import { resolveAssetUrl, getApiUrl } from './lib/utils';
 import { Zap, ChevronRight, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Modal } from './components/Modal';
 
 // No mock data needed for books anymore
 
 export default function Home() {
+  const router = useRouter();
   const { user, token } = useAuth();
   const [greeting, setGreeting] = useState('');
   const [books, setBooks] = useState<any[]>([]);
