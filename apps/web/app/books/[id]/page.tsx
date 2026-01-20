@@ -94,7 +94,7 @@ export default function BookDetailPage() {
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <div className="space-y-4">
+                        <div className="space-y-4 flex-1">
                             <div className="flex items-center gap-2">
                                 <span className="bg-indigo-600 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
                                     {book.subject?.name}
@@ -108,24 +108,48 @@ export default function BookDetailPage() {
                             <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{book.title}</h1>
                             <p className="text-xl text-zinc-400 font-medium">{book.author}</p>
 
-                            <div className="flex flex-wrap gap-4 pt-4">
-                                <button
-                                    onClick={() => router.push(`/books/${id}/read`)}
-                                    className="bg-white text-black px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-200 transition-colors"
-                                >
-                                    <Play size={20} fill="black" /> Start Reading
-                                </button>
-                                <button
-                                    onClick={addToLibrary}
-                                    disabled={addingToLibrary}
-                                    className="bg-zinc-900 border border-zinc-800 px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors disabled:opacity-50"
-                                >
-                                    {addingToLibrary ? 'Adding...' : <><Star size={20} /> Add to Library</>}
-                                </button>
-                                <button className="p-3 bg-zinc-900 border border-zinc-800 rounded-full hover:bg-zinc-800 transition-colors">
-                                    <Share2 size={20} />
-                                </button>
-                            </div>
+                            {/* Progress Bar for Started Books */}
+                            {book.progress && book.progress.percentage_completed > 0 ? (
+                                <div className="space-y-4 max-w-md pt-2">
+                                    <div className="flex items-center justify-between text-xs font-medium text-zinc-400 uppercase tracking-wider">
+                                        <span>Page {book.progress.current_page} of {book.progress.total_pages || '?'}</span>
+                                        <span>{Math.round(book.progress.percentage_completed)}% Completed</span>
+                                    </div>
+                                    <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-indigo-500 transition-all duration-500 ease-out"
+                                            style={{ width: `${book.progress.percentage_completed}%` }}
+                                        />
+                                    </div>
+                                    <div className="flex gap-4 pt-2">
+                                        <button
+                                            onClick={() => router.push(`/books/${id}/read`)}
+                                            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg shadow-indigo-600/20"
+                                        >
+                                            Continue Reading
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex flex-wrap gap-4 pt-4">
+                                    <button
+                                        onClick={() => router.push(`/books/${id}/read`)}
+                                        className="bg-white text-black px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-200 transition-colors"
+                                    >
+                                        <Play size={20} fill="black" /> Start Reading
+                                    </button>
+                                    <button
+                                        onClick={addToLibrary}
+                                        disabled={addingToLibrary}
+                                        className="bg-zinc-900 border border-zinc-800 px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors disabled:opacity-50"
+                                    >
+                                        {addingToLibrary ? 'Adding...' : <><Star size={20} /> Add to Library</>}
+                                    </button>
+                                    <button className="p-3 bg-zinc-900 border border-zinc-800 rounded-full hover:bg-zinc-800 transition-colors">
+                                        <Share2 size={20} />
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

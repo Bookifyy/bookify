@@ -10,11 +10,16 @@ interface BookCardProps {
     author: string;
     coverImage: string;
     progress?: number;
+    onClick?: (e: React.MouseEvent) => void;
 }
 
-export function BookCard({ id, title, author, coverImage, progress }: BookCardProps) {
+export function BookCard({ id, title, author, coverImage, progress, onClick }: BookCardProps) {
     return (
-        <Link href={`/books/${id}`} className="block group cursor-pointer">
+        <Link
+            href={`/books/${id}`}
+            className="block group cursor-pointer"
+            onClick={onClick}
+        >
             <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-zinc-800 shadow-lg transition-transform duration-300 group-hover:-translate-y-1">
                 <img
                     src={resolveAssetUrl(coverImage)}

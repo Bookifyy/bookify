@@ -146,6 +146,17 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             $path = parse_url($book->file_path, PHP_URL_PATH) ?? $book->file_path;
             $book->file_path = '/' . ltrim($path, '/');
         }
+
+        // Attach progress if user is authenticated
+        if (request()->user()) {
+            $progress = \App\Models\ReadingProgress::where('user_id', request()->user()->id)
+                ->where('book_id', $book->id)
+                ->first();
+            if ($progress) {
+                $book->progress = $progress;
+            }
+        }
+
         return $book;
     });
 

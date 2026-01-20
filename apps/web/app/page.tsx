@@ -6,6 +6,7 @@ import { BookCard } from './components/BookCard';
 import { resolveAssetUrl, getApiUrl } from './lib/utils';
 import { Zap, ChevronRight, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
+import { Modal } from './components/Modal';
 
 // No mock data needed for books anymore
 
@@ -15,6 +16,7 @@ export default function Home() {
   const [books, setBooks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [continueReading, setContinueReading] = useState<any[]>([]);
+  const [modalBook, setModalBook] = useState<any | null>(null);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -99,15 +101,22 @@ export default function Home() {
           </div>
         ) : books.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {books.map((book) => (
-              <BookCard
-                key={book.id}
-                id={book.id}
-                title={book.title}
-                author={book.author}
-                coverImage={book.cover_image}
-              />
-            ))}
+            {books.map((book) => {
+              const isStarted = continueReading.some(item => item.book?.id === book.id);
+              return (
+                <BookCard
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  author={book.author}
+                  coverImage={book.cover_image}
+                  onClick={isStarted ? (e) => {
+                    e.preventDefault();
+                    setModalBook(book);
+                  } : undefined}
+                />
+              );
+            })}
           </div>
         ) : (
           <div className="bg-zinc-900/30 rounded-xl py-12 text-center text-zinc-500 border border-zinc-800/50 border-dashed">
@@ -142,6 +151,35 @@ export default function Home() {
         </section>
       )}
 
+      {/* Modal for Already Started Books */}
+      <Modal
+        isOpen={!!modalBook}
+        onClose={() => setModalBook(null)}
+        title="Already Started"
+      >
+        <div className="space-y-6">
+          <p className="text-zinc-300">
+            You have already started reading <span className="font-bold text-white">{modalBook?.title}</span>.
+          </p>
+          <p className="text-zinc-400 text-sm">
+            Check your Library or the Continue Reading section to pick up exactly where you left off.
+          </p>
+          <div className="flex gap-3 pt-2">
+            <button
+              onClick={() => router.push('/library')}
+              className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors"
+            >
+              Go to Library
+            </button>
+            <button
+              onClick={() => setModalBook(null)}
+              className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-2.5 rounded-lg transition-colors border border-zinc-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
