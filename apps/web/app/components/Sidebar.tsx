@@ -4,40 +4,38 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
     Home,
-    Library,
-    FileText,
-    GraduationCap,
-    Users,
-    LayoutGrid,
-    BarChart3,
-    Moon,
-    Sun,
-    Settings,
-    ShieldCheck,
-    LogOut,
-    BookOpen
+    // ... (imports)
+    BookOpen,
+    X
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
+interface SidebarProps {
+    className?: string; // For mobile toggle classes
+    onClose?: () => void;
+}
+
 const menuItems = [
-    { icon: Home, label: 'Discover', href: '/' },
-    { icon: Library, label: 'Library', href: '/library' },
-    { icon: FileText, label: 'Notes', href: '/notes' },
-    { icon: GraduationCap, label: 'Quizzes', href: '/quizzes' },
-    { icon: Users, label: 'Groups', href: '/groups' },
-    { icon: LayoutGrid, label: 'Collections', href: '/collections' },
-    { icon: BarChart3, label: 'Dashboard', href: '/dashboard' },
+    // ... (menu items)
 ];
 
-export function Sidebar() {
+export function Sidebar({ className, onClose }: SidebarProps) {
     const pathname = usePathname();
     const { user, logout } = useAuth();
 
+    // Close sidebar on route change (for mobile)
+    // Note: LayoutWrapper handles reset, but we can also use Link onClick
+
     return (
-        <aside className="fixed left-0 top-0 z-40 h-screen w-64 flex-col bg-black text-zinc-400 border-r border-zinc-900 hidden lg:flex">
+        <aside className={className || "fixed left-0 top-0 z-40 h-screen w-64 flex-col bg-black text-zinc-400 border-r border-zinc-900 hidden lg:flex"}>
             {/* Logo */}
-            <div className="flex h-16 items-center px-6">
+            <div className="flex h-16 items-center justify-between px-6">
                 <span className="text-xl font-bold text-white tracking-tight">Bookify</span>
+                {onClose && (
+                    <button onClick={onClose} className="lg:hidden text-zinc-400 hover:text-white">
+                        <X size={24} />
+                    </button>
+                )}
             </div>
 
             {/* Navigation */}
@@ -50,6 +48,7 @@ export function Sidebar() {
                         <Link
                             key={item.label}
                             href={item.href}
+                            onClick={onClose}
                             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${isActive
                                 ? 'bg-zinc-900 text-white'
                                 : 'hover:bg-zinc-900/50 hover:text-white'
@@ -66,6 +65,7 @@ export function Sidebar() {
                         <p className="px-3 text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2">Management</p>
                         <Link
                             href="/admin/books"
+                            onClick={onClose}
                             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${pathname === '/admin/books'
                                 ? 'bg-zinc-900 text-white'
                                 : 'hover:bg-zinc-900/50 hover:text-white'
