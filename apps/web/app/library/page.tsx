@@ -155,7 +155,7 @@ export default function LibraryPage() {
     return (
         <div className="min-h-screen bg-black text-zinc-300">
             {/* Top Bar - sticky under main header */}
-            <div className="sticky top-16 z-20 bg-black/95 backdrop-blur-xl border-b border-zinc-900 px-8 py-4 space-y-3">
+            <div className="sticky top-16 z-20 bg-black border-b border-zinc-900 px-6 py-3 space-y-2">
 
                 {/* Row 1: Title and Controls */}
                 <div className="flex items-center justify-between">
@@ -163,24 +163,24 @@ export default function LibraryPage() {
                         {viewingCollectionId ? (
                             <div className="flex items-center gap-2">
                                 <button onClick={() => setViewingCollectionId(null)} className="text-zinc-400 hover:text-white transition-colors">
-                                    <ArrowLeft size={20} />
+                                    <ArrowLeft size={18} />
                                 </button>
-                                <h1 className="text-lg font-medium text-white tracking-wide font-serif">
+                                <h1 className="text-base font-medium text-white tracking-wide font-serif">
                                     {collections.find(c => c.id === viewingCollectionId)?.name}
                                 </h1>
                             </div>
                         ) : (
-                            <h1 className="text-xl font-medium text-white tracking-wide font-serif">Your Library</h1>
+                            <h1 className="text-base font-medium text-white tracking-wide font-serif">Your Library</h1>
                         )}
                     </div>
 
                     {!viewingCollectionId && (
-                        <div className="flex items-center gap-2">
-                            <button className="p-2 text-zinc-400 hover:text-white bg-zinc-900 rounded-lg transition-colors">
-                                <Grid size={16} />
+                        <div className="flex items-center gap-1">
+                            <button className="p-1.5 text-zinc-400 hover:text-white bg-zinc-900 rounded-md transition-colors">
+                                <Grid size={14} />
                             </button>
-                            <button className="p-2 text-zinc-500 hover:text-white hover:bg-zinc-900 rounded-lg transition-colors">
-                                <ListIcon size={16} />
+                            <button className="p-1.5 text-zinc-500 hover:text-white hover:bg-zinc-900 rounded-md transition-colors">
+                                <ListIcon size={14} />
                             </button>
                         </div>
                     )}
@@ -188,16 +188,16 @@ export default function LibraryPage() {
 
                 {/* Row 2: Sort Pills */}
                 {!viewingCollectionId && (
-                    <div className="flex items-center gap-3">
-                        <span className="text-xs text-zinc-500 font-medium">Sort by:</span>
-                        <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
+                        <span className="text-[11px] text-zinc-500 font-medium">Sort by:</span>
+                        <div className="flex items-center gap-1.5">
                             {(['recent', 'title', 'author', 'progress'] as const).map((type) => (
                                 <button
                                     key={type}
                                     onClick={() => setSortBy(type as any)}
-                                    className={`px-3 py-1 rounded-full text-[11px] font-medium transition-all ${sortBy === type
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                                    className={`px-2.5 py-0.5 rounded-md text-[10px] font-medium transition-all border ${sortBy === type
+                                        ? 'bg-blue-600 border-blue-600 text-white'
+                                        : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
                                         }`}
                                 >
                                     {type.charAt(0).toUpperCase() + type.slice(1)}
