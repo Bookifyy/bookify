@@ -4,7 +4,17 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
     Home,
-    // ... (imports)
+    Library,
+    FileText,
+    GraduationCap,
+    Users,
+    LayoutGrid,
+    BarChart3,
+    Moon,
+    Sun,
+    Settings,
+    ShieldCheck,
+    LogOut,
     BookOpen,
     X
 } from 'lucide-react';
@@ -16,7 +26,13 @@ interface SidebarProps {
 }
 
 const menuItems = [
-    // ... (menu items)
+    { icon: Home, label: 'Discover', href: '/' },
+    { icon: Library, label: 'Library', href: '/library' },
+    { icon: FileText, label: 'Notes', href: '/notes' },
+    { icon: GraduationCap, label: 'Quizzes', href: '/quizzes' },
+    { icon: Users, label: 'Groups', href: '/groups' },
+    { icon: LayoutGrid, label: 'Collections', href: '/collections' },
+    { icon: BarChart3, label: 'Dashboard', href: '/dashboard' },
 ];
 
 export function Sidebar({ className, onClose }: SidebarProps) {
