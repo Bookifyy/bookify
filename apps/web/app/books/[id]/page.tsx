@@ -76,31 +76,31 @@ export default function BookDetailPage() {
     return (
         <div className="min-h-screen bg-black text-white">
             {/* Hero Section */}
-            <div className="relative h-[400px] w-full overflow-hidden">
+            <div className="relative min-h-screen md:h-[500px] w-full overflow-hidden flex flex-col">
                 <div
                     className="absolute inset-0 bg-cover bg-center blur-3xl opacity-30 scale-110"
                     style={{ backgroundImage: `url(${resolveAssetUrl(book.cover_image)})` }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
-                <div className="relative z-10 p-8 pt-4 max-w-6xl mx-auto flex flex-col h-full justify-between">
+                <div className="relative z-10 p-8 pt-4 max-w-6xl mx-auto flex flex-col h-full justify-between w-full">
                     <button
                         onClick={() => router.back()}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md"
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md mb-8 md:mb-0"
                     >
                         <ArrowLeft size={20} />
                     </button>
 
-                    <div className="flex flex-col md:flex-row gap-8 items-end mb-8">
-                        <div className="relative w-48 h-72 flex-shrink-0 shadow-2xl shadow-black rounded-lg overflow-hidden border border-zinc-800">
+                    <div className="flex flex-col md:flex-row gap-8 items-center md:items-end mb-8 md:mb-12">
+                        <div className="relative w-48 h-72 md:w-56 md:h-80 flex-shrink-0 shadow-2xl shadow-black rounded-lg overflow-hidden border border-zinc-800">
                             <img
                                 src={resolveAssetUrl(book.cover_image)}
                                 alt={book.title}
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <div className="space-y-4 flex-1">
-                            <div className="flex items-center gap-2">
+                        <div className="space-y-4 flex-1 text-center md:text-left w-full">
+                            <div className="flex items-center justify-center md:justify-start gap-2">
                                 <span className="bg-indigo-600 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
                                     {book.subject?.name}
                                 </span>
@@ -110,12 +110,12 @@ export default function BookDetailPage() {
                                     </span>
                                 )}
                             </div>
-                            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{book.title}</h1>
+                            <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight">{book.title}</h1>
                             <p className="text-xl text-zinc-400 font-medium">{book.author}</p>
 
                             {/* Progress Bar for Started Books */}
                             {book.progress && book.progress.percentage_completed > 0 ? (
-                                <div className="space-y-4 max-w-md pt-2">
+                                <div className="space-y-4 max-w-md pt-2 mx-auto md:mx-0">
                                     <div className="flex items-center justify-between text-xs font-medium text-zinc-400 uppercase tracking-wider">
                                         <span>Page {book.progress.current_page} of {book.progress.total_pages || '?'}</span>
                                         <span>{Math.round(book.progress.percentage_completed)}% Completed</span>
@@ -126,31 +126,31 @@ export default function BookDetailPage() {
                                             style={{ width: `${book.progress.percentage_completed}%` }}
                                         />
                                     </div>
-                                    <div className="flex gap-4 pt-2">
+                                    <div className="flex gap-4 pt-2 justify-center md:justify-start">
                                         <button
                                             onClick={() => router.push(`/books/${id}/read`)}
-                                            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg shadow-indigo-600/20"
+                                            className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg shadow-indigo-600/20"
                                         >
                                             Continue Reading
                                         </button>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex flex-wrap gap-4 pt-4">
+                                <div className="flex flex-col md:flex-row gap-4 pt-4 justify-center md:justify-start">
                                     <button
                                         onClick={() => router.push(`/books/${id}/read`)}
-                                        className="bg-white text-black px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-200 transition-colors"
+                                        className="bg-white text-black px-8 py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors w-full md:w-auto"
                                     >
                                         <Play size={20} fill="black" /> Start Reading
                                     </button>
                                     <button
                                         onClick={addToLibrary}
                                         disabled={addingToLibrary}
-                                        className="bg-zinc-900 border border-zinc-800 px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors disabled:opacity-50"
+                                        className="bg-zinc-900 border border-zinc-800 px-6 py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-colors disabled:opacity-50 w-full md:w-auto"
                                     >
                                         {addingToLibrary ? 'Adding...' : <><Star size={20} /> Add to Library</>}
                                     </button>
-                                    <button className="p-3 bg-zinc-900 border border-zinc-800 rounded-full hover:bg-zinc-800 transition-colors">
+                                    <button className="p-3 bg-zinc-900 border border-zinc-800 rounded-full hover:bg-zinc-800 transition-colors hidden md:block">
                                         <Share2 size={20} />
                                     </button>
                                 </div>
