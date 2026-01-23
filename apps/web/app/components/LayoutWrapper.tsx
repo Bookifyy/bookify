@@ -28,7 +28,6 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
     }, [user, loading, isPublicRoute, router, pathname]);
 
     if (loading) {
-        // ... (loading state)
         return (
             <div className="flex min-h-screen items-center justify-center bg-black">
                 <div className="flex flex-col items-center gap-4">
@@ -68,7 +67,8 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
                 )}
 
                 <div className="flex flex-1 flex-col lg:pl-0 pt-0 w-full min-h-screen">
-                    <Header onMenuClick={() => setIsSidebarOpen(true)} />
+                    {/* Header should handle menu click only if sidebar is available */}
+                    <Header onMenuClick={!isLibraryPage ? () => setIsSidebarOpen(true) : undefined} />
                     <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden">
                         {children}
                     </main>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { resolveAssetUrl } from '../lib/utils';
-import { Download, CloudDownload } from 'lucide-react';
+import { Download } from 'lucide-react';
 
 interface BookCardProps {
     id: number;
@@ -44,22 +44,22 @@ export function BookCard({ id, title, author, coverImage, progress, isDownloaded
                 </div>
             </div>
 
-            {/* Progress Bar (Outside Image) */}
-            {progress !== undefined && (
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="flex-1 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
-                        <div
-                            className="h-full bg-blue-600"
-                            style={{ width: `${progress}%` }}
-                        />
-                    </div>
-                    <span className="text-[10px] font-medium text-zinc-500">{progress}%</span>
-                </div>
-            )}
-
-            <div className="space-y-0.5">
-                <h3 className="text-sm font-bold text-white truncate font-serif tracking-wide">{title}</h3>
+            <div className="space-y-1 px-0.5">
+                <h3 className="text-sm font-bold text-white truncate font-serif tracking-wide leading-tight">{title}</h3>
                 <p className="text-[11px] text-blue-400 font-medium truncate">{author}</p>
+
+                {/* Progress Bar (Bottom) */}
+                {progress !== undefined && (
+                    <div className="flex items-center gap-2 pt-1">
+                        <div className="flex-1 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-blue-600"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                        <span className="text-[10px] font-medium text-zinc-500">{progress}%</span>
+                    </div>
+                )}
             </div>
         </Link>
     );

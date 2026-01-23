@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Settings, User as UserIcon, Menu } from 'lucide-react';
+import { Search, Menu } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
 
@@ -14,14 +14,16 @@ export function Header({ onMenuClick }: HeaderProps) {
     return (
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-zinc-900 bg-black px-4 lg:px-8">
             <div className="flex items-center">
-                {/* Mobile Menu Button */}
-                <button
-                    type="button"
-                    className="mr-4 text-zinc-400 hover:text-white lg:hidden"
-                    onClick={onMenuClick}
-                >
-                    <Menu size={24} />
-                </button>
+                {/* Mobile Menu Button - Show only if onMenuClick is provided (for Sidebar pages) */}
+                {onMenuClick && (
+                    <button
+                        type="button"
+                        className="mr-4 text-zinc-400 hover:text-white lg:hidden"
+                        onClick={onMenuClick}
+                    >
+                        <Menu size={24} />
+                    </button>
+                )}
 
                 {/* Brand */}
                 <Link href="/" className="text-xl font-serif text-white tracking-wide">
