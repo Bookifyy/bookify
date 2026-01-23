@@ -8,6 +8,7 @@ import { Zap, ChevronRight, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Modal } from './components/Modal';
+import { StatsFooter } from './components/StatsFooter';
 
 
 // No mock data needed for books anymore
@@ -20,6 +21,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [continueReading, setContinueReading] = useState<any[]>([]);
   const [modalBook, setModalBook] = useState<any | null>(null);
+  const [recommendedSubject, setRecommendedSubject] = useState<{ name: string, books: any[] } | null>(null);
+  const [editorsPicks, setEditorsPicks] = useState<any[]>([]);
 
 
   useEffect(() => {
@@ -28,50 +31,81 @@ export default function Home() {
     else if (hour < 18) setGreeting('Good afternoon');
     else setGreeting('Good evening');
 
-    const fetchBooks = async () => {
+    if (!token) return;
+
+    const loadData = async () => {
+      setLoading(true);
       try {
         const apiUrl = getApiUrl();
-        const res = await fetch(`${apiUrl}/api/books?limit=5`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json'
-          }
-        });
-        if (res.ok) {
-          const data = await res.json();
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        };
+
+        // 1. Fetch Generic Recommendations & Library in parallel
+        const [booksRes, libraryRes] = await Promise.all([
+          fetch(`${apiUrl}/api/books?limit=5`, { headers }),
+          fetch(`${apiUrl}/api/library`, { headers })
+        ]);
+
+        if (booksRes.ok) {
+          const data = await booksRes.json();
           setBooks(data.data || []);
         }
-      } catch (err) {
-        console.error('Failed to fetch home books:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    const fetchLibrary = async () => {
-      try {
-        const apiUrl = getApiUrl();
-        const res = await fetch(`${apiUrl}/api/library`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json'
-          }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setContinueReading(data.slice(0, 5));
+        let libraryData: any[] = [];
+        if (libraryRes.ok) {
+          libraryData = await libraryRes.json();
+          setContinueReading(libraryData.slice(0, 5));
         }
+
+        // 2. Infer Subject & Fetch Subject Recommendations
+        if (libraryData.length > 0) {
+          const subjects: Record<string, number> = {};
+          let mostFrequentSubjectId = null;
+          let maxCount = 0;
+
+          libraryData.forEach((item: any) => {
+            const subId = item.book?.subject_id;
+            if (subId) {
+              subjects[subId] = (subjects[subId] || 0) + 1;
+              if (subjects[subId] > maxCount) {
+                maxCount = subjects[subId];
+                mostFrequentSubjectId = subId;
+              }
+            }
+          });
+
+          if (mostFrequentSubjectId) {
+            const subjectRes = await fetch(`${apiUrl}/api/books?subject_id=${mostFrequentSubjectId}&limit=5`, { headers });
+            if (subjectRes.ok) {
+              const data = await subjectRes.json();
+              if (data.data && data.data.length > 0) {
+                setRecommendedSubject({
+                  name: data.data[0].subject?.name || 'Related Topics',
+                  books: data.data
+                });
+              }
+            }
+          }
+        }
+
+        // 3. Fetch Editors' Picks (Simulated with offset)
+        const editorsRes = await fetch(`${apiUrl}/api/books?limit=4&page=2`, { headers });
+        if (editorsRes.ok) {
+          const data = await editorsRes.json();
+          setEditorsPicks(data.data || []);
+        }
+
       } catch (err) {
-        console.error('Failed to fetch library:', err);
+        console.error('Failed to load home data:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (token) {
-      fetchBooks();
-      fetchLibrary();
-    }
+    loadData();
+
   }, [token]);
 
   return (
@@ -130,6 +164,66 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {/* "Because you studied..." Section */}
+      {recommendedSubject && recommendedSubject.books.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-white">Because you studied {recommendedSubject.name}</h2>
+            <Link href="#" className="text-xs font-medium text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
+              See all <ChevronRight size={14} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {recommendedSubject.books.map((book) => {
+              const isStarted = continueReading.some(item => item.book?.id === book.id);
+              return (
+                <BookCard
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  author={book.author}
+                  coverImage={book.cover_image}
+                  onClick={isStarted ? (e) => {
+                    e.preventDefault();
+                    setModalBook(book);
+                  } : undefined}
+                />
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Editors' Picks Section */}
+      {editorsPicks.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-white">Editors' Picks</h2>
+            <Link href="#" className="text-xs font-medium text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
+              See all <ChevronRight size={14} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {editorsPicks.map((book) => {
+              const isStarted = continueReading.some(item => item.book?.id === book.id);
+              return (
+                <BookCard
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  author={book.author}
+                  coverImage={book.cover_image}
+                  onClick={isStarted ? (e) => {
+                    e.preventDefault();
+                    setModalBook(book);
+                  } : undefined}
+                />
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Continue Reading Section */}
       <section className="space-y-6">
@@ -208,6 +302,7 @@ export default function Home() {
         </div>
       </Modal>
 
+      <StatsFooter booksCompleted={continueReading.filter(i => i.percentage_completed === '100.00').length} />
     </div>
   );
 }
