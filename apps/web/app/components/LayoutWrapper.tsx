@@ -46,7 +46,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
     // Dashboard layout for logged in users on private routes
     if (user && !isPublicRoute) {
         // Special case: Library page matches a specific full-width design without sidebar
-        const isLibraryPage = pathname === '/library';
+        const isLibraryPage = pathname?.startsWith('/library');
 
         return (
             <div className="flex min-h-screen relative">

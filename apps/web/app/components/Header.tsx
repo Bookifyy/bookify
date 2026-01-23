@@ -51,12 +51,13 @@ export function Header({ onMenuClick }: HeaderProps) {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-6 text-zinc-400">
-                <button className="hover:text-white transition-colors flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-                    <span className="hidden lg:inline">• Settings</span>
+            <div className="flex items-center gap-4 text-zinc-400">
+                <button className="hover:text-white transition-colors text-xs font-medium uppercase tracking-wider">
+                    Settings
                 </button>
-                <button className="hover:text-white transition-colors flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-                    <span className="hidden lg:inline">Profile</span>
+                <span className="text-zinc-600">•</span>
+                <button className="hover:text-white transition-colors text-xs font-medium uppercase tracking-wider">
+                    Profile
                 </button>
             </div>
         </header>
