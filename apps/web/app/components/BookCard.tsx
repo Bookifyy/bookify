@@ -44,13 +44,13 @@ export function BookCard({ id, title, author, coverImage, progress, isDownloaded
                 </div>
             </div>
 
-            <div className="space-y-1 px-0.5">
-                <h3 className="text-sm font-bold text-white truncate font-serif tracking-wide leading-tight">{title}</h3>
-                <p className="text-[11px] text-blue-400 font-medium truncate">{author}</p>
+            <div className="space-y-1.5 px-0.5 mt-2">
+                <h3 className="text-base font-bold text-white truncate font-serif tracking-wide leading-tight">{title}</h3>
+                <p className="text-xs text-blue-500 font-medium truncate">{author}</p>
 
                 {/* Progress Bar (Bottom) */}
                 {progress !== undefined && (
-                    <div className="flex items-center gap-2 pt-1">
+                    <div className="flex items-center gap-2 pt-1.5">
                         <div className="flex-1 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
                             <div
                                 className="h-full bg-blue-600"
