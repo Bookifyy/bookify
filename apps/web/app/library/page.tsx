@@ -155,7 +155,7 @@ export default function LibraryPage() {
     return (
         <div className="min-h-screen bg-black text-zinc-300">
             {/* Top Bar - sticky under main header */}
-            <div className="sticky top-16 z-20 bg-black/95 backdrop-blur-xl px-8 py-6 space-y-4 border-b border-zinc-900">
+            <div className="sticky top-16 z-20 bg-black/95 backdrop-blur-xl border-b border-zinc-900 px-8 py-4 space-y-3">
 
                 {/* Row 1: Title and Controls */}
                 <div className="flex items-center justify-between">
@@ -165,22 +165,22 @@ export default function LibraryPage() {
                                 <button onClick={() => setViewingCollectionId(null)} className="text-zinc-400 hover:text-white transition-colors">
                                     <ArrowLeft size={20} />
                                 </button>
-                                <h1 className="text-lg font-medium text-white tracking-wide">
+                                <h1 className="text-lg font-medium text-white tracking-wide font-serif">
                                     {collections.find(c => c.id === viewingCollectionId)?.name}
                                 </h1>
                             </div>
                         ) : (
-                            <h1 className="text-xl font-medium text-white tracking-wide">Your Library</h1>
+                            <h1 className="text-xl font-medium text-white tracking-wide font-serif">Your Library</h1>
                         )}
                     </div>
 
                     {!viewingCollectionId && (
                         <div className="flex items-center gap-2">
                             <button className="p-2 text-zinc-400 hover:text-white bg-zinc-900 rounded-lg transition-colors">
-                                <Grid size={18} />
+                                <Grid size={16} />
                             </button>
                             <button className="p-2 text-zinc-500 hover:text-white hover:bg-zinc-900 rounded-lg transition-colors">
-                                <ListIcon size={18} />
+                                <ListIcon size={16} />
                             </button>
                         </div>
                     )}
@@ -188,25 +188,27 @@ export default function LibraryPage() {
 
                 {/* Row 2: Sort Pills */}
                 {!viewingCollectionId && (
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-zinc-500 mr-1">Sort by:</span>
-                        {(['recent', 'title', 'progress'] as const).map((type) => (
-                            <button
-                                key={type}
-                                onClick={() => setSortBy(type as any)}
-                                className={`px-3.5 py-1.5 rounded-full text-[11px] font-medium transition-all ${sortBy === type
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-800'
-                                    }`}
-                            >
-                                {type.charAt(0).toUpperCase() + type.slice(1)}
-                            </button>
-                        ))}
+                    <div className="flex items-center gap-3">
+                        <span className="text-xs text-zinc-500 font-medium">Sort by:</span>
+                        <div className="flex items-center gap-2">
+                            {(['recent', 'title', 'progress'] as const).map((type) => (
+                                <button
+                                    key={type}
+                                    onClick={() => setSortBy(type as any)}
+                                    className={`px-3 py-1 rounded-full text-[11px] font-medium transition-all ${sortBy === type
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                                        }`}
+                                >
+                                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>
 
-            <div className="px-8 pb-32 max-w-[1600px] mx-auto mt-6">
+            <div className="px-8 pb-32 max-w-[1600px] mx-auto mt-4">
                 {/* Tabs - Full Width */}
                 {!viewingCollectionId && <LibraryTabs activeTab={activeTab} onTabChange={setActiveTab} />}
 
@@ -214,6 +216,7 @@ export default function LibraryPage() {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-32 gap-4">
                         <Loader2 className="animate-spin text-blue-600" size={32} />
+                        <p className="text-zinc-600 text-sm font-medium tracking-wide animate-pulse">SYNCING LIBRARY...</p>
                     </div>
                 ) : (
                     <>
@@ -253,29 +256,31 @@ export default function LibraryPage() {
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-32 text-center border border-dashed border-zinc-900 rounded-3xl bg-zinc-950/50">
-                                    <h3 className="text-zinc-500 font-medium text-sm">No books found</h3>
+                                    <div className="bg-zinc-900 p-4 rounded-full mb-4">
+                                        <LibraryIcon size={32} className="text-zinc-700" />
+                                    </div>
+                                    <h3 className="text-lg font-medium text-white mb-1">No books found</h3>
+                                    <p className="text-zinc-500 text-sm">
+                                        {viewingCollectionId ? "This collection is empty." : "Your library is waiting for its first story."}
+                                    </p>
                                 </div>
                             )
                         ) : (
-                            // Collections View (Wide Cards)
-                            <div className="space-y-4">
+                            // Collections View
+                            <div className="space-y-6">
                                 {/* Create New Collection "Dropzone" */}
                                 {!showCreateCollection && (
-                                    <div className="flex justify-center mb-8">
-                                        <button
-                                            onClick={() => setShowCreateCollection(true)}
-                                            className="group flex flex-col items-center justify-center gap-3 px-12 py-8 border border-dashed border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/20 rounded-2xl w-full max-w-2xl transition-all"
-                                        >
-                                            <div className="bg-zinc-900 p-3 rounded-full group-hover:bg-zinc-800 transition-colors">
-                                                <Plus size={20} className="text-zinc-400 group-hover:text-white" />
-                                            </div>
-                                            <span className="text-zinc-500 font-medium group-hover:text-zinc-300">Create New Collection</span>
-                                        </button>
-                                    </div>
+                                    <button
+                                        onClick={() => setShowCreateCollection(true)}
+                                        className="w-full h-32 border border-dashed border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/20 rounded-2xl flex flex-col items-center justify-center gap-2 text-zinc-500 hover:text-zinc-300 transition-all group"
+                                    >
+                                        <Plus size={24} className="group-hover:scale-110 transition-transform" />
+                                        <span className="font-medium">Create New Collection</span>
+                                    </button>
                                 )}
 
                                 {showCreateCollection && (
-                                    <div className="bg-zinc-900/30 border border-zinc-800 p-6 rounded-2xl flex items-end gap-4 max-w-2xl mx-auto mb-8 animate-in fade-in slide-in-from-top-4">
+                                    <div className="bg-zinc-900/30 border border-zinc-800 p-6 rounded-2xl flex items-end gap-4 animate-in fade-in slide-in-from-top-4">
                                         <div className="flex-1 space-y-2">
                                             <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Collection Name</label>
                                             <input
@@ -291,7 +296,7 @@ export default function LibraryPage() {
                                             onClick={handleCreateCollection}
                                             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors text-sm"
                                         >
-                                            Create
+                                            Create Collection
                                         </button>
                                         <button
                                             onClick={() => setShowCreateCollection(false)}
@@ -303,49 +308,33 @@ export default function LibraryPage() {
                                 )}
 
                                 {collections.length > 0 && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {collections.map((collection) => (
                                             <div
                                                 key={collection.id}
                                                 onClick={() => setViewingCollectionId(collection.id)}
-                                                className="group relative bg-zinc-900/40 hover:bg-zinc-900/60 border border-zinc-800/50 hover:border-zinc-700 transition-all px-6 py-5 rounded-xl cursor-pointer flex items-center justify-between"
+                                                className="group relative bg-zinc-900/20 hover:bg-zinc-900/40 border border-zinc-800/60 hover:border-zinc-700 transition-all p-5 rounded-xl cursor-pointer flex items-center justify-between"
                                             >
                                                 <div className="flex items-center gap-4">
-                                                    {/* Mock Collection Icon */}
-                                                    <div className="relative">
-                                                        <div className="w-12 h-12 rounded-lg bg-zinc-800 flex items-center justify-center border border-zinc-700">
-                                                            {collection.bookIds.length > 0 ? (
-                                                                <div className="flex -space-x-1">
-                                                                    <div className="w-3 h-8 bg-zinc-600 rounded-sm" />
-                                                                    <div className="w-3 h-8 bg-zinc-500 rounded-sm transform translate-y-1" />
-                                                                </div>
-                                                            ) : (
-                                                                <FolderOpen size={20} className="text-zinc-600" />
-                                                            )}
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
-                                                        <h3 className="text-base font-medium text-white">{collection.name}</h3>
-                                                        <div className="flex items-center gap-2 mt-0.5">
-                                                            <span className="text-xs text-zinc-500">{collection.bookIds.length} books</span>
-
-                                                            {/* User avatars mock */}
-                                                            <div className="flex -space-x-1 ml-2">
-                                                                <div className="w-4 h-4 rounded-full bg-orange-500 border border-black" />
-                                                                <div className="w-4 h-4 rounded-full bg-blue-500 border border-black" />
+                                                    {/* Mock Avatar Stack */}
+                                                    <div className="flex -space-x-3">
+                                                        {[1, 2, 3].map(i => (
+                                                            <div key={i} className="w-10 h-10 rounded-full bg-zinc-800 border-2 border-black flex items-center justify-center">
+                                                                <LibraryIcon size={14} className="text-zinc-600" />
                                                             </div>
-                                                        </div>
+                                                        ))}
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-base font-semibold text-white font-serif">{collection.name}</h3>
+                                                        <p className="text-xs text-zinc-500 font-medium">{collection.bookIds.length} books</p>
                                                     </div>
                                                 </div>
 
                                                 <div className="flex items-center gap-2">
-                                                    <div className="text-zinc-600">
-                                                        <FolderOpen size={18} />
-                                                    </div>
+                                                    <FolderOpen className="text-zinc-600 group-hover:text-blue-500 transition-colors" size={20} />
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); handleDeleteCollection(collection.id); }}
-                                                        className="text-zinc-600 hover:text-red-500 transition-colors p-2 opacity-0 group-hover:opacity-100"
+                                                        className="text-zinc-700 hover:text-red-500 transition-colors p-2 opacity-0 group-hover:opacity-100"
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
