@@ -153,199 +153,189 @@ export default function LibraryPage() {
     }, [books, searchQuery, activeTab, sortBy, viewingCollectionId, collections]);
 
     return (
-        <div className="p-8 pb-32 space-y-8 max-w-[1400px] mx-auto text-zinc-300 min-h-screen">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                    {viewingCollectionId ? (
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => setViewingCollectionId(null)} className="text-zinc-400 hover:text-white transition-colors">
-                                <ArrowLeft size={24} />
-                            </button>
-                            <h1 className="text-3xl font-bold text-white tracking-tight">
-                                {collections.find(c => c.id === viewingCollectionId)?.name}
-                            </h1>
-                        </div>
-                    ) : (
-                        <>
-                            <h1 className="text-3xl font-bold text-white tracking-tight mb-2">My Library</h1>
-                            <p className="text-zinc-500 text-sm">Manage your reading collection and progress.</p>
-                        </>
-                    )}
-                </div>
-                <div className="flex items-center gap-4">
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-                        <input
-                            type="text"
-                            placeholder="Search books..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="bg-zinc-900 border border-zinc-800 rounded-full pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 w-64 transition-colors"
-                        />
+        <div className="min-h-screen bg-black text-zinc-300">
+            {/* Top Bar - sticky under main header */}
+            <div className="sticky top-16 z-20 bg-black/95 backdrop-blur-xl border-b border-zinc-900 px-8 py-4 space-y-4">
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-serif text-white tracking-wide">Your Library</h1>
+                    <div className="flex items-center gap-2 text-zinc-500">
+                        <button className="p-2 hover:text-white transition-colors bg-zinc-900 rounded-md">
+                            <SlidersHorizontal size={18} />
+                        </button>
                     </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <span className="text-sm text-zinc-500 font-medium mr-2">Sort by:</span>
+                    {(['recent', 'title', 'progress'] as const).map((type) => (
+                        <button
+                            key={type}
+                            onClick={() => setSortBy(type)}
+                            className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${sortBy === type
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
+                                    : 'bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-zinc-800'
+                                }`}
+                        >
+                            {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            {/* Controls */}
-            {!viewingCollectionId && (
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-zinc-800 pb-6">
-                    <LibraryTabs activeTab={activeTab} onTabChange={setActiveTab} />
+            <div className="p-8 max-w-[1600px] mx-auto">
+                {!viewingCollectionId && <LibraryTabs activeTab={activeTab} onTabChange={setActiveTab} />}
 
-                    {activeTab !== 'collections' && (
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2 bg-zinc-900 px-3 py-2 rounded-lg border border-zinc-800">
-                                <span className="text-xs text-zinc-500 uppercase font-bold tracking-wider">Sort By</span>
-                                <select
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value as any)}
-                                    className="bg-transparent text-sm text-white focus:outline-none cursor-pointer"
-                                >
-                                    <option value="recent">Recent Activity</option>
-                                    <option value="title">Title (A-Z)</option>
-                                    <option value="author">Author (A-Z)</option>
-                                    <option value="progress">Progress %</option>
-                                </select>
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab === 'collections' && (
+                {/* Collection View Header (Back Button) */}
+                {viewingCollectionId && (
+                    <div className="mb-6 flex items-center gap-4">
                         <button
-                            onClick={() => setShowCreateCollection(true)}
-                            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            onClick={() => setViewingCollectionId(null)}
+                            className="bg-zinc-900 hover:bg-zinc-800 text-white p-2 rounded-full transition-colors border border-zinc-800"
                         >
-                            <Plus size={16} />
-                            New Collection
+                            <ArrowLeft size={20} />
                         </button>
-                    )}
-                </div>
-            )}
+                        <h2 className="text-2xl font-serif text-white">
+                            {collections.find(c => c.id === viewingCollectionId)?.name}
+                        </h2>
+                    </div>
+                )}
 
-            {/* Content Area */}
-            {loading ? (
-                <div className="flex flex-col items-center justify-center py-24 gap-4">
-                    <Loader2 className="animate-spin text-indigo-500" size={40} />
-                    <p className="text-zinc-500 animate-pulse font-medium">Loading your library...</p>
-                </div>
-            ) : (
-                <>
-                    <AddToCollectionModal
-                        bookId={selectedBookForCollection}
-                        collections={collections}
-                        onClose={() => setSelectedBookForCollection(null)}
-                        onUpdateCollections={setCollections}
-                    />
+                {/* Content Area */}
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-32 gap-4">
+                        <Loader2 className="animate-spin text-blue-600" size={32} />
+                        <p className="text-zinc-600 text-sm font-medium tracking-wide animate-pulse">SYNCING LIBRARY...</p>
+                    </div>
+                ) : (
+                    <>
+                        <AddToCollectionModal
+                            bookId={selectedBookForCollection}
+                            collections={collections}
+                            onClose={() => setSelectedBookForCollection(null)}
+                            onUpdateCollections={setCollections}
+                        />
 
-                    {/* Books Grid */}
-                    {(activeTab !== 'collections' || viewingCollectionId) ? (
-                        filteredBooks.length > 0 ? (
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-                                {filteredBooks.map((item) => (
-                                    <div key={item.id} className="relative group">
-                                        <BookCard
-                                            id={item.book.id}
-                                            title={item.book.title}
-                                            author={item.book.author}
-                                            coverImage={item.book.cover_image}
-                                            progress={parseFloat(item.percentage_completed)}
-                                        />
-                                        {/* Add to Collection Button - Only show if created collections exist */}
-                                        {collections.length > 0 && (
-                                            <button
-                                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedBookForCollection(item.book.id); }}
-                                                className="absolute top-2 right-2 bg-black/60 hover:bg-indigo-600 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all z-10"
-                                                title="Add to Collection"
-                                            >
-                                                <Plus size={14} />
-                                            </button>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center py-24 text-center">
-                                <div className="bg-zinc-900/50 p-6 rounded-full mb-4">
-                                    <LibraryIcon size={48} className="text-zinc-700" />
-                                </div>
-                                <h3 className="text-xl font-semibold text-white mb-2">No books found</h3>
-                                <p className="text-zinc-500 max-w-sm">
-                                    {viewingCollectionId ? "This collection is empty." : "Try adjusting your search or filters."}
-                                </p>
-                            </div>
-                        )
-                    ) : (
-                        // Collections View
-                        <div>
-                            {showCreateCollection && (
-                                <div className="mb-8 bg-zinc-900/30 border border-zinc-800 p-6 rounded-2xl flex items-end gap-4 animate-in fade-in slide-in-from-top-4">
-                                    <div className="flex-1 space-y-2">
-                                        <label className="text-sm font-medium text-zinc-400">Collection Name</label>
-                                        <input
-                                            type="text"
-                                            value={newCollectionName}
-                                            onChange={(e) => setNewCollectionName(e.target.value)}
-                                            placeholder="e.g. Summer Reads"
-                                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-indigo-500"
-                                            autoFocus
-                                        />
-                                    </div>
-                                    <button
-                                        onClick={handleCreateCollection}
-                                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-                                    >
-                                        Create
-                                    </button>
-                                    <button
-                                        onClick={() => setShowCreateCollection(false)}
-                                        className="bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            )}
-
-                            {collections.length > 0 ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    {collections.map((collection) => (
-                                        <div
-                                            key={collection.id}
-                                            onClick={() => setViewingCollectionId(collection.id)}
-                                            className="group bg-zinc-900/40 hover:bg-zinc-900/60 border border-zinc-800/50 hover:border-zinc-700 transition-all p-6 rounded-2xl cursor-pointer"
-                                        >
-                                            <div className="flex items-start justify-between mb-4">
-                                                <div className="bg-indigo-500/10 p-3 rounded-xl">
-                                                    <FolderOpen className="text-indigo-400" size={24} />
-                                                </div>
+                        {/* Books Grid */}
+                        {(activeTab !== 'collections' || viewingCollectionId) ? (
+                            filteredBooks.length > 0 ? (
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10">
+                                    {filteredBooks.map((item) => (
+                                        <div key={item.id} className="relative group">
+                                            <BookCard
+                                                id={item.book.id}
+                                                title={item.book.title}
+                                                author={item.book.author}
+                                                coverImage={item.book.cover_image}
+                                                progress={parseFloat(item.percentage_completed)}
+                                                isDownloaded={activeTab === 'downloaded'}
+                                            />
+                                            {/* Add to Collection Button */}
+                                            {collections.length > 0 && (
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); handleDeleteCollection(collection.id); }}
-                                                    className="text-zinc-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 p-2"
+                                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedBookForCollection(item.book.id); }}
+                                                    className="absolute top-3 right-3 bg-black/40 hover:bg-blue-600 text-white p-1.5 rounded-full backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all z-20"
+                                                    title="Add to Collection"
                                                 >
-                                                    <Trash2 size={16} />
+                                                    <Plus size={14} />
                                                 </button>
-                                            </div>
-                                            <h3 className="text-lg font-semibold text-white mb-1">{collection.name}</h3>
-                                            <p className="text-sm text-zinc-500">{collection.bookIds.length} books</p>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center py-24 text-center">
-                                    <FolderOpen size={48} className="text-zinc-800 mb-4" />
-                                    <h3 className="text-xl font-semibold text-white mb-2">No collections yet</h3>
-                                    <p className="text-zinc-500 mb-6">Organize your books into custom collections.</p>
+                                <div className="flex flex-col items-center justify-center py-32 text-center border border-dashed border-zinc-900 rounded-3xl bg-zinc-950/50">
+                                    <div className="bg-zinc-900 p-4 rounded-full mb-4">
+                                        <LibraryIcon size={32} className="text-zinc-700" />
+                                    </div>
+                                    <h3 className="text-lg font-medium text-white mb-1">No books found</h3>
+                                    <p className="text-zinc-500 text-sm">
+                                        {viewingCollectionId ? "This collection is empty." : "Your library is waiting for its first story."}
+                                    </p>
+                                </div>
+                            )
+                        ) : (
+                            // Collections View
+                            <div className="space-y-6">
+                                {/* Create New Collection "Dropzone" */}
+                                {!showCreateCollection && (
                                     <button
                                         onClick={() => setShowCreateCollection(true)}
-                                        className="text-indigo-400 hover:text-indigo-300 font-medium"
+                                        className="w-full h-32 border border-dashed border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/20 rounded-2xl flex flex-col items-center justify-center gap-2 text-zinc-500 hover:text-zinc-300 transition-all group"
                                     >
-                                        Create your first collection
+                                        <Plus size={24} className="group-hover:scale-110 transition-transform" />
+                                        <span className="font-medium">Create New Collection</span>
                                     </button>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </>
-            )}
+                                )}
+
+                                {showCreateCollection && (
+                                    <div className="bg-zinc-900/30 border border-zinc-800 p-6 rounded-2xl flex items-end gap-4 animate-in fade-in slide-in-from-top-4">
+                                        <div className="flex-1 space-y-2">
+                                            <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Collection Name</label>
+                                            <input
+                                                type="text"
+                                                value={newCollectionName}
+                                                onChange={(e) => setNewCollectionName(e.target.value)}
+                                                placeholder="e.g. Summer Reads"
+                                                className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-600 transition-colors"
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <button
+                                            onClick={handleCreateCollection}
+                                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors text-sm"
+                                        >
+                                            Create Collection
+                                        </button>
+                                        <button
+                                            onClick={() => setShowCreateCollection(false)}
+                                            className="bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white px-6 py-2.5 rounded-lg font-medium transition-colors text-sm"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                )}
+
+                                {collections.length > 0 && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {collections.map((collection) => (
+                                            <div
+                                                key={collection.id}
+                                                onClick={() => setViewingCollectionId(collection.id)}
+                                                className="group relative bg-zinc-900/20 hover:bg-zinc-900/40 border border-zinc-800/60 hover:border-zinc-700 transition-all p-5 rounded-xl cursor-pointer flex items-center justify-between"
+                                            >
+                                                <div className="flex items-center gap-4">
+                                                    {/* Mock Avatar Stack */}
+                                                    <div className="flex -space-x-3">
+                                                        {[1, 2, 3].map(i => (
+                                                            <div key={i} className="w-10 h-10 rounded-full bg-zinc-800 border-2 border-black flex items-center justify-center">
+                                                                <LibraryIcon size={14} className="text-zinc-600" />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-base font-semibold text-white font-serif">{collection.name}</h3>
+                                                        <p className="text-xs text-zinc-500 font-medium">{collection.bookIds.length} books</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center gap-2">
+                                                    <FolderOpen className="text-zinc-600 group-hover:text-blue-500 transition-colors" size={20} />
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); handleDeleteCollection(collection.id); }}
+                                                        className="text-zinc-700 hover:text-red-500 transition-colors p-2 opacity-0 group-hover:opacity-100"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     );
 }

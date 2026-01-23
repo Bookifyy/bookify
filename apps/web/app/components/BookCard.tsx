@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { resolveAssetUrl } from '../lib/utils';
+import { Download, CloudDownload } from 'lucide-react';
 
 interface BookCardProps {
     id: number;
@@ -11,10 +11,11 @@ interface BookCardProps {
     author: string;
     coverImage: string;
     progress?: number;
+    isDownloaded?: boolean; // New prop for the icon
     onClick?: (e: React.MouseEvent) => void;
 }
 
-export function BookCard({ id, title, author, coverImage, progress, onClick }: BookCardProps) {
+export function BookCard({ id, title, author, coverImage, progress, isDownloaded = true, onClick }: BookCardProps) {
     const [hasError, setHasError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -26,37 +27,39 @@ export function BookCard({ id, title, author, coverImage, progress, onClick }: B
             className={`block group cursor-pointer transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             onClick={onClick}
         >
-            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-zinc-800 shadow-lg transition-transform duration-300 group-hover:-translate-y-1">
+            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-zinc-900 shadow-lg mb-3">
                 <img
                     src={resolveAssetUrl(coverImage)}
                     alt={title}
-                    className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-80"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     onLoad={() => setIsLoaded(true)}
                     onError={() => setHasError(true)}
                 />
-                {progress !== undefined && (
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-700">
+
+                {/* Download Icon Overlay */}
+                <div className="absolute top-2 left-2 z-10">
+                    <div className="bg-blue-600 rounded-full p-1 shadow-lg">
+                        <Download size={10} className="text-white" strokeWidth={3} />
+                    </div>
+                </div>
+            </div>
+
+            {/* Progress Bar (Outside Image) */}
+            {progress !== undefined && (
+                <div className="flex items-center gap-3 mb-2">
+                    <div className="flex-1 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
                         <div
-                            className="h-full bg-indigo-500 transition-all duration-500"
+                            className="h-full bg-blue-600"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
-                )}
-            </div>
-            <div className="mt-4 space-y-1">
-                <h3 className="text-sm font-semibold text-white truncate">{title}</h3>
-                <p className="text-xs text-zinc-500 truncate">{author}</p>
-                {progress !== undefined && (
-                    <div className="flex items-center gap-2 mt-1">
-                        <div className="flex-1 h-1 bg-zinc-800 rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-blue-600 rounded-full"
-                                style={{ width: `${progress}%` }}
-                            />
-                        </div>
-                        <span className="text-[10px] font-medium text-zinc-500">{progress}%</span>
-                    </div>
-                )}
+                    <span className="text-[10px] font-medium text-zinc-500">{progress}%</span>
+                </div>
+            )}
+
+            <div className="space-y-0.5">
+                <h3 className="text-sm font-bold text-white truncate font-serif tracking-wide">{title}</h3>
+                <p className="text-[11px] text-blue-400 font-medium truncate">{author}</p>
             </div>
         </Link>
     );
