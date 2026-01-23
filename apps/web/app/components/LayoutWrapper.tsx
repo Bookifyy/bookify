@@ -46,16 +46,21 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
 
     // Dashboard layout for logged in users on private routes
     if (user && !isPublicRoute) {
+        // Special case: Library page matches a specific full-width design without sidebar
+        const isLibraryPage = pathname === '/library';
+
         return (
             <div className="flex min-h-screen relative">
-                <Sidebar
-                    className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-black transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                        }`}
-                    onClose={() => setIsSidebarOpen(false)}
-                />
+                {!isLibraryPage && (
+                    <Sidebar
+                        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-black transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                            }`}
+                        onClose={() => setIsSidebarOpen(false)}
+                    />
+                )}
 
                 {/* Mobile Overlay */}
-                {isSidebarOpen && (
+                {isSidebarOpen && !isLibraryPage && (
                     <div
                         className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
                         onClick={() => setIsSidebarOpen(false)}
