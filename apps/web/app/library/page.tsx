@@ -191,13 +191,13 @@ export default function LibraryPage() {
                     <div className="flex items-center gap-3">
                         <span className="text-xs text-zinc-500 font-medium">Sort by:</span>
                         <div className="flex items-center gap-2">
-                            {(['recent', 'title', 'progress'] as const).map((type) => (
+                            {(['recent', 'title', 'author', 'progress'] as const).map((type) => (
                                 <button
                                     key={type}
                                     onClick={() => setSortBy(type as any)}
                                     className={`px-3 py-1 rounded-full text-[11px] font-medium transition-all ${sortBy === type
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                                        ? 'bg-blue-600 text-white'
+                                        : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
                                         }`}
                                 >
                                     {type.charAt(0).toUpperCase() + type.slice(1)}
