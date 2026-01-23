@@ -16,13 +16,14 @@ interface BookCardProps {
 
 export function BookCard({ id, title, author, coverImage, progress, onClick }: BookCardProps) {
     const [hasError, setHasError] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     if (hasError) return null;
 
     return (
         <Link
             href={`/books/${id}`}
-            className="block group cursor-pointer"
+            className={`block group cursor-pointer transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             onClick={onClick}
         >
             <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-zinc-800 shadow-lg transition-transform duration-300 group-hover:-translate-y-1">
@@ -30,6 +31,7 @@ export function BookCard({ id, title, author, coverImage, progress, onClick }: B
                     src={resolveAssetUrl(coverImage)}
                     alt={title}
                     className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-80"
+                    onLoad={() => setIsLoaded(true)}
                     onError={() => setHasError(true)}
                 />
                 {progress !== undefined && (
