@@ -45,21 +45,16 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
 
     // Dashboard layout for logged in users on private routes
     if (user && !isPublicRoute) {
-        // Special case: Library page matches a specific full-width design without sidebar
-        const isLibraryPage = pathname?.startsWith('/library');
-
         return (
             <div className="flex min-h-screen relative">
-                {!isLibraryPage && (
-                    <Sidebar
-                        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-black transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                            }`}
-                        onClose={() => setIsSidebarOpen(false)}
-                    />
-                )}
+                <Sidebar
+                    className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-black transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                        }`}
+                    onClose={() => setIsSidebarOpen(false)}
+                />
 
                 {/* Mobile Overlay */}
-                {isSidebarOpen && !isLibraryPage && (
+                {isSidebarOpen && (
                     <div
                         className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
                         onClick={() => setIsSidebarOpen(false)}
@@ -67,8 +62,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
                 )}
 
                 <div className="flex flex-1 flex-col lg:pl-0 pt-0 w-full min-h-screen">
-                    {/* Header should handle menu click only if sidebar is available */}
-                    <Header onMenuClick={!isLibraryPage ? () => setIsSidebarOpen(true) : undefined} />
+                    <Header onMenuClick={() => setIsSidebarOpen(true)} />
                     <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden">
                         {children}
                     </main>
