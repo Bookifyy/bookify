@@ -14,7 +14,7 @@ const tabs = [
 
 export function LibraryTabs({ activeTab, onTabChange }: LibraryTabsProps) {
     return (
-        <div className="relative z-10 w-full bg-zinc-950 border border-zinc-900 p-1 rounded-xl grid grid-cols-4 gap-1 mb-6">
+        <div className="relative z-10 w-full bg-zinc-950 border border-zinc-900 p-1 rounded-xl grid grid-cols-4 gap-1">
             {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
