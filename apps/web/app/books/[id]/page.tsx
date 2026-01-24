@@ -83,7 +83,7 @@ export default function BookDetailPage() {
         ];
 
         return (
-            <div className="min-h-screen bg-black text-white pb-32">
+            <div className="min-h-screen bg-black text-white pb-80">
                 {/* Header */}
                 <div className="pt-8 px-4 flex flex-col items-center text-center space-y-4">
                     <div className="w-32 h-48 rounded-lg shadow-2xl overflow-hidden mb-2">
