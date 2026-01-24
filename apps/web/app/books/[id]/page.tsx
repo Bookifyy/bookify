@@ -73,6 +73,11 @@ export default function BookDetailPage() {
     if (loading) return <div className="p-8 text-zinc-500">Loading book details...</div>;
     if (!book) return <div className="p-8 text-red-500">Book not found.</div>;
 
+    const [showThemeModal, setShowThemeModal] = useState(false);
+    const [theme, setTheme] = useState<'dark' | 'light' | 'sepia'>('dark');
+
+    // ... (rest of code)
+
     // --- Continue Reading Layout ---
     if (book.progress && book.progress.percentage_completed > 0) {
         // Mock Chapters Data
@@ -82,8 +87,27 @@ export default function BookDetailPage() {
             { number: 3, title: 'Differentiation Rules', pages: 84, startPage: 121 },
         ];
 
+        // Theme Classes Mapping
+        const themeClasses = {
+            dark: 'bg-black text-white',
+            light: 'bg-white text-black',
+            sepia: 'bg-amber-50 text-amber-900',
+        };
+
+        const subTextClasses = {
+            dark: 'text-zinc-400',
+            light: 'text-zinc-600',
+            sepia: 'text-amber-700/80',
+        }
+
+        const cardClasses = {
+            dark: 'bg-zinc-900/50 hover:bg-zinc-900',
+            light: 'bg-zinc-100 hover:bg-zinc-200',
+            sepia: 'bg-amber-100/50 hover:bg-amber-100',
+        }
+
         return (
-            <div className="min-h-screen bg-black text-white pb-80">
+            <div className={`min-h-screen pb-80 transition-colors duration-300 ${themeClasses[theme]}`}>
                 {/* Header */}
                 <div className="pt-8 px-4 flex flex-col items-center text-center space-y-4">
                     <div className="w-32 h-48 rounded-lg shadow-2xl overflow-hidden mb-2">
@@ -95,7 +119,7 @@ export default function BookDetailPage() {
                     </div>
                     <div>
                         <h1 className="text-xl font-bold font-serif mb-1">{book.title}</h1>
-                        <p className="text-zinc-400 text-sm mb-1">{book.author}</p>
+                        <p className={`text-sm mb-1 ${subTextClasses[theme]}`}>{book.author}</p>
                         <p className="text-blue-500 text-xs font-medium uppercase tracking-wider">
                             {book.subject?.name} • {book.progress.total_pages || 1248} pages
                         </p>
@@ -104,13 +128,13 @@ export default function BookDetailPage() {
 
                 {/* Progress Bar */}
                 <div className="max-w-xl mx-auto px-6 mt-8">
-                    <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden mb-2">
+                    <div className={`h-1.5 rounded-full overflow-hidden mb-2 ${theme === 'dark' ? 'bg-zinc-800' : 'bg-slate-200'}`}>
                         <div
                             className="h-full bg-blue-600 rounded-full"
                             style={{ width: `${book.progress.percentage_completed}%` }}
                         />
                     </div>
-                    <div className="flex justify-between text-[11px] font-medium text-zinc-500 uppercase tracking-wider">
+                    <div className={`flex justify-between text-[11px] font-medium uppercase tracking-wider ${subTextClasses[theme]}`}>
                         <span>Page {book.progress.current_page}</span>
                         <span>{book.progress.total_pages || 1248} pages</span>
                     </div>
@@ -118,17 +142,17 @@ export default function BookDetailPage() {
 
                 {/* Chapters List */}
                 <div className="max-w-xl mx-auto px-6 mt-10 space-y-2">
-                    <h3 className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-4">Chapters</h3>
+                    <h3 className={`text-xs font-bold uppercase tracking-wider mb-4 ${subTextClasses[theme]}`}>Chapters</h3>
                     <div className="space-y-3">
                         {chapters.map((chapter) => (
-                            <div key={chapter.number} className="bg-zinc-900/50 p-4 rounded-xl flex items-center justify-between group cursor-pointer hover:bg-zinc-900 transition-colors">
+                            <div key={chapter.number} className={`p-4 rounded-xl flex items-center justify-between group cursor-pointer transition-colors ${cardClasses[theme]}`}>
                                 <div>
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className="text-xs text-zinc-500 font-bold">{chapter.number}</span>
-                                        <h4 className="text-sm font-medium text-white">{chapter.title}</h4>
+                                        <span className={`text-xs font-bold ${subTextClasses[theme]}`}>{chapter.number}</span>
+                                        <h4 className="text-sm font-medium">{chapter.title}</h4>
                                         <div className="w-1.5 h-1.5 rounded-full bg-blue-600 ml-1"></div>
                                     </div>
-                                    <p className="text-[11px] text-zinc-500 pl-4">{chapter.pages} pages • Starting page {chapter.startPage}</p>
+                                    <p className={`text-[11px] pl-4 ${subTextClasses[theme]}`}>{chapter.pages} pages • Starting page {chapter.startPage}</p>
                                 </div>
                             </div>
                         ))}
@@ -137,13 +161,13 @@ export default function BookDetailPage() {
 
                 {/* Stats */}
                 <div className="max-w-xl mx-auto px-6 mt-6">
-                    <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-4 space-y-2">
+                    <div className={`border rounded-xl p-4 space-y-2 ${theme === 'dark' ? 'bg-zinc-900/30 border-zinc-800' : 'bg-slate-50 border-slate-200'}`}>
                         <div className="flex justify-between items-center text-sm">
-                            <span className="text-zinc-500">Time spent</span>
+                            <span className={subTextClasses[theme]}>Time spent</span>
                             <span className="font-medium">30h 47m</span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
-                            <span className="text-zinc-500">Progress</span>
+                            <span className={subTextClasses[theme]}>Progress</span>
                             <span className="font-medium">{Math.round(book.progress.percentage_completed)}% complete</span>
                         </div>
                     </div>
@@ -151,18 +175,59 @@ export default function BookDetailPage() {
 
                 {/* Info Footer */}
                 <div className="max-w-xl mx-auto px-8 mt-4">
-                    <p className="text-[10px] text-zinc-600 flex items-center gap-1.5">
+                    <p className={`text-[10px] flex items-center gap-1.5 ${subTextClasses[theme]}`}>
                         <div className="w-1 h-1 rounded-full bg-blue-600"></div>
                         Protected content • User ID: #Q2/Q9QG30
                     </p>
                 </div>
+
+                {/* Theme Overlay */}
+                {showThemeModal && (
+                    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setShowThemeModal(false)}>
+                        <div
+                            className="absolute bottom-32 left-0 right-0 p-4 animate-in slide-in-from-bottom-10 fade-in duration-200"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="max-w-xl mx-auto">
+                                <h3 className="text-white text-sm font-bold mb-4 px-2">Reading Theme</h3>
+                                <div className="grid grid-cols-3 gap-4">
+                                    {/* Light Button */}
+                                    <button
+                                        onClick={() => setTheme('light')}
+                                        className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'light' ? 'bg-white border-white text-black' : 'bg-white text-black border-transparent opacity-80'}`}
+                                    >
+                                        Light
+                                    </button>
+                                    {/* Dark Button */}
+                                    <button
+                                        onClick={() => setTheme('dark')}
+                                        className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'dark' ? 'bg-zinc-900 border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'bg-zinc-900 border-zinc-700 text-zinc-400'}`}
+                                    >
+                                        Dark
+                                    </button>
+                                    {/* Sepia Button */}
+                                    <button
+                                        onClick={() => setTheme('sepia')}
+                                        className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'sepia' ? 'bg-[#f5e6d0] border-[#f5e6d0] text-[#5f4b32]' : 'bg-[#f5e6d0] text-[#5f4b32] border-transparent opacity-80'}`}
+                                    >
+                                        Sepia
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
 
                 {/* Bottom Toolbar & Action */}
                 <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-zinc-900 p-4 pb-6 z-50">
                     <div className="max-w-xl mx-auto space-y-4">
                         {/* Toolbar Icons */}
                         <div className="flex justify-between px-4">
-                            <button className="flex flex-col items-center gap-1 text-zinc-400 hover:text-white transition-colors">
+                            <button
+                                onClick={() => setShowThemeModal(!showThemeModal)}
+                                className={`flex flex-col items-center gap-1 transition-colors ${showThemeModal ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                            >
                                 <Sun size={18} />
                                 <span className="text-[10px]">Theme</span>
                             </button>
