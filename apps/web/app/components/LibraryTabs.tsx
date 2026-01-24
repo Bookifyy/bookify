@@ -21,7 +21,7 @@ export function LibraryTabs({ activeTab, onTabChange }: LibraryTabsProps) {
                     <button
                         key={tab.id}
                         onClick={() => onTabChange(tab.id)}
-                        className={`relative py-2 text-[13px] font-medium rounded-lg transition-all duration-200 focus:outline-none ${isActive
+                        className={`relative py-2.5 text-[14px] font-medium rounded-lg transition-all duration-200 focus:outline-none ${isActive
                             ? 'text-white'
                             : 'text-zinc-500 hover:text-zinc-300'
                             }`}

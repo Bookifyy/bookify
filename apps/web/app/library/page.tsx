@@ -188,15 +188,15 @@ export default function LibraryPage() {
 
                 {/* Row 2: Sort Pills */}
                 {!viewingCollectionId && (
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-zinc-900/50">
-                        <div className="flex items-center gap-2">
-                            <span className="text-[11px] text-zinc-500 font-medium">Sort by:</span>
-                            <div className="flex items-center gap-1.5">
+                    <div className="flex flex-col gap-4 mt-4 pt-0">
+                        <div className="flex items-center gap-3">
+                            <span className="text-[14px] text-zinc-500 font-medium">Sort by:</span>
+                            <div className="flex items-center gap-2">
                                 {(['recent', 'title', 'author', 'progress'] as const).map((type) => (
                                     <button
                                         key={type}
                                         onClick={() => setSortBy(type as any)}
-                                        className={`px-2.5 py-0.5 rounded-md text-[10px] font-medium transition-all border ${sortBy === type
+                                        className={`px-4 py-1.5 rounded-lg text-[13px] font-medium transition-all border ${sortBy === type
                                             ? 'bg-blue-600 border-blue-600 text-white'
                                             : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
                                             }`}
@@ -207,7 +207,7 @@ export default function LibraryPage() {
                             </div>
                         </div>
 
-                        <div className="w-[400px]">
+                        <div className="w-full">
                             <LibraryTabs activeTab={activeTab} onTabChange={setActiveTab} />
                         </div>
                     </div>
