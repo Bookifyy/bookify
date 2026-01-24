@@ -172,10 +172,10 @@ export default function BookDetailPage() {
 
                 {/* Info Footer */}
                 <div className="max-w-xl mx-auto px-8 mt-4">
-                    <p className={`text-[10px] flex items-center gap-1.5 ${subTextClasses[theme]}`}>
+                    <div className={`text-[10px] flex items-center gap-1.5 ${subTextClasses[theme]}`}>
                         <div className="w-1 h-1 rounded-full bg-blue-600"></div>
                         Protected content • User ID: #Q2/Q9QG30
-                    </p>
+                    </div>
                 </div>
 
                 {/* Theme Overlay */}
