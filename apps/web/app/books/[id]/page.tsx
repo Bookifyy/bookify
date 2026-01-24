@@ -108,10 +108,10 @@ export default function BookDetailPage() {
                 {/* Header */}
                 <div className="pt-8 px-4 flex flex-col items-center text-center space-y-4">
                     <div className="w-32 h-48 rounded-lg shadow-2xl overflow-hidden mb-2">
-                        {book.cover_image ? (
+                        {book?.cover_image ? (
                             <img
                                 src={resolveAssetUrl(book.cover_image)}
-                                alt={book.title}
+                                alt={book?.title ?? 'Book Cover'}
                                 className="w-full h-full object-cover"
                             />
                         ) : (
@@ -121,10 +121,10 @@ export default function BookDetailPage() {
                         )}
                     </div>
                     <div>
-                        <h1 className="text-xl font-bold font-serif mb-1">{book.title}</h1>
-                        <p className={`text-sm mb-1 ${subTextClasses[theme] || subTextClasses.dark}`}>{book.author}</p>
+                        <h1 className="text-xl font-bold font-serif mb-1">{book?.title}</h1>
+                        <p className={`text-sm mb-1 ${subTextClasses[theme] || subTextClasses.dark}`}>{book?.author}</p>
                         <p className="text-blue-500 text-xs font-medium uppercase tracking-wider">
-                            {book.subject?.name} • {book.progress?.total_pages || 1248} pages
+                            {book?.subject?.name} • {book?.progress?.total_pages || '?'} pages
                         </p>
                     </div>
                 </div>
@@ -134,12 +134,12 @@ export default function BookDetailPage() {
                     <div className={`h-1.5 rounded-full overflow-hidden mb-2 ${theme === 'dark' ? 'bg-zinc-800' : 'bg-slate-200'}`}>
                         <div
                             className="h-full bg-blue-600 rounded-full"
-                            style={{ width: `${book.progress.percentage_completed}%` }}
+                            style={{ width: `${Math.max(0, Math.min(100, book?.progress?.percentage_completed || 0))}%` }}
                         />
                     </div>
-                    <div className={`flex justify-between text-[11px] font-medium uppercase tracking-wider ${subTextClasses[theme]}`}>
-                        <span>Page {book.progress.current_page}</span>
-                        <span>{book.progress.total_pages || 1248} pages</span>
+                    <div className={`flex justify-between text-[11px] font-medium uppercase tracking-wider ${subTextClasses[theme] || subTextClasses.dark}`}>
+                        <span>Page {book?.progress?.current_page || 0}</span>
+                        <span>{book?.progress?.total_pages || '?'} pages</span>
                     </div>
                 </div>
 
