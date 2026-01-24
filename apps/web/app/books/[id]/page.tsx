@@ -75,8 +75,7 @@ export default function BookDetailPage() {
     if (loading) return <div className="p-8 text-zinc-500">Loading book details...</div>;
     if (!book) return <div className="p-8 text-red-500">Book not found.</div>;
 
-    const [showThemeModal, setShowThemeModal] = useState(false);
-    const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
 
     // ... (rest of code)
 
