@@ -29,7 +29,7 @@ export function LibraryTabs({ activeTab, onTabChange }: LibraryTabsProps) {
                         {isActive && (
                             <motion.div
                                 layoutId="activeTab"
-                                className="absolute inset-0 bg-zinc-900 rounded-lg border border-blue-500/30 shadow-[0_0_12px_rgba(59,130,246,0.3)]"
+                                className="absolute inset-0 bg-zinc-900 rounded-lg border border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.25)]"
                                 initial={false}
                                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                                 style={{ zIndex: -1 }}
