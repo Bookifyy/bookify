@@ -74,7 +74,7 @@ export default function BookDetailPage() {
     if (!book) return <div className="p-8 text-red-500">Book not found.</div>;
 
     const [showThemeModal, setShowThemeModal] = useState(false);
-    const [theme, setTheme] = useState<'dark' | 'light' | 'sepia'>('dark');
+    const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
     // ... (rest of code)
 
@@ -91,19 +91,16 @@ export default function BookDetailPage() {
         const themeClasses = {
             dark: 'bg-black text-white',
             light: 'bg-white text-black',
-            sepia: 'bg-amber-50 text-amber-900',
         };
 
         const subTextClasses = {
             dark: 'text-zinc-400',
             light: 'text-zinc-600',
-            sepia: 'text-amber-700/80',
         }
 
         const cardClasses = {
             dark: 'bg-zinc-900/50 hover:bg-zinc-900',
             light: 'bg-zinc-100 hover:bg-zinc-200',
-            sepia: 'bg-amber-100/50 hover:bg-amber-100',
         }
 
         return (
@@ -190,7 +187,7 @@ export default function BookDetailPage() {
                         >
                             <div className="max-w-xl mx-auto">
                                 <h3 className="text-white text-sm font-bold mb-4 px-2">Reading Theme</h3>
-                                <div className="grid grid-cols-3 gap-4">
+                                <div className="grid grid-cols-2 gap-4">
                                     {/* Light Button */}
                                     <button
                                         onClick={() => setTheme('light')}
@@ -204,13 +201,6 @@ export default function BookDetailPage() {
                                         className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'dark' ? 'bg-zinc-900 border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'bg-zinc-900 border-zinc-700 text-zinc-400'}`}
                                     >
                                         Dark
-                                    </button>
-                                    {/* Sepia Button */}
-                                    <button
-                                        onClick={() => setTheme('sepia')}
-                                        className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'sepia' ? 'bg-[#f5e6d0] border-[#f5e6d0] text-[#5f4b32]' : 'bg-[#f5e6d0] text-[#5f4b32] border-transparent opacity-80'}`}
-                                    >
-                                        Sepia
                                     </button>
                                 </div>
                             </div>
