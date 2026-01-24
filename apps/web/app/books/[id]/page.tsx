@@ -28,6 +28,8 @@ export default function BookDetailPage() {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
     const [addingToLibrary, setAddingToLibrary] = useState(false);
+    const [showThemeModal, setShowThemeModal] = useState(false);
+    const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
     useEffect(() => {
         const apiUrl = getApiUrl();
