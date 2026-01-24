@@ -104,21 +104,27 @@ export default function BookDetailPage() {
         }
 
         return (
-            <div className={`min-h-screen pb-80 transition-colors duration-300 ${themeClasses[theme]}`}>
+            <div className={`min-h-screen pb-80 transition-colors duration-300 ${themeClasses[theme] || themeClasses.dark}`}>
                 {/* Header */}
                 <div className="pt-8 px-4 flex flex-col items-center text-center space-y-4">
                     <div className="w-32 h-48 rounded-lg shadow-2xl overflow-hidden mb-2">
-                        <img
-                            src={resolveAssetUrl(book.cover_image)}
-                            alt={book.title}
-                            className="w-full h-full object-cover"
-                        />
+                        {book.cover_image ? (
+                            <img
+                                src={resolveAssetUrl(book.cover_image)}
+                                alt={book.title}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
+                                <BookOpen className="text-zinc-600" />
+                            </div>
+                        )}
                     </div>
                     <div>
                         <h1 className="text-xl font-bold font-serif mb-1">{book.title}</h1>
-                        <p className={`text-sm mb-1 ${subTextClasses[theme]}`}>{book.author}</p>
+                        <p className={`text-sm mb-1 ${subTextClasses[theme] || subTextClasses.dark}`}>{book.author}</p>
                         <p className="text-blue-500 text-xs font-medium uppercase tracking-wider">
-                            {book.subject?.name} • {book.progress.total_pages || 1248} pages
+                            {book.subject?.name} • {book.progress?.total_pages || 1248} pages
                         </p>
                     </div>
                 </div>
