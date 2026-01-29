@@ -391,7 +391,7 @@ export default function ReaderPage() {
     const pdfUrl = resolveAssetUrl(book.file_path);
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-white flex flex-col overflow-hidden select-none">
+        <div className="h-screen bg-zinc-950 text-white flex flex-col overflow-hidden select-none">
             {/* Reader Header */}
             {!isFullscreen && (
                 <header className="h-16 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-md px-6 flex items-center justify-between z-20">
@@ -470,8 +470,7 @@ export default function ReaderPage() {
             </main>
 
             {/* Navigation Footer */}
-            {/* Navigation Footer */}
-            <footer className="h-16 border-t border-zinc-800 bg-zinc-900/80 backdrop-blur-md px-6 flex items-center justify-center gap-8 z-20 mb-16 md:mb-16">
+            <footer className="h-16 border-t border-zinc-800 bg-zinc-900/80 backdrop-blur-md px-6 flex items-center justify-center gap-8 z-20 mb-20">
                 <button
                     disabled={pageNumber <= 1}
                     onClick={() => setPageNumber(p => Math.max(1, p - 1))}
