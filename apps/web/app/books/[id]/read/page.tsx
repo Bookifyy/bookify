@@ -12,6 +12,16 @@ import 'react-pdf/dist/Page/TextLayer.css';
 // Set worker path
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
+interface Book {
+    id: number;
+    title: string;
+    file_path: string;
+    progress?: {
+        current_page: number;
+        total_pages: number;
+    };
+}
+
 interface Bookmark {
     id: number;
     page_number: number;
@@ -62,6 +72,7 @@ export default function ReaderPage() {
 
     // New Feature States
     const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'note' | 'flashcard'>('none');
+    const [theme, setTheme] = useState<'dark' | 'light'>('dark');
     // Search specific state
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<{ page: number, match_text: string }[]>([]);
