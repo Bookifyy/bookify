@@ -639,7 +639,7 @@ export default function ReaderPage() {
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                                            className="w-full bg-black border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-600"
+                                            className="w-full bg-black border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-base md:text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-600"
                                             autoFocus
                                         />
                                         {isSearching && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 animate-spin" size={16} />}
@@ -690,7 +690,7 @@ export default function ReaderPage() {
                                             <input
                                                 type="text"
                                                 placeholder="Bookmark title..."
-                                                className="flex-1 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors"
+                                                className="flex-1 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors"
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         const val = e.currentTarget.value;
@@ -751,7 +751,7 @@ export default function ReaderPage() {
                                         <div className="space-y-2">
                                             <textarea
                                                 placeholder="Write a note..."
-                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors resize-none h-40"
+                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors resize-none h-40"
                                             />
                                             <button
                                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-2 text-xs font-bold transition-colors"
@@ -836,13 +836,13 @@ export default function ReaderPage() {
                                             <input
                                                 type="text"
                                                 placeholder="Front (Question)"
-                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors"
+                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors"
                                                 id="fc-front"
                                             />
                                             <input
                                                 type="text"
                                                 placeholder="Back (Answer)"
-                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors"
+                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors"
                                                 id="fc-back"
                                             />
                                             <button
@@ -902,7 +902,7 @@ export default function ReaderPage() {
                                     <input
                                         type="text"
                                         placeholder="Add a title (optional)"
-                                        className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none"
+                                        className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none"
                                         id="hl-title"
                                         autoFocus
                                     />
