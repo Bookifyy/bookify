@@ -12,14 +12,36 @@ import 'react-pdf/dist/Page/TextLayer.css';
 // Set worker path
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-interface Book {
+interface Bookmark {
     id: number;
+    page_number: number;
     title: string;
-    file_path: string;
-    progress?: {
-        current_page: number;
-        total_pages: number;
-    };
+    created_at: string;
+}
+
+interface Note {
+    id: number;
+    page_number: number;
+    content: string;
+    color: string;
+    created_at: string;
+}
+
+interface Highlight {
+    id: number;
+    page_number: number;
+    text_content: string;
+    color: string;
+    range_start?: string;
+    range_end?: string;
+    created_at: string;
+}
+
+interface Flashcard {
+    id: number;
+    front_content: string;
+    back_content: string;
+    created_at: string;
 }
 
 export default function ReaderPage() {
@@ -40,18 +62,112 @@ export default function ReaderPage() {
 
     // New Feature States
     const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'note' | 'flashcard'>('none');
+    // Search specific state
     const [searchQuery, setSearchQuery] = useState('');
-    const [fontSize, setFontSize] = useState(16); // Placeholder for UI
-    const [lineHeight, setLineHeight] = useState(1.6); // Placeholder for UI
-    const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+    const [searchResults, setSearchResults] = useState<{ page: number, match_text: string }[]>([]);
 
-    // Feature Content States (Mock)
-    const [bookmarks, setBookmarks] = useState([
-        { id: 1, title: 'Calculus definition', page: 12, date: '2 days ago' },
-    ]);
-    const [notes, setNotes] = useState<any[]>([]);
-    const [highlights, setHighlights] = useState<any[]>([]);
-    const [flashcards, setFlashcards] = useState<any[]>([]);
+    // Feature Content States
+    const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+    const [notes, setNotes] = useState<Note[]>([]);
+    const [highlights, setHighlights] = useState<Highlight[]>([]);
+    const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
+
+    // Selection Text
+    const [selectedText, setSelectedText] = useState('');
+
+    // Features Data Fetching
+    const fetchFeatures = async () => {
+        if (!token || !id) return;
+        const apiUrl = getApiUrl();
+        try {
+            const res = await fetch(`${apiUrl}/api/books/${id}/features`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setBookmarks(data.bookmarks);
+                setNotes(data.notes);
+                setHighlights(data.highlights);
+                setFlashcards(data.flashcards);
+            }
+        } catch (e) {
+            console.error("Failed to fetch features", e);
+        }
+    };
+
+    useEffect(() => {
+        fetchFeatures();
+    }, [id, token]);
+
+    // Handlers
+    const saveBookmark = async (title: string) => {
+        const apiUrl = getApiUrl();
+        const res = await fetch(`${apiUrl}/api/books/${id}/bookmarks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ page_number: pageNumber, title })
+        });
+        if (res.ok) fetchFeatures();
+    };
+
+    const deleteFeature = async (type: 'bookmarks' | 'notes' | 'highlights' | 'flashcards', featureId: number) => {
+        const apiUrl = getApiUrl();
+        const res = await fetch(`${apiUrl}/api/books/${id}/${type}/${featureId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+            // Optimistic update
+            if (type === 'bookmarks') setBookmarks(prev => prev.filter(b => b.id !== featureId));
+            if (type === 'notes') setNotes(prev => prev.filter(n => n.id !== featureId));
+            if (type === 'highlights') setHighlights(prev => prev.filter(h => h.id !== featureId));
+            if (type === 'flashcards') setFlashcards(prev => prev.filter(f => f.id !== featureId));
+        }
+    };
+
+    const saveNote = async (content: string) => {
+        const apiUrl = getApiUrl();
+        const res = await fetch(`${apiUrl}/api/books/${id}/notes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ page_number: pageNumber, content })
+        });
+        if (res.ok) fetchFeatures();
+    };
+
+    const saveHighlight = async (text: string, color: string = 'yellow') => {
+        const apiUrl = getApiUrl();
+        const res = await fetch(`${apiUrl}/api/books/${id}/highlights`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ page_number: pageNumber, text_content: text, color })
+        });
+        if (res.ok) fetchFeatures();
+    };
+
+    const saveFlashcard = async (front: string, back: string) => {
+        const apiUrl = getApiUrl();
+        const res = await fetch(`${apiUrl}/api/books/${id}/flashcards`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ front_content: front, back_content: back })
+        });
+        if (res.ok) fetchFeatures();
+    };
+
+    // Text Selection Handler
+    useEffect(() => {
+        const handleSelection = () => {
+            const selection = window.getSelection();
+            if (selection && selection.toString().trim().length > 0) {
+                setSelectedText(selection.toString().trim());
+                // Optionally open highlight modal automatically if user intends
+                // setActiveModal('highlight'); 
+            }
+        };
+        document.addEventListener('mouseup', handleSelection);
+        return () => document.removeEventListener('mouseup', handleSelection);
+    }, []);
 
     // Responsive width calculation
     useEffect(() => {
@@ -173,9 +289,49 @@ export default function ReaderPage() {
         return () => clearTimeout(timer);
     }, [pageNumber, id, token, loading, numPages]);
 
-    function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
-        setNumPages(numPages);
+    // PDF Document Proxy
+    const [pdfDocument, setPdfDocument] = useState<any>(null);
+    const [isSearching, setIsSearching] = useState(false);
+
+    function onDocumentLoadSuccess(pdf: any) {
+        setNumPages(pdf.numPages);
+        setPdfDocument(pdf);
     }
+
+    const handleSearch = async () => {
+        if (!pdfDocument || !searchQuery.trim()) return;
+
+        setIsSearching(true);
+        setSearchResults([]);
+        const results: { page: number, match_text: string }[] = [];
+        const lowerQuery = searchQuery.toLowerCase();
+
+        try {
+            for (let i = 1; i <= pdfDocument.numPages; i++) {
+                const page = await pdfDocument.getPage(i);
+                const textContent = await page.getTextContent();
+                const textItems = textContent.items.map((item: any) => item.str).join(' ');
+
+                if (textItems.toLowerCase().includes(lowerQuery)) {
+                    // Extract a snippet around the match
+                    const index = textItems.toLowerCase().indexOf(lowerQuery);
+                    const start = Math.max(0, index - 20);
+                    const end = Math.min(textItems.length, index + 40);
+                    const snippet = (start > 0 ? '...' : '') + textItems.substring(start, end) + (end < textItems.length ? '...' : '');
+
+                    results.push({ page: i, match_text: snippet });
+                }
+
+                // Optional: Limit results for performance
+                if (results.length >= 20) break;
+            }
+        } catch (e) {
+            console.error("Search failed", e);
+        }
+
+        setSearchResults(results);
+        setIsSearching(false);
+    };
 
     const toggleFullscreen = () => {
         if (!document.fullscreenElement) {
@@ -359,23 +515,50 @@ export default function ReaderPage() {
 
                             {/* Search Modal */}
                             {activeModal === 'search' && (
-                                <div className="p-4">
-                                    <div className="relative">
+                                <div className="p-4 h-full flex flex-col">
+                                    <div className="relative shrink-0">
                                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
                                         <input
                                             type="text"
                                             placeholder="Search in book..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                                             className="w-full bg-black border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-600"
                                             autoFocus
                                         />
+                                        {isSearching && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 animate-spin" size={16} />}
                                     </div>
-                                    {searchQuery && (
-                                        <div className="mt-4 text-center text-zinc-500 text-xs py-8">
-                                            No results found for "{searchQuery}"
-                                        </div>
-                                    )}
+
+                                    <div className="mt-4 flex-1 overflow-y-auto custom-scrollbar space-y-2">
+                                        {searchResults.length > 0 ? (
+                                            searchResults.map((result, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => {
+                                                        setPageNumber(result.page);
+                                                        setActiveModal('none');
+                                                    }}
+                                                    className="w-full text-left p-3 rounded-lg bg-zinc-900/50 hover:bg-zinc-800 border border-zinc-800 transition-colors group"
+                                                >
+                                                    <div className="flex justify-between items-center mb-1">
+                                                        <span className="text-[10px] uppercase font-bold text-zinc-500">Page {result.page}</span>
+                                                    </div>
+                                                    <p className="text-xs text-zinc-300 line-clamp-2">
+                                                        <span dangerouslySetInnerHTML={{
+                                                            __html: result.match_text.replace(new RegExp(searchQuery, 'gi'), match => `<span class="text-blue-400 font-bold bg-blue-400/10">${match}</span>`)
+                                                        }} />
+                                                    </p>
+                                                </button>
+                                            ))
+                                        ) : (
+                                            !isSearching && searchQuery && (
+                                                <div className="text-center py-8 text-zinc-500 text-xs">
+                                                    No results found for "{searchQuery}"
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
                                 </div>
                             )}
 
@@ -397,7 +580,7 @@ export default function ReaderPage() {
                                                     if (e.key === 'Enter') {
                                                         const val = e.currentTarget.value;
                                                         if (val.trim()) {
-                                                            setBookmarks([{ id: Date.now(), title: val, page: pageNumber, date: 'Just now' }, ...bookmarks]);
+                                                            saveBookmark(val);
                                                             e.currentTarget.value = '';
                                                         }
                                                     }
@@ -408,7 +591,7 @@ export default function ReaderPage() {
                                                 onClick={(e) => {
                                                     const input = e.currentTarget.previousElementSibling as HTMLInputElement;
                                                     if (input.value.trim()) {
-                                                        setBookmarks([{ id: Date.now(), title: input.value, page: pageNumber, date: 'Just now' }, ...bookmarks]);
+                                                        saveBookmark(input.value);
                                                         input.value = '';
                                                     }
                                                 }}
@@ -426,10 +609,10 @@ export default function ReaderPage() {
                                                 <div key={bm.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg flex items-center justify-between group">
                                                     <div>
                                                         <p className="text-sm font-medium text-white">{bm.title}</p>
-                                                        <p className="text-[10px] text-zinc-500">Page {bm.page} • {bm.date}</p>
+                                                        <p className="text-[10px] text-zinc-500">Page {bm.page_number} • {new Date(bm.created_at).toLocaleDateString()}</p>
                                                     </div>
                                                     <button
-                                                        onClick={() => setBookmarks(bookmarks.filter(b => b.id !== bm.id))}
+                                                        onClick={() => deleteFeature('bookmarks', bm.id)}
                                                         className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
                                                     >
                                                         <Bookmark size={14} fill="currentColor" />
@@ -453,14 +636,14 @@ export default function ReaderPage() {
                                         <div className="space-y-2">
                                             <textarea
                                                 placeholder="Write a note..."
-                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors resize-none h-20"
+                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors resize-none h-40"
                                             />
                                             <button
                                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-2 text-xs font-bold transition-colors"
                                                 onClick={(e) => {
                                                     const textarea = e.currentTarget.previousElementSibling as HTMLTextAreaElement;
                                                     if (textarea.value.trim()) {
-                                                        setNotes([{ id: Date.now(), content: textarea.value, page: pageNumber, date: 'Just now' }, ...notes]);
+                                                        saveNote(textarea.value);
                                                         textarea.value = '';
                                                     }
                                                 }}
@@ -478,9 +661,9 @@ export default function ReaderPage() {
                                                 <div key={note.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg flex flex-col gap-2 group">
                                                     <p className="text-xs text-zinc-300 leading-relaxed">{note.content}</p>
                                                     <div className="flex justify-between items-center pt-2 border-t border-zinc-800/50">
-                                                        <p className="text-[10px] text-zinc-500">Page {note.page} • {note.date}</p>
+                                                        <p className="text-[10px] text-zinc-500">Page {note.page_number} • {new Date(note.created_at).toLocaleDateString()}</p>
                                                         <button
-                                                            onClick={() => setNotes(notes.filter(n => n.id !== note.id))}
+                                                            onClick={() => deleteFeature('notes', note.id)}
                                                             className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
                                                         >
                                                             Delete
@@ -503,31 +686,22 @@ export default function ReaderPage() {
 
                                     <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
                                         <div className="space-y-2">
-                                            <div className="flex gap-2 mb-2">
-                                                {['yellow', 'green', 'blue', 'red'].map(color => (
-                                                    <button
-                                                        key={color}
-                                                        className={`w-6 h-6 rounded-full border-2 ${color === 'yellow' ? 'bg-yellow-500/20 border-yellow-500' : color === 'green' ? 'bg-green-500/20 border-green-500' : color === 'blue' ? 'bg-blue-500/20 border-blue-500' : 'bg-red-500/20 border-red-500'}`}
-                                                        onClick={() => {
-                                                            // In a real app this would set selection color
-                                                        }}
-                                                    />
-                                                ))}
+                                            <div className="bg-zinc-800/50 p-3 rounded-lg border border-zinc-700 mb-2">
+                                                <p className="text-xs text-zinc-300 italic">"
+                                                    {selectedText || "Select text in the book to highlight"}
+                                                    "</p>
                                             </div>
-                                            <input
-                                                type="text"
-                                                placeholder="Text to highlight (mock)..."
-                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors"
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        const val = e.currentTarget.value;
-                                                        if (val.trim()) {
-                                                            setHighlights([{ id: Date.now(), text: val, color: 'yellow', page: pageNumber }, ...highlights]);
-                                                            e.currentTarget.value = '';
-                                                        }
-                                                    }
-                                                }}
-                                            />
+                                            {selectedText && (
+                                                <div className="flex gap-2 mb-2">
+                                                    {['yellow', 'green', 'blue', 'red'].map(color => (
+                                                        <button
+                                                            key={color}
+                                                            className={`w-6 h-6 rounded-full border-2 cursor-pointer transition-transform hover:scale-110 ${color === 'yellow' ? 'bg-yellow-500/20 border-yellow-500' : color === 'green' ? 'bg-green-500/20 border-green-500' : color === 'blue' ? 'bg-blue-500/20 border-blue-500' : 'bg-red-500/20 border-red-500'}`}
+                                                            onClick={() => saveHighlight(selectedText, color)}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
@@ -537,11 +711,11 @@ export default function ReaderPage() {
                                         ) : (
                                             highlights.map(hl => (
                                                 <div key={hl.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg group">
-                                                    <p className={`text-xs text-zinc-300 italic pl-2 border-l-2 ${hl.color === 'yellow' ? 'border-yellow-500' : 'border-blue-500'} mb-2`}>"{hl.text}"</p>
+                                                    <p className={`text-xs text-zinc-300 italic pl-2 border-l-2 ${hl.color === 'yellow' ? 'border-yellow-500' : 'border-blue-500'} mb-2`}>"{hl.text_content}"</p>
                                                     <div className="flex justify-between items-center">
-                                                        <p className="text-[10px] text-zinc-500">Page {hl.page}</p>
+                                                        <p className="text-[10px] text-zinc-500">Page {hl.page_number}</p>
                                                         <button
-                                                            onClick={() => setHighlights(highlights.filter(h => h.id !== hl.id))}
+                                                            onClick={() => deleteFeature('highlights', hl.id)}
                                                             className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 text-[10px]"
                                                         >
                                                             Remove
@@ -582,7 +756,7 @@ export default function ReaderPage() {
                                                     const front = (document.getElementById('fc-front') as HTMLInputElement);
                                                     const back = (document.getElementById('fc-back') as HTMLInputElement);
                                                     if (front.value.trim() && back.value.trim()) {
-                                                        setFlashcards([{ id: Date.now(), front: front.value, back: back.value }, ...flashcards]);
+                                                        saveFlashcard(front.value, back.value);
                                                         front.value = '';
                                                         back.value = '';
                                                         front.focus();
@@ -602,15 +776,15 @@ export default function ReaderPage() {
                                                 <div key={fc.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg group">
                                                     <div className="mb-2">
                                                         <p className="text-[10px] text-zinc-500 uppercase font-bold">Front</p>
-                                                        <p className="text-xs text-white">{fc.front}</p>
+                                                        <p className="text-xs text-white">{fc.front_content}</p>
                                                     </div>
                                                     <div className="mb-2">
                                                         <p className="text-[10px] text-zinc-500 uppercase font-bold">Back</p>
-                                                        <p className="text-xs text-zinc-300">{fc.back}</p>
+                                                        <p className="text-xs text-zinc-300">{fc.back_content}</p>
                                                     </div>
                                                     <div className="flex justify-end">
                                                         <button
-                                                            onClick={() => setFlashcards(flashcards.filter(card => card.id !== fc.id))}
+                                                            onClick={() => deleteFeature('flashcards', fc.id)}
                                                             className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 text-[10px]"
                                                         >
                                                             Delete

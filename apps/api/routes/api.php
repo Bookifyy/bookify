@@ -183,5 +183,22 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::get('/subjects', [\App\Http\Controllers\SubjectController::class, 'index']);
+
+    // Reading Features Routes
+    Route::group(['prefix' => 'books/{bookId}'], function () {
+        Route::get('/features', [App\Http\Controllers\ReadingFeaturesController::class, 'index']);
+
+        Route::post('/bookmarks', [App\Http\Controllers\ReadingFeaturesController::class, 'storeBookmark']);
+        Route::delete('/bookmarks/{id}', [App\Http\Controllers\ReadingFeaturesController::class, 'deleteBookmark']);
+
+        Route::post('/notes', [App\Http\Controllers\ReadingFeaturesController::class, 'storeNote']);
+        Route::delete('/notes/{id}', [App\Http\Controllers\ReadingFeaturesController::class, 'deleteNote']);
+
+        Route::post('/highlights', [App\Http\Controllers\ReadingFeaturesController::class, 'storeHighlight']);
+        Route::delete('/highlights/{id}', [App\Http\Controllers\ReadingFeaturesController::class, 'deleteHighlight']);
+
+        Route::post('/flashcards', [App\Http\Controllers\ReadingFeaturesController::class, 'storeFlashcard']);
+        Route::delete('/flashcards/{id}', [App\Http\Controllers\ReadingFeaturesController::class, 'deleteFlashcard']);
+    });
 });
 
