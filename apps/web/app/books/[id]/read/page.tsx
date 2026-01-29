@@ -150,19 +150,33 @@ export default function ReaderPage() {
 
     const saveHighlight = async (text: string, title: string = '', color: string = 'yellow') => {
         try {
+            const tempId = Date.now();
+            // Optimistic update
+            const newHighlight: Highlight = {
+                id: tempId,
+                page_number: pageNumber,
+                text_content: text,
+                title,
+                color,
+                created_at: new Date().toISOString()
+            };
+            setHighlights(prev => [...prev, newHighlight]);
+
             const apiUrl = getApiUrl();
             const res = await fetch(`${apiUrl}/api/books/${id}/highlights`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ page_number: pageNumber, text_content: text, title, color })
             });
+
             if (res.ok) {
+                // Background refresh to get real ID
                 fetchFeatures();
             } else {
+                // Revert if failed
+                setHighlights(prev => prev.filter(h => h.id !== tempId));
                 const err = await res.text();
-                // Temporary alert for debugging
                 alert(`Failed to save: ${err}`);
-                console.error("Highlight save failed:", err);
             }
         } catch (e) {
             console.error("Network error saving highlight:", e);
