@@ -109,11 +109,20 @@ export default function BookDetailPage() {
             light: 'bg-zinc-100 hover:bg-zinc-200',
         }
 
-        // Feature Mock Data
-        const mockBookmarks = [
+        // Feature States (Mock Data for now)
+        const [bookmarks, setBookmarks] = useState([
             { id: 1, title: 'Calculus definition', page: 12, date: '2 days ago' },
             { id: 2, title: 'Derivative rules', page: 54, date: '1 week ago' },
-        ];
+        ]);
+        const [notes, setNotes] = useState([
+            { id: 1, content: 'Remember to practice chain rule.', page: 55, date: '1 day ago' }
+        ]);
+        const [highlights, setHighlights] = useState([
+            { id: 1, text: 'Fundamental Theorem of Calculus', color: 'yellow', page: 60 }
+        ]);
+        const [flashcards, setFlashcards] = useState([
+            { id: 1, front: 'd/dx (sin x)', back: 'cos x' }
+        ]);
 
         return (
             <div className={`min-h-screen pb-80 transition-colors duration-300 ${themeClasses[theme] || themeClasses.dark}`}>
@@ -206,7 +215,7 @@ export default function BookDetailPage() {
                             className="absolute bottom-0 left-0 right-0 p-4 animate-in slide-in-from-bottom-10 fade-in duration-200 lg:top-1/2 lg:bottom-auto lg:left-1/2 lg:right-auto lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-[400px]"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
+                            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl max-h-[80vh] flex flex-col">
 
                                 {/* Theme Modal */}
                                 {activeModal === 'theme' && (
@@ -284,41 +293,245 @@ export default function BookDetailPage() {
 
                                 {/* Bookmarks Modal */}
                                 {activeModal === 'bookmark' && (
-                                    <div className="p-6">
-                                        <div className="flex items-center justify-between mb-4">
+                                    <div className="flex flex-col h-full">
+                                        <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
                                             <h3 className="font-bold text-white">Bookmarks</h3>
-                                            <span className="text-xs text-zinc-500">{mockBookmarks.length} found</span>
+                                            <span className="text-xs text-zinc-500">{bookmarks.length} saved</span>
                                         </div>
-                                        <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
-                                            {mockBookmarks.map(bm => (
-                                                <div key={bm.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg flex items-center justify-between">
-                                                    <div>
-                                                        <p className="text-sm font-medium text-white">{bm.title}</p>
-                                                        <p className="text-[10px] text-zinc-500">Page {bm.page} • {bm.date}</p>
+
+                                        <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Bookmark title..."
+                                                    className="flex-1 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors"
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter') {
+                                                            const val = e.currentTarget.value;
+                                                            if (val.trim()) {
+                                                                setBookmarks([{ id: Date.now(), title: val, page: book?.progress?.current_page || 1, date: 'Just now' }, ...bookmarks]);
+                                                                e.currentTarget.value = '';
+                                                            }
+                                                        }
+                                                    }}
+                                                />
+                                                <button
+                                                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-2 text-xs font-bold transition-colors"
+                                                    onClick={(e) => {
+                                                        const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                                        if (input.value.trim()) {
+                                                            setBookmarks([{ id: Date.now(), title: input.value, page: book?.progress?.current_page || 1, date: 'Just now' }, ...bookmarks]);
+                                                            input.value = '';
+                                                        }
+                                                    }}
+                                                >
+                                                    Add
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+                                            {bookmarks.length === 0 ? (
+                                                <div className="text-center py-8 text-zinc-500 text-xs">No bookmarks yet.</div>
+                                            ) : (
+                                                bookmarks.map(bm => (
+                                                    <div key={bm.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg flex items-center justify-between group">
+                                                        <div>
+                                                            <p className="text-sm font-medium text-white">{bm.title}</p>
+                                                            <p className="text-[10px] text-zinc-500">Page {bm.page} • {bm.date}</p>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => setBookmarks(bookmarks.filter(b => b.id !== bm.id))}
+                                                            className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                                        >
+                                                            <Bookmark size={14} fill="currentColor" />
+                                                        </button>
                                                     </div>
-                                                    <button className="text-zinc-600 hover:text-red-500 transition-colors"><Bookmark size={14} fill="currentColor" /></button>
-                                                </div>
-                                            ))}
+                                                ))
+                                            )}
                                         </div>
                                     </div>
                                 )}
 
-                                {/* Other Feature Modals (Generic) */}
-                                {['highlight', 'note', 'flashcard'].includes(activeModal) && (
-                                    <div className="p-8 text-center">
-                                        <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4 text-zinc-400">
-                                            {activeModal === 'highlight' && <Type size={20} />}
-                                            {activeModal === 'note' && <Bookmark size={20} />}
-                                            {activeModal === 'flashcard' && <BookOpen size={20} />}
+                                {/* Notes Modal */}
+                                {activeModal === 'note' && (
+                                    <div className="flex flex-col h-full">
+                                        <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
+                                            <h3 className="font-bold text-white">Notes</h3>
+                                            <span className="text-xs text-zinc-500">{notes.length} saved</span>
                                         </div>
-                                        <h3 className="font-bold text-white capitalize mb-2">{activeModal}s</h3>
-                                        <p className="text-xs text-zinc-500">
-                                            Create your first {activeModal} to get started.
-                                            <br />This feature is coming soon to the platform.
-                                        </p>
-                                        <button className="mt-6 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-2.5 rounded-lg text-xs transition-colors">
-                                            Create New {activeModal.charAt(0).toUpperCase() + activeModal.slice(1)}
-                                        </button>
+
+                                        <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
+                                            <div className="space-y-2">
+                                                <textarea
+                                                    placeholder="Write a note..."
+                                                    className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors resize-none h-20"
+                                                />
+                                                <button
+                                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-2 text-xs font-bold transition-colors"
+                                                    onClick={(e) => {
+                                                        const textarea = e.currentTarget.previousElementSibling as HTMLTextAreaElement;
+                                                        if (textarea.value.trim()) {
+                                                            setNotes([{ id: Date.now(), content: textarea.value, page: book?.progress?.current_page || 1, date: 'Just now' }, ...notes]);
+                                                            textarea.value = '';
+                                                        }
+                                                    }}
+                                                >
+                                                    Save Note
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+                                            {notes.length === 0 ? (
+                                                <div className="text-center py-8 text-zinc-500 text-xs">No notes yet.</div>
+                                            ) : (
+                                                notes.map(note => (
+                                                    <div key={note.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg flex flex-col gap-2 group">
+                                                        <p className="text-xs text-zinc-300 leading-relaxed">{note.content}</p>
+                                                        <div className="flex justify-between items-center pt-2 border-t border-zinc-800/50">
+                                                            <p className="text-[10px] text-zinc-500">Page {note.page} • {note.date}</p>
+                                                            <button
+                                                                onClick={() => setNotes(notes.filter(n => n.id !== note.id))}
+                                                                className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Highlights Modal */}
+                                {activeModal === 'highlight' && (
+                                    <div className="flex flex-col h-full">
+                                        <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
+                                            <h3 className="font-bold text-white">Highlights</h3>
+                                            <span className="text-xs text-zinc-500">{highlights.length} saved</span>
+                                        </div>
+
+                                        <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
+                                            <div className="space-y-2">
+                                                <div className="flex gap-2 mb-2">
+                                                    {['yellow', 'green', 'blue', 'red'].map(color => (
+                                                        <button
+                                                            key={color}
+                                                            className={`w-6 h-6 rounded-full border-2 ${color === 'yellow' ? 'bg-yellow-500/20 border-yellow-500' : color === 'green' ? 'bg-green-500/20 border-green-500' : color === 'blue' ? 'bg-blue-500/20 border-blue-500' : 'bg-red-500/20 border-red-500'}`}
+                                                            onClick={() => {
+                                                                // In a real app this would set selection color
+                                                            }}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Text to highlight (mock)..."
+                                                    className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors"
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter') {
+                                                            const val = e.currentTarget.value;
+                                                            if (val.trim()) {
+                                                                setHighlights([{ id: Date.now(), text: val, color: 'yellow', page: book?.progress?.current_page || 1 }, ...highlights]);
+                                                                e.currentTarget.value = '';
+                                                            }
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+                                            {highlights.length === 0 ? (
+                                                <div className="text-center py-8 text-zinc-500 text-xs">No highlights yet.</div>
+                                            ) : (
+                                                highlights.map(hl => (
+                                                    <div key={hl.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg group">
+                                                        <p className={`text-xs text-zinc-300 italic pl-2 border-l-2 ${hl.color === 'yellow' ? 'border-yellow-500' : 'border-blue-500'} mb-2`}>"{hl.text}"</p>
+                                                        <div className="flex justify-between items-center">
+                                                            <p className="text-[10px] text-zinc-500">Page {hl.page}</p>
+                                                            <button
+                                                                onClick={() => setHighlights(highlights.filter(h => h.id !== hl.id))}
+                                                                className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 text-[10px]"
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Flashcards Modal */}
+                                {activeModal === 'flashcard' && (
+                                    <div className="flex flex-col h-full">
+                                        <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
+                                            <h3 className="font-bold text-white">Flashcards</h3>
+                                            <span className="text-xs text-zinc-500">{flashcards.length} cards</span>
+                                        </div>
+
+                                        <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
+                                            <div className="space-y-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Front (Question)"
+                                                    className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors"
+                                                    id="fc-front"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Back (Answer)"
+                                                    className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none transition-colors"
+                                                    id="fc-back"
+                                                />
+                                                <button
+                                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-2 text-xs font-bold transition-colors"
+                                                    onClick={() => {
+                                                        const front = (document.getElementById('fc-front') as HTMLInputElement);
+                                                        const back = (document.getElementById('fc-back') as HTMLInputElement);
+                                                        if (front.value.trim() && back.value.trim()) {
+                                                            setFlashcards([{ id: Date.now(), front: front.value, back: back.value }, ...flashcards]);
+                                                            front.value = '';
+                                                            back.value = '';
+                                                            front.focus();
+                                                        }
+                                                    }}
+                                                >
+                                                    Add Card
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+                                            {flashcards.length === 0 ? (
+                                                <div className="text-center py-8 text-zinc-500 text-xs">No cards created.</div>
+                                            ) : (
+                                                flashcards.map(fc => (
+                                                    <div key={fc.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg group">
+                                                        <div className="mb-2">
+                                                            <p className="text-[10px] text-zinc-500 uppercase font-bold">Front</p>
+                                                            <p className="text-xs text-white">{fc.front}</p>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                            <p className="text-[10px] text-zinc-500 uppercase font-bold">Back</p>
+                                                            <p className="text-xs text-zinc-300">{fc.back}</p>
+                                                        </div>
+                                                        <div className="flex justify-end">
+                                                            <button
+                                                                onClick={() => setFlashcards(flashcards.filter(card => card.id !== fc.id))}
+                                                                className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 text-[10px]"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
                                     </div>
                                 )}
 
@@ -329,59 +542,73 @@ export default function BookDetailPage() {
 
 
                 {/* Bottom Toolbar & Action */}
-                <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-zinc-900 p-4 pb-6 z-50">
-                    <div className="max-w-xl mx-auto space-y-4">
-                        {/* Toolbar Icons */}
-                        <div className="flex justify-between px-4">
-                            <button
-                                onClick={() => setActiveModal(activeModal === 'theme' ? 'none' : 'theme')}
-                                className={`flex flex-col items-center gap-1 transition-colors ${activeModal === 'theme' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
-                            >
-                                <Sun size={18} />
-                                <span className="text-[10px]">Theme</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveModal(activeModal === 'typography' ? 'none' : 'typography')}
-                                className={`flex flex-col items-center gap-1 transition-colors ${activeModal === 'typography' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
-                            >
-                                <Type size={18} />
-                                <span className="text-[10px]">Font</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveModal(activeModal === 'search' ? 'none' : 'search')}
-                                className={`flex flex-col items-center gap-1 transition-colors ${activeModal === 'search' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
-                            >
-                                <Search size={18} />
-                                <span className="text-[10px]">Search</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveModal(activeModal === 'bookmark' ? 'none' : 'bookmark')}
-                                className={`flex flex-col items-center gap-1 transition-colors ${activeModal === 'bookmark' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
-                            >
-                                <Bookmark size={18} />
-                                <span className="text-[10px]">Bookmark</span>
-                            </button>
-                        </div>
+                <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-zinc-900 pb-6 pt-2 z-50">
+                    <div className="max-w-xl mx-auto flex items-center justify-between px-6">
 
-                        {/* Pills */}
-                        <div className="flex justify-center gap-2">
-                            {['Highlight', 'Note', 'Flashcard'].map(action => (
-                                <button
-                                    key={action}
-                                    onClick={() => setActiveModal(action.toLowerCase() as any)}
-                                    className={`bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white text-[10px] uppercase font-bold tracking-wider px-4 py-1.5 rounded-full transition-colors border border-zinc-800 ${activeModal === action.toLowerCase() ? 'border-blue-600 text-blue-500' : ''}`}
-                                >
-                                    • {action}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Main Button */}
+                        {/* Font Settings */}
                         <button
-                            onClick={() => router.push(`/books/${id}/read`)}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+                            onClick={() => setActiveModal(activeModal === 'typography' ? 'none' : 'typography')}
+                            className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'typography' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
                         >
-                            Continue Reading
+                            <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                                <Type size={18} />
+                            </div>
+                            <span className="text-[10px] font-medium">Font</span>
+                        </button>
+
+                        {/* Search */}
+                        <button
+                            onClick={() => setActiveModal(activeModal === 'search' ? 'none' : 'search')}
+                            className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'search' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        >
+                            <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                                <Search size={18} />
+                            </div>
+                            <span className="text-[10px] font-medium">Search</span>
+                        </button>
+
+                        {/* Highlight */}
+                        <button
+                            onClick={() => setActiveModal(activeModal === 'highlight' ? 'none' : 'highlight')}
+                            className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'highlight' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        >
+                            <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                                <Type size={18} className="rotate-90" /> {/* Simulate Pen or just use Type for now, lucide might have Highlighter */}
+                            </div>
+                            <span className="text-[10px] font-medium">Highlight</span>
+                        </button>
+
+                        {/* Note */}
+                        <button
+                            onClick={() => setActiveModal(activeModal === 'note' ? 'none' : 'note')}
+                            className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'note' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        >
+                            <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                                <BookOpen size={18} />
+                            </div>
+                            <span className="text-[10px] font-medium">Note</span>
+                        </button>
+
+                        {/* Bookmark */}
+                        <button
+                            onClick={() => setActiveModal(activeModal === 'bookmark' ? 'none' : 'bookmark')}
+                            className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'bookmark' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        >
+                            <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                                <Bookmark size={18} />
+                            </div>
+                            <span className="text-[10px] font-medium">Bookmark</span>
+                        </button>
+
+                        {/* Flashcards */}
+                        <button
+                            onClick={() => setActiveModal(activeModal === 'flashcard' ? 'none' : 'flashcard')}
+                            className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'flashcard' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        >
+                            <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                                <Star size={18} />
+                            </div>
+                            <span className="text-[10px] font-medium">Flashcard</span>
                         </button>
                     </div>
                 </div>
