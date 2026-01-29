@@ -149,13 +149,24 @@ export default function ReaderPage() {
     };
 
     const saveHighlight = async (text: string, title: string = '', color: string = 'yellow') => {
-        const apiUrl = getApiUrl();
-        const res = await fetch(`${apiUrl}/api/books/${id}/highlights`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ page_number: pageNumber, text_content: text, title, color })
-        });
-        if (res.ok) fetchFeatures();
+        try {
+            const apiUrl = getApiUrl();
+            const res = await fetch(`${apiUrl}/api/books/${id}/highlights`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ page_number: pageNumber, text_content: text, title, color })
+            });
+            if (res.ok) {
+                fetchFeatures();
+            } else {
+                const err = await res.text();
+                // Temporary alert for debugging
+                alert(`Failed to save: ${err}`);
+                console.error("Highlight save failed:", err);
+            }
+        } catch (e) {
+            console.error("Network error saving highlight:", e);
+        }
     };
 
     const saveFlashcard = async (front: string, back: string) => {
