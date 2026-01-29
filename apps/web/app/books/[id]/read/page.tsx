@@ -485,13 +485,20 @@ export default function ReaderPage() {
                                     const str = textItem.str;
                                     const itemIndex = textItem.itemIndex;
 
+                                    // Helper to normalize strings for comparison
+                                    const normalize = (s: string) => s.replace(/\s+/g, ' ').trim();
+                                    const normStr = normalize(str);
+                                    if (!normStr) return str;
+
                                     // Find unique matches on this page
                                     const pageHighlights = highlights.filter(h => h.page_number === pageNumber);
 
                                     // Check if this textItem is part of any highlight
                                     for (const h of pageHighlights) {
-                                        // Case 1: The highlight fully contains this text item (e.g. multi-line selection)
-                                        if (h.text_content.includes(str)) {
+                                        const normHighlight = normalize(h.text_content);
+
+                                        // Case 1: Highlight contains this text segment (e.g. highlight is a paragraph, textItem is a line)
+                                        if (normHighlight.includes(normStr)) {
                                             const colorMap: Record<string, string> = {
                                                 'yellow': 'rgba(234, 179, 8, 0.4)',
                                                 'green': 'rgba(34, 197, 94, 0.4)',
@@ -501,8 +508,8 @@ export default function ReaderPage() {
                                             return <span key={itemIndex + h.id} style={{ backgroundColor: colorMap[h.color] || 'rgba(255, 255, 0, 0.4)' }}>{str}</span>;
                                         }
 
-                                        // Case 2: The text item contains the highlight (e.g. single word selection)
-                                        if (str.includes(h.text_content)) {
+                                        // Case 2: Text segment contains the highlight (e.g. single word selection)
+                                        if (normStr.includes(normHighlight)) {
                                             const colorMap: Record<string, string> = {
                                                 'yellow': 'rgba(234, 179, 8, 0.4)',
                                                 'green': 'rgba(34, 197, 94, 0.4)',
@@ -511,21 +518,23 @@ export default function ReaderPage() {
                                             };
 
                                             // Split text by the highlight content to highlight only the match
-                                            // Note: This highlights ALL occurrences of the phrase in this line. 
-                                            // Without precise coordinates, this is the best approximation.
-                                            const parts = str.split(h.text_content);
-                                            return (
-                                                <span key={itemIndex}>
-                                                    {parts.map((part: string, i: number) => (
-                                                        <React.Fragment key={i}>
-                                                            {part}
-                                                            {i < parts.length - 1 && (
-                                                                <span style={{ backgroundColor: colorMap[h.color] }}>{h.text_content}</span>
-                                                            )}
-                                                        </React.Fragment>
-                                                    ))}
-                                                </span>
-                                            );
+                                            // Using normalized check is tricky for split, so we rely on simple match for split
+                                            // If simple split fails, we default to full highlight valid above or fallback
+                                            if (str.includes(h.text_content)) {
+                                                const parts = str.split(h.text_content);
+                                                return (
+                                                    <span key={itemIndex}>
+                                                        {parts.map((part: string, i: number) => (
+                                                            <React.Fragment key={i}>
+                                                                {part}
+                                                                {i < parts.length - 1 && (
+                                                                    <span style={{ backgroundColor: colorMap[h.color] }}>{h.text_content}</span>
+                                                                )}
+                                                            </React.Fragment>
+                                                        ))}
+                                                    </span>
+                                                );
+                                            }
                                         }
                                     }
                                     return str;
