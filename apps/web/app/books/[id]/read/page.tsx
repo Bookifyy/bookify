@@ -470,7 +470,8 @@ export default function ReaderPage() {
             </main>
 
             {/* Navigation Footer */}
-            <footer className="h-16 border-t border-zinc-800 bg-zinc-900/80 backdrop-blur-md px-6 flex items-center justify-center gap-8 z-20">
+            {/* Navigation Footer */}
+            <footer className="h-16 border-t border-zinc-800 bg-zinc-900/80 backdrop-blur-md px-6 flex items-center justify-center gap-8 z-20 mb-16 md:mb-16">
                 <button
                     disabled={pageNumber <= 1}
                     onClick={() => setPageNumber(p => Math.max(1, p - 1))}
@@ -895,7 +896,18 @@ export default function ReaderPage() {
                         </div>
                         <span className="text-[10px] font-medium">Search</span>
                     </button>
+                    {/* Highlight */}
+                    <button
+                        onClick={() => setActiveModal(activeModal === 'highlight' ? 'none' : 'highlight')}
+                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'highlight' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                    >
+                        <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                            <Type size={18} className="rotate-90" />
+                        </div>
+                        <span className="text-[10px] font-medium">Highlight</span>
+                    </button>
 
+                    {/* Note */}
 
 
                     {/* Note */}
