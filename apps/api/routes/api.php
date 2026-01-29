@@ -184,6 +184,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/subjects', [\App\Http\Controllers\SubjectController::class, 'index']);
 
+    // Global Reading Features (All Books)
+    Route::get('/reading-features', [App\Http\Controllers\ReadingFeaturesController::class, 'getAllUserFeatures']);
+
     // Reading Features Routes
     Route::group(['prefix' => 'books/{bookId}'], function () {
         Route::get('/features', [App\Http\Controllers\ReadingFeaturesController::class, 'index']);

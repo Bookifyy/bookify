@@ -23,6 +23,33 @@ class ReadingFeaturesController extends Controller
         ]);
     }
 
+    // Get all features for the authenticated user across all books
+    public function getAllUserFeatures()
+    {
+        $userId = Auth::id();
+
+        $bookmarks = Bookmark::where('user_id', $userId)->with('book')->latest()->get()->map(function ($item) {
+            $item->type = 'bookmark';
+            return $item;
+        });
+
+        $notes = Note::where('user_id', $userId)->with('book')->latest()->get()->map(function ($item) {
+            $item->type = 'note';
+            return $item;
+        });
+
+        $highlights = Highlight::where('user_id', $userId)->with('book')->latest()->get()->map(function ($item) {
+            $item->type = 'highlight';
+            return $item;
+        });
+
+        return response()->json([
+            'bookmarks' => $bookmarks,
+            'notes' => $notes,
+            'highlights' => $highlights,
+        ]);
+    }
+
     // Bookmarks
     public function storeBookmark(Request $request, $bookId)
     {
