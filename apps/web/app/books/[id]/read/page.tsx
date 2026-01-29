@@ -217,9 +217,11 @@ export default function ReaderPage() {
             }
         };
         document.addEventListener('mouseup', handleSelection);
+        document.addEventListener('touchend', handleSelection);
         document.addEventListener('mousedown', handleMouseDown);
         return () => {
             document.removeEventListener('mouseup', handleSelection);
+            document.removeEventListener('touchend', handleSelection);
             document.removeEventListener('mousedown', handleMouseDown);
         };
     }, [highlightPopup]);
@@ -445,7 +447,7 @@ export default function ReaderPage() {
             )}
 
             {/* Reader Canvas */}
-            <main className="flex-1 overflow-auto bg-zinc-900 flex justify-center p-4 md:p-8 custom-scrollbar relative select-text">
+            <main className="flex-1 overflow-auto bg-zinc-900 flex justify-center p-4 md:p-8 custom-scrollbar relative select-text overscroll-x-none touch-pan-y">
                 <div ref={containerRef} className="w-full max-w-4xl mx-auto flex justify-center">
                     <Document
                         file={pdfBlob}
