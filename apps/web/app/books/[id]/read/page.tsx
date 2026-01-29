@@ -391,7 +391,7 @@ export default function ReaderPage() {
     const pdfUrl = resolveAssetUrl(book.file_path);
 
     return (
-        <div className="h-screen bg-zinc-950 text-white flex flex-col overflow-hidden select-none">
+        <div className="h-screen bg-zinc-950 text-white flex flex-col overflow-hidden">
             {/* Reader Header */}
             {!isFullscreen && (
                 <header className="h-16 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-md px-6 flex items-center justify-between z-20">
@@ -422,7 +422,7 @@ export default function ReaderPage() {
             )}
 
             {/* Reader Canvas */}
-            <main className="flex-1 overflow-auto bg-zinc-900 flex justify-center p-4 md:p-8 custom-scrollbar relative">
+            <main className="flex-1 overflow-auto bg-zinc-900 flex justify-center p-4 md:p-8 custom-scrollbar relative select-text">
                 <div ref={containerRef} className="w-full max-w-4xl mx-auto flex justify-center">
                     <Document
                         file={pdfBlob}
@@ -843,9 +843,9 @@ export default function ReaderPage() {
                                             <button
                                                 key={color}
                                                 className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${color === 'yellow' ? 'bg-yellow-500/10 border-yellow-500 hover:bg-yellow-500/20' :
-                                                        color === 'green' ? 'bg-green-500/10 border-green-500 hover:bg-green-500/20' :
-                                                            color === 'blue' ? 'bg-blue-500/10 border-blue-500 hover:bg-blue-500/20' :
-                                                                'bg-red-500/10 border-red-500 hover:bg-red-500/20'
+                                                    color === 'green' ? 'bg-green-500/10 border-green-500 hover:bg-green-500/20' :
+                                                        color === 'blue' ? 'bg-blue-500/10 border-blue-500 hover:bg-blue-500/20' :
+                                                            'bg-red-500/10 border-red-500 hover:bg-red-500/20'
                                                     }`}
                                                 onClick={() => {
                                                     const titleInput = document.getElementById('hl-title') as HTMLInputElement;
@@ -855,8 +855,8 @@ export default function ReaderPage() {
                                                 }}
                                             >
                                                 <div className={`w-4 h-4 rounded-full ${color === 'yellow' ? 'bg-yellow-500' :
-                                                        color === 'green' ? 'bg-green-500' :
-                                                            color === 'blue' ? 'bg-blue-500' : 'bg-red-500'
+                                                    color === 'green' ? 'bg-green-500' :
+                                                        color === 'blue' ? 'bg-blue-500' : 'bg-red-500'
                                                     }`} />
                                                 <span className="text-xs font-bold text-white capitalize">{color}</span>
                                             </button>
