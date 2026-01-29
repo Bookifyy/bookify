@@ -31,6 +31,11 @@ export default function BookDetailPage() {
     const [showThemeModal, setShowThemeModal] = useState(false);
     const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
+    const [fontSize, setFontSize] = useState(16);
+    const [lineHeight, setLineHeight] = useState(1.6);
+    const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'note' | 'flashcard'>('none');
+    const [searchQuery, setSearchQuery] = useState('');
+
     useEffect(() => {
         const apiUrl = getApiUrl();
         fetch(`${apiUrl}/api/books/${id}`, {
@@ -87,14 +92,6 @@ export default function BookDetailPage() {
             { number: 2, title: 'Limits and Derivatives', pages: 72, startPage: 49 },
             { number: 3, title: 'Differentiation Rules', pages: 84, startPage: 121 },
         ];
-
-        // Typography State
-        const [fontSize, setFontSize] = useState(16);
-        const [lineHeight, setLineHeight] = useState(1.6);
-
-        // Modals State
-        const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'note' | 'flashcard'>('none');
-        const [searchQuery, setSearchQuery] = useState('');
 
         // Theme Classes Mapping
         const themeClasses = {
