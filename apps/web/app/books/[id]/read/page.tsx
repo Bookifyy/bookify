@@ -175,8 +175,6 @@ export default function ReaderPage() {
             } else {
                 // Revert if failed
                 setHighlights(prev => prev.filter(h => h.id !== tempId));
-                const err = await res.text();
-                alert(`Failed to save: ${err}`);
             }
         } catch (e) {
             console.error("Network error saving highlight:", e);
