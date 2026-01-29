@@ -88,6 +88,14 @@ export default function BookDetailPage() {
             { number: 3, title: 'Differentiation Rules', pages: 84, startPage: 121 },
         ];
 
+        // Typography State
+        const [fontSize, setFontSize] = useState(16);
+        const [lineHeight, setLineHeight] = useState(1.6);
+
+        // Modals State
+        const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'note' | 'flashcard'>('none');
+        const [searchQuery, setSearchQuery] = useState('');
+
         // Theme Classes Mapping
         const themeClasses = {
             dark: 'bg-black text-white',
@@ -103,6 +111,12 @@ export default function BookDetailPage() {
             dark: 'bg-zinc-900/50 hover:bg-zinc-900',
             light: 'bg-zinc-100 hover:bg-zinc-200',
         }
+
+        // Feature Mock Data
+        const mockBookmarks = [
+            { id: 1, title: 'Calculus definition', page: 12, date: '2 days ago' },
+            { id: 2, title: 'Derivative rules', page: 54, date: '1 week ago' },
+        ];
 
         return (
             <div className={`min-h-screen pb-80 transition-colors duration-300 ${themeClasses[theme] || themeClasses.dark}`}>
@@ -145,7 +159,10 @@ export default function BookDetailPage() {
                 </div>
 
                 {/* Chapters List */}
-                <div className="max-w-xl mx-auto px-6 mt-10 space-y-2">
+                <div
+                    className="max-w-xl mx-auto px-6 mt-10 space-y-2"
+                    style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}
+                >
                     <h3 className={`text-xs font-bold uppercase tracking-wider mb-4 ${subTextClasses[theme]}`}>Chapters</h3>
                     <div className="space-y-3">
                         {chapters.map((chapter) => (
@@ -153,7 +170,7 @@ export default function BookDetailPage() {
                                 <div>
                                     <div className="flex items-center gap-2 mb-1">
                                         <span className={`text-xs font-bold ${subTextClasses[theme]}`}>{chapter.number}</span>
-                                        <h4 className="text-sm font-medium">{chapter.title}</h4>
+                                        <h4 className="font-medium">{chapter.title}</h4>
                                         <div className="w-1.5 h-1.5 rounded-full bg-blue-600 ml-1"></div>
                                     </div>
                                     <p className={`text-[11px] pl-4 ${subTextClasses[theme]}`}>{chapter.pages} pages • Starting page {chapter.startPage}</p>
@@ -185,31 +202,129 @@ export default function BookDetailPage() {
                     </div>
                 </div>
 
-                {/* Theme Overlay */}
-                {showThemeModal && (
-                    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setShowThemeModal(false)}>
+                {/* Modals Overlay */}
+                {activeModal !== 'none' && (
+                    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setActiveModal('none')}>
                         <div
-                            className="absolute bottom-32 left-0 right-0 p-4 animate-in slide-in-from-bottom-10 fade-in duration-200"
+                            className="absolute bottom-0 left-0 right-0 p-4 animate-in slide-in-from-bottom-10 fade-in duration-200 lg:top-1/2 lg:bottom-auto lg:left-1/2 lg:right-auto lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-[400px]"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="max-w-xl mx-auto">
-                                <h3 className="text-white text-sm font-bold mb-4 px-2">Reading Theme</h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {/* Light Button */}
-                                    <button
-                                        onClick={() => setTheme('light')}
-                                        className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'light' ? 'bg-white border-white text-black' : 'bg-white text-black border-transparent opacity-80'}`}
-                                    >
-                                        Light
-                                    </button>
-                                    {/* Dark Button */}
-                                    <button
-                                        onClick={() => setTheme('dark')}
-                                        className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'dark' ? 'bg-zinc-900 border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'bg-zinc-900 border-zinc-700 text-zinc-400'}`}
-                                    >
-                                        Dark
-                                    </button>
-                                </div>
+                            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
+
+                                {/* Theme Modal */}
+                                {activeModal === 'theme' && (
+                                    <div className="p-6">
+                                        <h3 className="text-white text-sm font-bold mb-4">Reading Theme</h3>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <button onClick={() => setTheme('light')} className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'light' ? 'bg-white border-white text-black' : 'bg-white text-black border-transparent opacity-80'}`}>Light</button>
+                                            <button onClick={() => setTheme('dark')} className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'dark' ? 'bg-zinc-900 border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'bg-zinc-900 border-zinc-700 text-zinc-400'}`}>Dark</button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Typography Modal */}
+                                {activeModal === 'typography' && (
+                                    <div className="p-6 space-y-6">
+                                        <h3 className="text-white text-base font-bold mb-2">Typography</h3>
+
+                                        <div className="space-y-4">
+                                            <div className="space-y-2">
+                                                <div className="flex justify-between text-xs text-zinc-400 font-medium">
+                                                    <span>Font Size</span>
+                                                    <span>{fontSize}px</span>
+                                                </div>
+                                                <input
+                                                    type="range"
+                                                    min="12"
+                                                    max="24"
+                                                    step="1"
+                                                    value={fontSize}
+                                                    onChange={(e) => setFontSize(parseInt(e.target.value))}
+                                                    className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <div className="flex justify-between text-xs text-zinc-400 font-medium">
+                                                    <span>Line Height</span>
+                                                    <span>{lineHeight}</span>
+                                                </div>
+                                                <input
+                                                    type="range"
+                                                    min="1.0"
+                                                    max="2.0"
+                                                    step="0.1"
+                                                    value={lineHeight}
+                                                    onChange={(e) => setLineHeight(parseFloat(e.target.value))}
+                                                    className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Search Modal */}
+                                {activeModal === 'search' && (
+                                    <div className="p-4">
+                                        <div className="relative">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+                                            <input
+                                                type="text"
+                                                placeholder="Search in book..."
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                                className="w-full bg-black border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-600"
+                                                autoFocus
+                                            />
+                                        </div>
+                                        {searchQuery && (
+                                            <div className="mt-4 text-center text-zinc-500 text-xs py-8">
+                                                No results found for "{searchQuery}"
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Bookmarks Modal */}
+                                {activeModal === 'bookmark' && (
+                                    <div className="p-6">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="font-bold text-white">Bookmarks</h3>
+                                            <span className="text-xs text-zinc-500">{mockBookmarks.length} found</span>
+                                        </div>
+                                        <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
+                                            {mockBookmarks.map(bm => (
+                                                <div key={bm.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg flex items-center justify-between">
+                                                    <div>
+                                                        <p className="text-sm font-medium text-white">{bm.title}</p>
+                                                        <p className="text-[10px] text-zinc-500">Page {bm.page} • {bm.date}</p>
+                                                    </div>
+                                                    <button className="text-zinc-600 hover:text-red-500 transition-colors"><Bookmark size={14} fill="currentColor" /></button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Other Feature Modals (Generic) */}
+                                {['highlight', 'note', 'flashcard'].includes(activeModal) && (
+                                    <div className="p-8 text-center">
+                                        <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4 text-zinc-400">
+                                            {activeModal === 'highlight' && <Type size={20} />}
+                                            {activeModal === 'note' && <Bookmark size={20} />}
+                                            {activeModal === 'flashcard' && <BookOpen size={20} />}
+                                        </div>
+                                        <h3 className="font-bold text-white capitalize mb-2">{activeModal}s</h3>
+                                        <p className="text-xs text-zinc-500">
+                                            Create your first {activeModal} to get started.
+                                            <br />This feature is coming soon to the platform.
+                                        </p>
+                                        <button className="mt-6 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-2.5 rounded-lg text-xs transition-colors">
+                                            Create New {activeModal.charAt(0).toUpperCase() + activeModal.slice(1)}
+                                        </button>
+                                    </div>
+                                )}
+
                             </div>
                         </div>
                     </div>
@@ -222,21 +337,30 @@ export default function BookDetailPage() {
                         {/* Toolbar Icons */}
                         <div className="flex justify-between px-4">
                             <button
-                                onClick={() => setShowThemeModal(!showThemeModal)}
-                                className={`flex flex-col items-center gap-1 transition-colors ${showThemeModal ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                                onClick={() => setActiveModal(activeModal === 'theme' ? 'none' : 'theme')}
+                                className={`flex flex-col items-center gap-1 transition-colors ${activeModal === 'theme' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
                             >
                                 <Sun size={18} />
                                 <span className="text-[10px]">Theme</span>
                             </button>
-                            <button className="flex flex-col items-center gap-1 text-zinc-400 hover:text-white transition-colors">
+                            <button
+                                onClick={() => setActiveModal(activeModal === 'typography' ? 'none' : 'typography')}
+                                className={`flex flex-col items-center gap-1 transition-colors ${activeModal === 'typography' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                            >
                                 <Type size={18} />
                                 <span className="text-[10px]">Font</span>
                             </button>
-                            <button className="flex flex-col items-center gap-1 text-zinc-400 hover:text-white transition-colors">
+                            <button
+                                onClick={() => setActiveModal(activeModal === 'search' ? 'none' : 'search')}
+                                className={`flex flex-col items-center gap-1 transition-colors ${activeModal === 'search' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                            >
                                 <Search size={18} />
                                 <span className="text-[10px]">Search</span>
                             </button>
-                            <button className="flex flex-col items-center gap-1 text-zinc-400 hover:text-white transition-colors">
+                            <button
+                                onClick={() => setActiveModal(activeModal === 'bookmark' ? 'none' : 'bookmark')}
+                                className={`flex flex-col items-center gap-1 transition-colors ${activeModal === 'bookmark' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                            >
                                 <Bookmark size={18} />
                                 <span className="text-[10px]">Bookmark</span>
                             </button>
@@ -245,7 +369,11 @@ export default function BookDetailPage() {
                         {/* Pills */}
                         <div className="flex justify-center gap-2">
                             {['Highlight', 'Note', 'Flashcard'].map(action => (
-                                <button key={action} className="bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white text-[10px] uppercase font-bold tracking-wider px-4 py-1.5 rounded-full transition-colors border border-zinc-800">
+                                <button
+                                    key={action}
+                                    onClick={() => setActiveModal(action.toLowerCase() as any)}
+                                    className={`bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white text-[10px] uppercase font-bold tracking-wider px-4 py-1.5 rounded-full transition-colors border border-zinc-800 ${activeModal === action.toLowerCase() ? 'border-blue-600 text-blue-500' : ''}`}
+                                >
                                     • {action}
                                 </button>
                             ))}
