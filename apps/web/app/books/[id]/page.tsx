@@ -36,6 +36,21 @@ export default function BookDetailPage() {
     const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'note' | 'flashcard'>('none');
     const [searchQuery, setSearchQuery] = useState('');
 
+    // Feature States (Mock Data for now)
+    const [bookmarks, setBookmarks] = useState([
+        { id: 1, title: 'Calculus definition', page: 12, date: '2 days ago' },
+        { id: 2, title: 'Derivative rules', page: 54, date: '1 week ago' },
+    ]);
+    const [notes, setNotes] = useState([
+        { id: 1, content: 'Remember to practice chain rule.', page: 55, date: '1 day ago' }
+    ]);
+    const [highlights, setHighlights] = useState([
+        { id: 1, text: 'Fundamental Theorem of Calculus', color: 'yellow', page: 60 }
+    ]);
+    const [flashcards, setFlashcards] = useState([
+        { id: 1, front: 'd/dx (sin x)', back: 'cos x' }
+    ]);
+
     useEffect(() => {
         const apiUrl = getApiUrl();
         fetch(`${apiUrl}/api/books/${id}`, {
@@ -109,20 +124,6 @@ export default function BookDetailPage() {
             light: 'bg-zinc-100 hover:bg-zinc-200',
         }
 
-        // Feature States (Mock Data for now)
-        const [bookmarks, setBookmarks] = useState([
-            { id: 1, title: 'Calculus definition', page: 12, date: '2 days ago' },
-            { id: 2, title: 'Derivative rules', page: 54, date: '1 week ago' },
-        ]);
-        const [notes, setNotes] = useState([
-            { id: 1, content: 'Remember to practice chain rule.', page: 55, date: '1 day ago' }
-        ]);
-        const [highlights, setHighlights] = useState([
-            { id: 1, text: 'Fundamental Theorem of Calculus', color: 'yellow', page: 60 }
-        ]);
-        const [flashcards, setFlashcards] = useState([
-            { id: 1, front: 'd/dx (sin x)', back: 'cos x' }
-        ]);
 
         return (
             <div className={`min-h-screen pb-80 transition-colors duration-300 ${themeClasses[theme] || themeClasses.dark}`}>
