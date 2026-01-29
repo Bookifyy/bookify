@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
-import { Play, Clock, BookOpen, Star, Share2, ArrowLeft, Sun, Type, Search, Bookmark } from 'lucide-react';
+import { Play, Clock, BookOpen, Star, Share2, ArrowLeft } from 'lucide-react';
 import { resolveAssetUrl, getApiUrl } from '../../lib/utils';
 
 interface Book {
@@ -28,7 +28,6 @@ export default function BookDetailPage() {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
     const [addingToLibrary, setAddingToLibrary] = useState(false);
-    const [showThemeModal, setShowThemeModal] = useState(false);
     const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
 
@@ -149,7 +148,6 @@ export default function BookDetailPage() {
                 {/* Chapters List */}
                 <div
                     className="max-w-xl mx-auto px-6 mt-10 space-y-2"
-                    style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}
                 >
                     <h3 className={`text-xs font-bold uppercase tracking-wider mb-4 ${subTextClasses[theme]}`}>Chapters</h3>
                     <div className="space-y-3">
