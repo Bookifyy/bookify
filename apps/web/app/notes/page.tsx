@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { getApiUrl } from '../../lib/utils';
+import { getApiUrl } from '../lib/utils';
 import {
     Search,
     Filter,
@@ -277,8 +277,8 @@ export default function NotesPage() {
                                         <span>•</span>
                                         <span>{formatDate(item.created_at)}</span>
                                         <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-bold ${item.type === 'highlight' ? 'bg-yellow-500/10 text-yellow-500' :
-                                                item.type === 'note' ? 'bg-blue-500/10 text-blue-500' :
-                                                    'bg-indigo-500/10 text-indigo-500'
+                                            item.type === 'note' ? 'bg-blue-500/10 text-blue-500' :
+                                                'bg-indigo-500/10 text-indigo-500'
                                             }`}>
                                             {item.type}
                                         </span>
