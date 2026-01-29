@@ -215,7 +215,7 @@ export default function NotesPage() {
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     />
                 </div>
-                <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
+                <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 max-w-full custom-scrollbar">
                     <select
                         value={filterBook}
                         onChange={(e) => setFilterBook(e.target.value)}
