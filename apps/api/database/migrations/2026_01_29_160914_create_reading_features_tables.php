@@ -35,6 +35,7 @@ return new class extends Migration {
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
             $table->integer('page_number');
             $table->text('text_content');
+            $table->string('title')->nullable(); // User provided title
             $table->string('color')->default('yellow');
             $table->text('range_start')->nullable(); // For future precise positioning
             $table->text('range_end')->nullable();   // For future precise positioning

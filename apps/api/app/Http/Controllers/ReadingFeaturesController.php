@@ -81,6 +81,7 @@ class ReadingFeaturesController extends Controller
         $request->validate([
             'page_number' => 'required|integer',
             'text_content' => 'required|string',
+            'title' => 'nullable|string|max:255',
             'color' => 'nullable|string|max:20',
             'range_start' => 'nullable|string',
             'range_end' => 'nullable|string',
@@ -91,6 +92,7 @@ class ReadingFeaturesController extends Controller
             'book_id' => $bookId,
             'page_number' => $request->page_number,
             'text_content' => $request->text_content,
+            'title' => $request->title,
             'color' => $request->color ?? 'yellow',
             'range_start' => $request->range_start,
             'range_end' => $request->range_end,

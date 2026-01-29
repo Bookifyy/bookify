@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../../context/AuthContext';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ZoomIn, ZoomOut, ArrowLeft, Loader2, Play, Clock, BookOpen, Star, Share2, Sun, Type, Search, Bookmark } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ZoomIn, ZoomOut, ArrowLeft, Loader2, Play, Clock, BookOpen, Star, Share2, Sun, Type, Search, Bookmark, Highlighter } from 'lucide-react';
 import { resolveAssetUrl, getApiUrl } from '../../../lib/utils';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -41,6 +41,7 @@ interface Highlight {
     id: number;
     page_number: number;
     text_content: string;
+    title?: string;
     color: string;
     range_start?: string;
     range_end?: string;
@@ -71,7 +72,7 @@ export default function ReaderPage() {
     const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined);
 
     // New Feature States
-    const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'note' | 'flashcard'>('none');
+    const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'highlight_create' | 'note' | 'flashcard'>('none');
     const [theme, setTheme] = useState<'dark' | 'light'>('dark');
     // Search specific state
     const [searchQuery, setSearchQuery] = useState('');
@@ -85,6 +86,7 @@ export default function ReaderPage() {
 
     // Selection Text
     const [selectedText, setSelectedText] = useState('');
+    const [highlightPopup, setHighlightPopup] = useState<{ x: number, y: number, text: string } | null>(null);
 
     // Features Data Fetching
     const fetchFeatures = async () => {
@@ -146,12 +148,12 @@ export default function ReaderPage() {
         if (res.ok) fetchFeatures();
     };
 
-    const saveHighlight = async (text: string, color: string = 'yellow') => {
+    const saveHighlight = async (text: string, title: string = '', color: string = 'yellow') => {
         const apiUrl = getApiUrl();
         const res = await fetch(`${apiUrl}/api/books/${id}/highlights`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ page_number: pageNumber, text_content: text, color })
+            body: JSON.stringify({ page_number: pageNumber, text_content: text, title, color })
         });
         if (res.ok) fetchFeatures();
     };
@@ -170,15 +172,34 @@ export default function ReaderPage() {
     useEffect(() => {
         const handleSelection = () => {
             const selection = window.getSelection();
-            if (selection && selection.toString().trim().length > 0) {
-                setSelectedText(selection.toString().trim());
-                // Optionally open highlight modal automatically if user intends
-                // setActiveModal('highlight'); 
+            if (selection && selection.rangeCount > 0 && selection.toString().trim().length > 0) {
+                const text = selection.toString().trim();
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+
+                if (rect.width > 0 && rect.height > 0) {
+                    setHighlightPopup({
+                        x: rect.left + (rect.width / 2),
+                        y: rect.top - 10,
+                        text: text
+                    });
+                    setSelectedText(text);
+                }
+            }
+        };
+
+        const handleMouseDown = (e: MouseEvent) => {
+            if (highlightPopup && !(e.target as HTMLElement).closest('#highlight-popup')) {
+                setHighlightPopup(null);
             }
         };
         document.addEventListener('mouseup', handleSelection);
-        return () => document.removeEventListener('mouseup', handleSelection);
-    }, []);
+        document.addEventListener('mousedown', handleMouseDown);
+        return () => {
+            document.removeEventListener('mouseup', handleSelection);
+            document.removeEventListener('mousedown', handleMouseDown);
+        };
+    }, [highlightPopup]);
 
     // Responsive width calculation
     useEffect(() => {
@@ -687,7 +708,7 @@ export default function ReaderPage() {
                                 </div>
                             )}
 
-                            {/* Highlights Modal */}
+                            {/* Highlights List Modal */}
                             {activeModal === 'highlight' && (
                                 <div className="flex flex-col h-full">
                                     <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
@@ -695,33 +716,13 @@ export default function ReaderPage() {
                                         <span className="text-xs text-zinc-500">{highlights.length} saved</span>
                                     </div>
 
-                                    <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
-                                        <div className="space-y-2">
-                                            <div className="bg-zinc-800/50 p-3 rounded-lg border border-zinc-700 mb-2">
-                                                <p className="text-xs text-zinc-300 italic">"
-                                                    {selectedText || "Select text in the book to highlight"}
-                                                    "</p>
-                                            </div>
-                                            {selectedText && (
-                                                <div className="flex gap-2 mb-2">
-                                                    {['yellow', 'green', 'blue', 'red'].map(color => (
-                                                        <button
-                                                            key={color}
-                                                            className={`w-6 h-6 rounded-full border-2 cursor-pointer transition-transform hover:scale-110 ${color === 'yellow' ? 'bg-yellow-500/20 border-yellow-500' : color === 'green' ? 'bg-green-500/20 border-green-500' : color === 'blue' ? 'bg-blue-500/20 border-blue-500' : 'bg-red-500/20 border-red-500'}`}
-                                                            onClick={() => saveHighlight(selectedText, color)}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
                                     <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
                                         {highlights.length === 0 ? (
-                                            <div className="text-center py-8 text-zinc-500 text-xs">No highlights yet.</div>
+                                            <div className="text-center py-8 text-zinc-500 text-xs">No highlights yet. Select text to add one.</div>
                                         ) : (
                                             highlights.map(hl => (
                                                 <div key={hl.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg group">
+                                                    {hl.title && <p className="text-xs font-bold text-white mb-1">{hl.title}</p>}
                                                     <p className={`text-xs text-zinc-300 italic pl-2 border-l-2 ${hl.color === 'yellow' ? 'border-yellow-500' : 'border-blue-500'} mb-2`}>"{hl.text_content}"</p>
                                                     <div className="flex justify-between items-center">
                                                         <p className="text-[10px] text-zinc-500">Page {hl.page_number}</p>
@@ -808,8 +809,64 @@ export default function ReaderPage() {
                                 </div>
                             )}
 
+                            {/* Create Highlight Modal */}
+                            {activeModal === 'highlight_create' && (
+                                <div className="p-6 space-y-4">
+                                    <h3 className="text-white text-sm font-bold">Save Highlight</h3>
+                                    <div className="bg-zinc-800/50 p-3 rounded-lg border border-zinc-700">
+                                        <p className="text-xs text-zinc-300 italic line-clamp-4">"{selectedText}"</p>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Add a title (optional)"
+                                        className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-600 outline-none"
+                                        id="hl-title"
+                                        autoFocus
+                                    />
+                                    <div className="flex gap-2 justify-center">
+                                        {['yellow', 'green', 'blue', 'red'].map(color => (
+                                            <button
+                                                key={color}
+                                                className={`w-8 h-8 rounded-full border-2 cursor-pointer transition-transform hover:scale-110 ${color === 'yellow' ? 'bg-yellow-500/20 border-yellow-500' : color === 'green' ? 'bg-green-500/20 border-green-500' : color === 'blue' ? 'bg-blue-500/20 border-blue-500' : 'bg-red-500/20 border-red-500'}`}
+                                                onClick={() => {
+                                                    const titleInput = document.getElementById('hl-title') as HTMLInputElement;
+                                                    const title = titleInput ? titleInput.value : '';
+                                                    saveHighlight(selectedText, title, color);
+                                                    setActiveModal('highlight');
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Highlight Popup Button */}
+            {highlightPopup && (
+                <div
+                    id="highlight-popup"
+                    className="fixed z-[70] bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl p-2 flex gap-2 animate-in fade-in zoom-in duration-200"
+                    style={{
+                        left: highlightPopup.x,
+                        top: highlightPopup.y - 50,
+                        transform: 'translateX(-50%)'
+                    }}
+                >
+                    <button
+                        className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-md flex items-center gap-2"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveModal('highlight_create');
+                            setHighlightPopup(null);
+                        }}
+                    >
+                        <Highlighter size={14} />
+                        Highlight
+                    </button>
                 </div>
             )}
 
@@ -839,16 +896,7 @@ export default function ReaderPage() {
                         <span className="text-[10px] font-medium">Search</span>
                     </button>
 
-                    {/* Highlight */}
-                    <button
-                        onClick={() => setActiveModal(activeModal === 'highlight' ? 'none' : 'highlight')}
-                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'highlight' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
-                    >
-                        <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
-                            <Type size={18} className="rotate-90" />
-                        </div>
-                        <span className="text-[10px] font-medium">Highlight</span>
-                    </button>
+
 
                     {/* Note */}
                     <button

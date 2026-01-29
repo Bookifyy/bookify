@@ -14,6 +14,7 @@ class Highlight extends Model
         'book_id',
         'page_number',
         'text_content',
+        'title',
         'color',
         'range_start',
         'range_end',
