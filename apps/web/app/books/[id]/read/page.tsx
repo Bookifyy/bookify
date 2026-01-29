@@ -484,15 +484,49 @@ export default function ReaderPage() {
                                 customTextRenderer={(textItem: any) => {
                                     const str = textItem.str;
                                     const itemIndex = textItem.itemIndex;
-                                    const match = highlights.find(h => h.page_number === pageNumber && h.text_content.includes(str));
-                                    if (match) {
-                                        const colorMap: Record<string, string> = {
-                                            'yellow': 'rgba(234, 179, 8, 0.4)',
-                                            'green': 'rgba(34, 197, 94, 0.4)',
-                                            'blue': 'rgba(59, 130, 246, 0.4)',
-                                            'red': 'rgba(239, 68, 68, 0.4)',
-                                        };
-                                        return <span key={itemIndex} style={{ backgroundColor: colorMap[match.color] || 'rgba(255, 255, 0, 0.4)' }}>{str}</span>;
+
+                                    // Find unique matches on this page
+                                    const pageHighlights = highlights.filter(h => h.page_number === pageNumber);
+
+                                    // Check if this textItem is part of any highlight
+                                    for (const h of pageHighlights) {
+                                        // Case 1: The highlight fully contains this text item (e.g. multi-line selection)
+                                        if (h.text_content.includes(str)) {
+                                            const colorMap: Record<string, string> = {
+                                                'yellow': 'rgba(234, 179, 8, 0.4)',
+                                                'green': 'rgba(34, 197, 94, 0.4)',
+                                                'blue': 'rgba(59, 130, 246, 0.4)',
+                                                'red': 'rgba(239, 68, 68, 0.4)',
+                                            };
+                                            return <span key={itemIndex + h.id} style={{ backgroundColor: colorMap[h.color] || 'rgba(255, 255, 0, 0.4)' }}>{str}</span>;
+                                        }
+
+                                        // Case 2: The text item contains the highlight (e.g. single word selection)
+                                        if (str.includes(h.text_content)) {
+                                            const colorMap: Record<string, string> = {
+                                                'yellow': 'rgba(234, 179, 8, 0.4)',
+                                                'green': 'rgba(34, 197, 94, 0.4)',
+                                                'blue': 'rgba(59, 130, 246, 0.4)',
+                                                'red': 'rgba(239, 68, 68, 0.4)',
+                                            };
+
+                                            // Split text by the highlight content to highlight only the match
+                                            // Note: This highlights ALL occurrences of the phrase in this line. 
+                                            // Without precise coordinates, this is the best approximation.
+                                            const parts = str.split(h.text_content);
+                                            return (
+                                                <span key={itemIndex}>
+                                                    {parts.map((part: string, i: number) => (
+                                                        <React.Fragment key={i}>
+                                                            {part}
+                                                            {i < parts.length - 1 && (
+                                                                <span style={{ backgroundColor: colorMap[h.color] }}>{h.text_content}</span>
+                                                            )}
+                                                        </React.Fragment>
+                                                    ))}
+                                                </span>
+                                            );
+                                        }
                                     }
                                     return str;
                                 }}
