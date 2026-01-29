@@ -458,6 +458,21 @@ export default function ReaderPage() {
                                 renderAnnotationLayer={false}
                                 renderTextLayer={true}
                                 className="shadow-2xl shadow-black"
+                                customTextRenderer={(textItem: any) => {
+                                    const str = textItem.str;
+                                    const itemIndex = textItem.itemIndex;
+                                    const match = highlights.find(h => h.page_number === pageNumber && h.text_content.includes(str));
+                                    if (match) {
+                                        const colorMap: Record<string, string> = {
+                                            'yellow': 'rgba(234, 179, 8, 0.4)',
+                                            'green': 'rgba(34, 197, 94, 0.4)',
+                                            'blue': 'rgba(59, 130, 246, 0.4)',
+                                            'red': 'rgba(239, 68, 68, 0.4)',
+                                        };
+                                        return <span key={itemIndex} style={{ backgroundColor: colorMap[match.color] || 'rgba(255, 255, 0, 0.4)' }}>{str}</span>;
+                                    }
+                                    return str;
+                                }}
                                 loading={
                                     <div className="w-full aspect-[1/1.4] bg-zinc-800 animate-pulse flex items-center justify-center">
                                         <Loader2 className="animate-spin text-zinc-600" size={32} />
@@ -823,18 +838,28 @@ export default function ReaderPage() {
                                         id="hl-title"
                                         autoFocus
                                     />
-                                    <div className="flex gap-2 justify-center">
+                                    <div className="grid grid-cols-2 gap-3">
                                         {['yellow', 'green', 'blue', 'red'].map(color => (
                                             <button
                                                 key={color}
-                                                className={`w-8 h-8 rounded-full border-2 cursor-pointer transition-transform hover:scale-110 ${color === 'yellow' ? 'bg-yellow-500/20 border-yellow-500' : color === 'green' ? 'bg-green-500/20 border-green-500' : color === 'blue' ? 'bg-blue-500/20 border-blue-500' : 'bg-red-500/20 border-red-500'}`}
+                                                className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${color === 'yellow' ? 'bg-yellow-500/10 border-yellow-500 hover:bg-yellow-500/20' :
+                                                        color === 'green' ? 'bg-green-500/10 border-green-500 hover:bg-green-500/20' :
+                                                            color === 'blue' ? 'bg-blue-500/10 border-blue-500 hover:bg-blue-500/20' :
+                                                                'bg-red-500/10 border-red-500 hover:bg-red-500/20'
+                                                    }`}
                                                 onClick={() => {
                                                     const titleInput = document.getElementById('hl-title') as HTMLInputElement;
                                                     const title = titleInput ? titleInput.value : '';
                                                     saveHighlight(selectedText, title, color);
                                                     setActiveModal('highlight');
                                                 }}
-                                            />
+                                            >
+                                                <div className={`w-4 h-4 rounded-full ${color === 'yellow' ? 'bg-yellow-500' :
+                                                        color === 'green' ? 'bg-green-500' :
+                                                            color === 'blue' ? 'bg-blue-500' : 'bg-red-500'
+                                                    }`} />
+                                                <span className="text-xs font-bold text-white capitalize">{color}</span>
+                                            </button>
                                         ))}
                                     </div>
                                 </div>
