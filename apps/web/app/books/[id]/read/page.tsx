@@ -608,109 +608,138 @@ export default function ReaderPage() {
                 </button>
             </footer>
 
-            {/* Simple TOC Renderer Helper */}
+            {/* TOC Sidebar / Drawer */}
             {activeModal === 'toc' && (
                 <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setActiveModal('none')}>
                     <div
-                        className="absolute bottom-0 left-0 right-0 p-4 animate-in slide-in-from-bottom-10 fade-in duration-200 lg:top-1/2 lg:bottom-auto lg:left-1/2 lg:right-auto lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-[400px]"
+                        className="absolute top-0 bottom-0 right-0 w-[85vw] md:w-[400px] bg-zinc-900 border-l border-zinc-800 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl h-[80vh] flex flex-col">
-                            <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/90 backdrop-blur">
-                                <div>
-                                    <h3 className="font-bold text-white">Table of Contents</h3>
-                                    <p className="text-xs text-zinc-500">{outline && outline.length > 0 ? `${outline.length} Items` : 'No chapters found'}</p>
-                                </div>
-                                <button onClick={() => setActiveModal('none')} className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-zinc-400 hover:text-white">
-                                    <X size={20} />
+                        <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/95 backdrop-blur shrink-0">
+                            <div>
+                                <h3 className="font-bold text-white text-lg">Contents</h3>
+                                <p className="text-xs text-zinc-500">{outline && outline.length > 0 ? `${outline.length} Chapters` : 'No embedded chapters'}</p>
+                            </div>
+                            <button onClick={() => setActiveModal('none')} className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-zinc-400 hover:text-white">
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        {/* Jump to Page Input */}
+                        <div className="p-4 border-b border-zinc-800 bg-zinc-900/50 shrink-0">
+                            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 block">Jump to Page</label>
+                            <div className="flex gap-2">
+                                <input
+                                    type="number"
+                                    min={1}
+                                    max={numPages || 1}
+                                    placeholder={`1-${numPages || '?'}`}
+                                    className="flex-1 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-600 outline-none"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            const val = parseInt(e.currentTarget.value);
+                                            if (val >= 1 && val <= (numPages || 1)) {
+                                                setPageNumber(val);
+                                                setActiveModal('none');
+                                            }
+                                        }
+                                    }}
+                                />
+                                <button
+                                    className="bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                                    onClick={(e) => {
+                                        const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                        const val = parseInt(input.value);
+                                        if (val >= 1 && val <= (numPages || 1)) {
+                                            setPageNumber(val);
+                                            setActiveModal('none');
+                                        }
+                                    }}
+                                >
+                                    Go
                                 </button>
                             </div>
-                            <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
-                                {outline && outline.length > 0 ? (
-                                    <ul className="space-y-1">
-                                        {outline.map((item, idx) => {
-                                            const renderItem = (tocItem: any, level: number) => (
-                                                <div key={idx + level}>
-                                                    <button
-                                                        onClick={async () => {
-                                                            if (pdfDocument && tocItem.dest) {
-                                                                try {
-                                                                    const dest = tocItem.dest;
-                                                                    // Handle named destinations or explicit arrays
-                                                                    let explicitDest = dest;
-                                                                    if (typeof dest === 'string') {
-                                                                        explicitDest = await pdfDocument.getDestination(dest);
-                                                                    }
+                        </div>
 
-                                                                    if (explicitDest) {
-                                                                        const pageRef = explicitDest[0];
-                                                                        const pageIndex = await pdfDocument.getPageIndex(pageRef);
-                                                                        setPageNumber(pageIndex + 1);
-                                                                        setActiveModal('none');
-                                                                    }
-                                                                } catch (e) {
-                                                                    console.warn("TOC navigation error", e);
+                        <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                            {outline && outline.length > 0 ? (
+                                <ul className="space-y-1">
+                                    {outline.map((item, idx) => {
+                                        const renderItem = (tocItem: any, level: number) => (
+                                            <div key={idx + level}>
+                                                <button
+                                                    onClick={async () => {
+                                                        if (pdfDocument && tocItem.dest) {
+                                                            try {
+                                                                const dest = tocItem.dest;
+                                                                let explicitDest = dest;
+                                                                if (typeof dest === 'string') {
+                                                                    explicitDest = await pdfDocument.getDestination(dest);
                                                                 }
+                                                                if (explicitDest) {
+                                                                    const pageRef = explicitDest[0];
+                                                                    const pageIndex = await pdfDocument.getPageIndex(pageRef);
+                                                                    setPageNumber(pageIndex + 1);
+                                                                    setActiveModal('none');
+                                                                }
+                                                            } catch (e) {
+                                                                console.warn("TOC navigation error", e);
                                                             }
-                                                        }}
-                                                        className="w-full text-left py-3 px-3 rounded-lg hover:bg-zinc-800/50 text-sm text-zinc-300 hover:text-white transition-colors truncate border-b border-zinc-800/50 last:border-0"
-                                                        style={{ paddingLeft: `${12 + (level * 16)}px` }}
-                                                    >
-                                                        {tocItem.title}
-                                                    </button>
-                                                    {tocItem.items && tocItem.items.length > 0 && (
-                                                        <div className="mt-1">
-                                                            {tocItem.items.map((subItem: any, subIdx: number) =>
-                                                                // Simple inline recursion for one level, or simple map
-                                                                // For full recursion, we needs a proper component, but 
-                                                                // PDF TOCs usually aren't super deep. Let's support 1 level deep for now to be safe inline
-                                                                // or just render flat if possible. Ideally we want true recursion.
-                                                                // Let's rely on the top level mapping being enough for now or simple flattening if needed.
-                                                                // Actually, many PDFs have nested items.
-                                                                // Let's try to render them with padding.
-                                                                <div key={subIdx} className="pl-4 border-l border-zinc-800 ml-3">
-                                                                    <button
-                                                                        onClick={async () => {
-                                                                            if (pdfDocument && subItem.dest) {
-                                                                                try {
-                                                                                    const dest = subItem.dest;
-                                                                                    let explicitDest = dest;
-                                                                                    if (typeof dest === 'string') explicitDest = await pdfDocument.getDestination(dest);
-                                                                                    if (explicitDest) {
-                                                                                        const pageIndex = await pdfDocument.getPageIndex(explicitDest[0]);
-                                                                                        setPageNumber(pageIndex + 1);
-                                                                                        setActiveModal('none');
-                                                                                    }
-                                                                                } catch (e) { }
-                                                                            }
-                                                                        }}
-                                                                        className="w-full text-left py-2 px-2 text-xs text-zinc-400 hover:text-white hover:bg-zinc-800/30 rounded"
-                                                                    >
-                                                                        {subItem.title}
-                                                                    </button>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                            return renderItem(item, 0);
-                                        })}
-                                    </ul>
-                                ) : (
-                                    <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-4">
-                                        <List size={48} className="opacity-20" />
-                                        <p className="text-sm font-medium">No table of contents available.</p>
+                                                        }
+                                                    }}
+                                                    className="w-full text-left py-3 px-3 rounded-lg hover:bg-zinc-800/50 text-sm text-zinc-300 hover:text-white transition-colors truncate border-b border-zinc-800/50 last:border-0"
+                                                    style={{ paddingLeft: `${12 + (level * 16)}px` }}
+                                                >
+                                                    {tocItem.title}
+                                                </button>
+                                                {tocItem.items && tocItem.items.length > 0 && (
+                                                    <div className="mt-1">
+                                                        {tocItem.items.map((subItem: any, subIdx: number) =>
+                                                            <div key={subIdx} className="pl-4 border-l border-zinc-800 ml-3">
+                                                                <button
+                                                                    onClick={async () => {
+                                                                        if (pdfDocument && subItem.dest) {
+                                                                            try {
+                                                                                const dest = subItem.dest;
+                                                                                let explicitDest = dest;
+                                                                                if (typeof dest === 'string') explicitDest = await pdfDocument.getDestination(dest);
+                                                                                if (explicitDest) {
+                                                                                    const pageIndex = await pdfDocument.getPageIndex(explicitDest[0]);
+                                                                                    setPageNumber(pageIndex + 1);
+                                                                                    setActiveModal('none');
+                                                                                }
+                                                                            } catch (e) { }
+                                                                        }
+                                                                    }}
+                                                                    className="w-full text-left py-2 px-2 text-xs text-zinc-400 hover:text-white hover:bg-zinc-800/30 rounded"
+                                                                >
+                                                                    {subItem.title}
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                        return renderItem(item, 0);
+                                    })}
+                                </ul>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center h-40 text-zinc-500 gap-3 border border-dashed border-zinc-800 rounded-xl mt-4">
+                                    <List size={32} className="opacity-20" />
+                                    <div className="text-center">
+                                        <p className="text-sm font-medium text-zinc-400">No chapters found</p>
+                                        <p className="text-xs mt-1 max-w-[200px]">This PDF doesn't contain a table of contents. Use the page jump above to navigate.</p>
                                     </div>
-                                )}
-                            </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* Modals Overlay */}
-            {activeModal !== 'none' && (
+            {/* Modals Overlay (exclude TOC as it has its own sidebar) */}
+            {activeModal !== 'none' && activeModal !== 'toc' && (
                 <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setActiveModal('none')}>
                     <div
                         className="absolute bottom-0 left-0 right-0 p-4 animate-in slide-in-from-bottom-10 fade-in duration-200 lg:top-1/2 lg:bottom-auto lg:left-1/2 lg:right-auto lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-[400px]"
