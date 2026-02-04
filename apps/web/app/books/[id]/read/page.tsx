@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../../context/AuthContext';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ZoomIn, ZoomOut, ArrowLeft, Loader2, Play, Clock, BookOpen, Star, Share2, Sun, Type, Search, Bookmark, Highlighter, List } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ZoomIn, ZoomOut, ArrowLeft, Loader2, Play, Clock, BookOpen, Star, Share2, Sun, Type, Search, Bookmark, Highlighter, List, X } from 'lucide-react';
 import { resolveAssetUrl, getApiUrl } from '../../../lib/utils';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -227,6 +227,15 @@ export default function ReaderPage() {
         };
     }, [highlightPopup]);
 
+    // Handle Fullscreen Change Events (Esc key, etc)
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    }, []);
+
     // Print Prevention & Keyboard Shortcuts
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -433,36 +442,34 @@ export default function ReaderPage() {
     return (
         <div className="h-screen bg-zinc-950 text-white flex flex-col overflow-hidden">
             {/* Reader Header */}
-            {!isFullscreen && (
-                <header className="h-16 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-md px-6 flex items-center justify-between z-20">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => router.back()}
-                            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400 hover:text-white"
-                        >
-                            <ArrowLeft size={20} />
-                        </button>
-                        <div>
-                            <h1 className="text-sm font-bold tracking-tight truncate max-w-[200px] md:max-w-md">{book.title}</h1>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Reader Mode</p>
-                        </div>
+            <header className="h-16 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-md px-6 flex items-center justify-between z-20">
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => router.back()}
+                        className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400 hover:text-white"
+                    >
+                        <ArrowLeft size={20} />
+                    </button>
+                    <div>
+                        <h1 className="text-sm font-bold tracking-tight truncate max-w-[200px] md:max-w-md">{book.title}</h1>
+                        <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Reader Mode</p>
                     </div>
+                </div>
 
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center bg-zinc-800 rounded-lg p-1">
-                            <button onClick={() => setScale(s => Math.max(0.5, s - 0.1))} className="p-1.5 hover:bg-zinc-700 rounded transition-colors text-zinc-400"><ZoomOut size={16} /></button>
-                            <span className="text-[10px] font-bold w-12 text-center text-zinc-300">{Math.round(scale * 100)}%</span>
-                            <button onClick={() => setScale(s => Math.min(2, s + 0.1))} className="p-1.5 hover:bg-zinc-700 rounded transition-colors text-zinc-400"><ZoomIn size={16} /></button>
-                        </div>
-                        <button onClick={toggleFullscreen} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400">
-                            {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
-                        </button>
-                        <button onClick={() => setActiveModal('toc')} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400" title="Table of Contents">
-                            <List size={20} />
-                        </button>
+                <div className="flex items-center gap-2">
+                    <div className="flex items-center bg-zinc-800 rounded-lg p-1">
+                        <button onClick={() => setScale(s => Math.max(0.5, s - 0.1))} className="p-1.5 hover:bg-zinc-700 rounded transition-colors text-zinc-400"><ZoomOut size={16} /></button>
+                        <span className="text-[10px] font-bold w-12 text-center text-zinc-300">{Math.round(scale * 100)}%</span>
+                        <button onClick={() => setScale(s => Math.min(2, s + 0.1))} className="p-1.5 hover:bg-zinc-700 rounded transition-colors text-zinc-400"><ZoomIn size={16} /></button>
                     </div>
-                </header>
-            )}
+                    <button onClick={toggleFullscreen} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400">
+                        {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+                    </button>
+                    <button onClick={() => setActiveModal('toc')} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400" title="Table of Contents">
+                        <List size={20} />
+                    </button>
+                </div>
+            </header>
 
             {/* Reader Canvas */}
             <main className="flex-1 overflow-auto bg-zinc-900 flex justify-center p-4 md:p-8 custom-scrollbar relative select-text overscroll-x-none touch-pan-y">
@@ -609,46 +616,91 @@ export default function ReaderPage() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl h-[80vh] flex flex-col">
-                            <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
-                                <h3 className="font-bold text-white">Table of Contents</h3>
-                                <span className="text-xs text-zinc-500">{outline.length > 0 ? `${outline.length} Chapters` : 'No chapters'}</span>
+                            <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/90 backdrop-blur">
+                                <div>
+                                    <h3 className="font-bold text-white">Table of Contents</h3>
+                                    <p className="text-xs text-zinc-500">{outline && outline.length > 0 ? `${outline.length} Items` : 'No chapters found'}</p>
+                                </div>
+                                <button onClick={() => setActiveModal('none')} className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-zinc-400 hover:text-white">
+                                    <X size={20} />
+                                </button>
                             </div>
                             <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
-                                {outline.length > 0 ? (
+                                {outline && outline.length > 0 ? (
                                     <ul className="space-y-1">
-                                        {outline.map((item, idx) => (
-                                            <li key={idx}>
-                                                <button
-                                                    onClick={async () => {
-                                                        // Resolve destination logic would be complex, simplistic assumption:
-                                                        // react-pdf pdf object getDestination(item.dest) -> page ref
-                                                        // but simplistic approach for V1 if we don't have page mapping easily:
-                                                        // Many PDF outlines return dest array [ref, name, ...].
-                                                        // For now, simpler to just show items. Actual page jump requires ref lookup.
-                                                        // We will try a basic lookup if possible or just log.
-                                                        // To properly support jumping we need to resolve 'dest' to page index.
-                                                        // This requires using pdf object methods.
-                                                        if (pdfDocument) {
-                                                            try {
-                                                                const dest = item.dest;
-                                                                const pageIndex = await pdfDocument.getPageIndex(dest[0]);
-                                                                setPageNumber(pageIndex + 1);
-                                                                setActiveModal('none');
-                                                            } catch (e) {
-                                                                console.warn("Could not navigate to TOC item", e);
+                                        {outline.map((item, idx) => {
+                                            const renderItem = (tocItem: any, level: number) => (
+                                                <div key={idx + level}>
+                                                    <button
+                                                        onClick={async () => {
+                                                            if (pdfDocument && tocItem.dest) {
+                                                                try {
+                                                                    const dest = tocItem.dest;
+                                                                    // Handle named destinations or explicit arrays
+                                                                    let explicitDest = dest;
+                                                                    if (typeof dest === 'string') {
+                                                                        explicitDest = await pdfDocument.getDestination(dest);
+                                                                    }
+
+                                                                    if (explicitDest) {
+                                                                        const pageRef = explicitDest[0];
+                                                                        const pageIndex = await pdfDocument.getPageIndex(pageRef);
+                                                                        setPageNumber(pageIndex + 1);
+                                                                        setActiveModal('none');
+                                                                    }
+                                                                } catch (e) {
+                                                                    console.warn("TOC navigation error", e);
+                                                                }
                                                             }
-                                                        }
-                                                    }}
-                                                    className="w-full text-left py-2 px-3 rounded hover:bg-zinc-800 text-sm text-zinc-300 hover:text-white truncate transition-colors"
-                                                >
-                                                    {item.title}
-                                                </button>
-                                            </li>
-                                        ))}
+                                                        }}
+                                                        className="w-full text-left py-3 px-3 rounded-lg hover:bg-zinc-800/50 text-sm text-zinc-300 hover:text-white transition-colors truncate border-b border-zinc-800/50 last:border-0"
+                                                        style={{ paddingLeft: `${12 + (level * 16)}px` }}
+                                                    >
+                                                        {tocItem.title}
+                                                    </button>
+                                                    {tocItem.items && tocItem.items.length > 0 && (
+                                                        <div className="mt-1">
+                                                            {tocItem.items.map((subItem: any, subIdx: number) =>
+                                                                // Simple inline recursion for one level, or simple map
+                                                                // For full recursion, we needs a proper component, but 
+                                                                // PDF TOCs usually aren't super deep. Let's support 1 level deep for now to be safe inline
+                                                                // or just render flat if possible. Ideally we want true recursion.
+                                                                // Let's rely on the top level mapping being enough for now or simple flattening if needed.
+                                                                // Actually, many PDFs have nested items.
+                                                                // Let's try to render them with padding.
+                                                                <div key={subIdx} className="pl-4 border-l border-zinc-800 ml-3">
+                                                                    <button
+                                                                        onClick={async () => {
+                                                                            if (pdfDocument && subItem.dest) {
+                                                                                try {
+                                                                                    const dest = subItem.dest;
+                                                                                    let explicitDest = dest;
+                                                                                    if (typeof dest === 'string') explicitDest = await pdfDocument.getDestination(dest);
+                                                                                    if (explicitDest) {
+                                                                                        const pageIndex = await pdfDocument.getPageIndex(explicitDest[0]);
+                                                                                        setPageNumber(pageIndex + 1);
+                                                                                        setActiveModal('none');
+                                                                                    }
+                                                                                } catch (e) { }
+                                                                            }
+                                                                        }}
+                                                                        className="w-full text-left py-2 px-2 text-xs text-zinc-400 hover:text-white hover:bg-zinc-800/30 rounded"
+                                                                    >
+                                                                        {subItem.title}
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                            return renderItem(item, 0);
+                                        })}
                                     </ul>
                                 ) : (
-                                    <div className="text-center py-8 text-zinc-500">
-                                        <p className="text-sm">No table of contents found.</p>
+                                    <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-4">
+                                        <List size={48} className="opacity-20" />
+                                        <p className="text-sm font-medium">No table of contents available.</p>
                                     </div>
                                 )}
                             </div>
