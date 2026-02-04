@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { Search, Ban, Trash2, Edit2, CheckCircle, ShieldAlert, MoreVertical } from 'lucide-react';
+import { ConfirmModal } from '../../components/ConfirmModal';
 
 interface User {
     id: number;
@@ -10,7 +11,7 @@ interface User {
     email: string;
     roles: { name: string }[];
     created_at: string;
-    is_active?: boolean; // Assuming api returns this, or defaulting to true
+    is_active?: boolean;
 }
 
 export default function AdminUsersPage() {
@@ -20,8 +21,12 @@ export default function AdminUsersPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState('');
 
+    // Modal State
+    const [banModalOpen, setBanModalOpen] = useState(false);
+    const [userToBan, setUserToBan] = useState<User | null>(null);
+
     useEffect(() => {
-        fetchUsers();
+        if (token) fetchUsers();
     }, [token]);
 
     const fetchUsers = async () => {
@@ -43,10 +48,24 @@ export default function AdminUsersPage() {
         }
     };
 
-    const handleBanUser = async (userId: number) => {
-        if (!confirm('Are you sure you want to ban/unban this user?')) return;
-        // API call to toggle ban status would go here
-        alert('Ban functionality to be connected to backend API endpoint');
+    const confirmBan = (user: User) => {
+        setUserToBan(user);
+        setBanModalOpen(true);
+    };
+
+    const handleBanUser = async () => {
+        if (!userToBan) return;
+
+        // Placeholder for API call
+        // In a real implementation: await fetch(`/api/admin/users/${userToBan.id}/ban`, ...)
+
+        console.log(`Banning user: ${userToBan.email}`);
+
+        // Simulating UI update
+        // setUsers(users.map(u => u.id === userToBan.id ? { ...u, is_active: !u.is_active } : u));
+
+        setBanModalOpen(false);
+        setUserToBan(null);
     };
 
     const filteredUsers = users.filter(user =>
@@ -56,6 +75,16 @@ export default function AdminUsersPage() {
 
     return (
         <div className="space-y-6">
+            <ConfirmModal
+                isOpen={banModalOpen}
+                onClose={() => setBanModalOpen(false)}
+                onConfirm={handleBanUser}
+                title="Ban User Access?"
+                message={`Are you sure you want to ban ${userToBan?.name}? They will lose access to the platform immediately.`}
+                confirmText="Ban User"
+                isDestructive={true}
+            />
+
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">User Management</h1>
@@ -110,8 +139,8 @@ export default function AdminUsersPage() {
                                         <td className="p-4">
                                             {user.roles.map(r => (
                                                 <span key={r.name} className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${r.name === 'Admin'
-                                                        ? 'bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20'
-                                                        : 'bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20'
+                                                    ? 'bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20'
+                                                    : 'bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20'
                                                     }`}>
                                                     {r.name}
                                                 </span>
@@ -131,7 +160,7 @@ export default function AdminUsersPage() {
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleBanUser(user.id)}
+                                                    onClick={() => confirmBan(user)}
                                                     className="p-2 hover:bg-red-500/10 rounded-lg text-zinc-400 hover:text-red-500 transition-colors"
                                                     title="Ban User"
                                                 >

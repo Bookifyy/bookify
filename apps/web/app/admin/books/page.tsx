@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { BookOpen, Search, Plus, Trash2, Edit2, Star } from 'lucide-react';
+import { ConfirmModal } from '../../components/ConfirmModal';
 
 interface Book {
     id: number;
@@ -23,8 +24,12 @@ export default function AdminBooksPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState('');
 
+    // Modal State
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [bookToDelete, setBookToDelete] = useState<number | null>(null);
+
     useEffect(() => {
-        fetchBooks();
+        if (token) fetchBooks();
     }, [token]);
 
     const fetchBooks = async () => {
@@ -38,7 +43,13 @@ export default function AdminBooksPage() {
             });
             if (!res.ok) throw new Error('Failed to fetch books');
             const data = await res.json();
-            setBooks(data);
+            // Ensure data is array
+            if (Array.isArray(data)) {
+                setBooks(data);
+            } else {
+                setBooks([]);
+                console.error('API did not return an array for books:', data);
+            }
             setLoading(false);
         } catch (err: any) {
             setError(err.message);
@@ -46,12 +57,17 @@ export default function AdminBooksPage() {
         }
     };
 
-    const handleDeleteBook = async (id: number) => {
-        if (!confirm('Are you sure you want to delete this book? This action cannot be undone.')) return;
+    const confirmDelete = (id: number) => {
+        setBookToDelete(id);
+        setDeleteModalOpen(true);
+    };
+
+    const handleDeleteBook = async () => {
+        if (!bookToDelete) return;
 
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${apiUrl}/api/books/${id}`, {
+            const res = await fetch(`${apiUrl}/api/books/${bookToDelete}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -60,13 +76,17 @@ export default function AdminBooksPage() {
             });
 
             if (res.ok) {
-                setBooks(books.filter(b => b.id !== id));
+                setBooks(books.filter(b => b.id !== bookToDelete));
             } else {
-                alert('Failed to delete book');
+                console.error('Failed to delete book');
+                setError('Failed to delete book. Please try again.');
             }
         } catch (e) {
             console.error(e);
-            alert('Error deleting book');
+            setError('An error occurred while deleting the book.');
+        } finally {
+            setDeleteModalOpen(false);
+            setBookToDelete(null);
         }
     };
 
@@ -84,6 +104,16 @@ export default function AdminBooksPage() {
 
     return (
         <div className="space-y-6">
+            <ConfirmModal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                onConfirm={handleDeleteBook}
+                title="Delete Book?"
+                message="Are you sure you want to delete this book? This action cannot be undone and will remove the book from the user library."
+                confirmText="Delete Book"
+                isDestructive={true}
+            />
+
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">Book Management</h1>
@@ -169,7 +199,7 @@ export default function AdminBooksPage() {
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDeleteBook(book.id)}
+                                                    onClick={() => confirmDelete(book.id)}
                                                     className="p-2 hover:bg-red-500/10 rounded-lg text-zinc-400 hover:text-red-500 transition-colors"
                                                     title="Delete"
                                                 >

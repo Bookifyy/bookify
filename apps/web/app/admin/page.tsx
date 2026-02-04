@@ -4,15 +4,8 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 
-interface User {
-    id: number;
-    name: string;
-    email: string;
-    roles: { name: string }[];
-}
-
 export default function AdminDashboard() {
-    const { user, loading } = useAuth();
+    const { user, token, loading } = useAuth();
     const router = useRouter();
 
     // Dashboard Stats State
@@ -22,23 +15,57 @@ export default function AdminDashboard() {
         activeUsers: 0,
         premiumUsers: 0
     });
+    const [statLoading, setStatLoading] = useState(true);
 
-    // Fake data for visual proof-of-concept (replace with real API later)
     useEffect(() => {
-        if (!loading && user) {
-            // Simulate fetching stats
-            setTimeout(() => {
-                setStats({
-                    totalUsers: 1243,
-                    totalBooks: 85,
-                    activeUsers: 342,
-                    premiumUsers: 128
-                });
-            }, 500);
+        if (!loading && user && token) {
+            fetchStats();
         }
-    }, [loading, user]);
+    }, [loading, user, token]);
 
-    if (loading) return <div className="p-8 text-zinc-500">Loading dashboard...</div>;
+    const fetchStats = async () => {
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+            // Parallel data fetching for performance
+            const [usersRes, booksRes] = await Promise.all([
+                fetch(`${apiUrl}/api/users`, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }),
+                fetch(`${apiUrl}/api/books`, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } })
+            ]);
+
+            const users = usersRes.ok ? await usersRes.json() : [];
+            const books = booksRes.ok ? await booksRes.json() : [];
+
+            // Calculate derived stats
+            const totalUsers_count = Array.isArray(users) ? users.length : 0;
+            const totalBooks_count = Array.isArray(books) ? books.length : 0;
+            // Mocking these for now as we don't have tracking endpoints yet
+            const activeUsers_count = Math.floor(totalUsers_count * 0.4);
+            const premiumUsers_count = Math.floor(totalUsers_count * 0.1);
+
+            setStats({
+                totalUsers: totalUsers_count,
+                totalBooks: totalBooks_count,
+                activeUsers: activeUsers_count,
+                premiumUsers: premiumUsers_count
+            });
+        } catch (error) {
+            console.error('Failed to load dashboard stats', error);
+        } finally {
+            setStatLoading(false);
+        }
+    };
+
+    if (loading || statLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
+                    <p className="text-zinc-500 text-sm">Loading dashboard metrics...</p>
+                </div>
+            </div>
+        );
+    }
 
     const StatCard = ({ title, value, change, icon: Icon, color }: any) => (
         <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl relative overflow-hidden group hover:border-zinc-700 transition-all">
@@ -48,9 +75,11 @@ export default function AdminDashboard() {
             <p className="text-zinc-500 text-sm font-medium uppercase tracking-wider mb-1">{title}</p>
             <h3 className="text-3xl font-serif font-bold text-white mb-4">{value.toLocaleString()}</h3>
             <div className="flex items-center gap-2 text-xs">
-                <span className="text-green-500 font-bold bg-green-500/10 px-2 py-0.5 rounded flex items-center gap-1">
-                    {change}
-                </span>
+                {change && (
+                    <span className="text-green-500 font-bold bg-green-500/10 px-2 py-0.5 rounded flex items-center gap-1">
+                        {change}
+                    </span>
+                )}
                 <span className="text-zinc-600">vs last month</span>
             </div>
         </div>
@@ -111,25 +140,15 @@ export default function AdminDashboard() {
                         <h3 className="text-lg font-bold text-white">Recent Signups</h3>
                         <button onClick={() => router.push('/admin/users')} className="text-xs font-bold text-indigo-400 hover:text-indigo-300">View All</button>
                     </div>
+                    {/* Placeholder for now until we have created_at API sort */}
                     <div className="space-y-4">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                            <div key={i} className="flex items-center justify-between py-2 border-b border-zinc-800/50 last:border-0">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 text-sm font-bold">
-                                        U{i}
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-zinc-200">User {i}</p>
-                                        <p className="text-xs text-zinc-500">user{i}@example.com</p>
-                                    </div>
-                                </div>
-                                <span className="text-xs text-zinc-600">2h ago</span>
-                            </div>
-                        ))}
+                        <div className="flex items-center justify-center h-32 text-zinc-500 text-sm">
+                            Loading recent activity...
+                        </div>
                     </div>
                 </div>
 
-                {/* System Status (Placeholder for Security/Audit Phase) */}
+                {/* System Status */}
                 <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
                     <h3 className="text-lg font-bold text-white mb-6">System Status</h3>
                     <div className="space-y-4">

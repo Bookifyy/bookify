@@ -43,6 +43,11 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
         return null;
     }
 
+    // Admin routes have their own layout
+    if (pathname.startsWith('/admin')) {
+        return <>{children}</>;
+    }
+
     // Dashboard layout for logged in users on private routes
     if (user && !isPublicRoute) {
         return (
