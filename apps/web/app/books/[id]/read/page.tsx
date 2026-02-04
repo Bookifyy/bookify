@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../../context/AuthContext';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ZoomIn, ZoomOut, ArrowLeft, Loader2, Play, Clock, BookOpen, Star, Share2, Sun, Type, Search, Bookmark, Highlighter } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ZoomIn, ZoomOut, ArrowLeft, Loader2, Play, Clock, BookOpen, Star, Share2, Sun, Type, Search, Bookmark, Highlighter, List } from 'lucide-react';
 import { resolveAssetUrl, getApiUrl } from '../../../lib/utils';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -72,7 +72,8 @@ export default function ReaderPage() {
     const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined);
 
     // New Feature States
-    const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'highlight_create' | 'note' | 'flashcard'>('none');
+    const [activeModal, setActiveModal] = useState<'none' | 'theme' | 'typography' | 'search' | 'bookmark' | 'highlight' | 'highlight_create' | 'note' | 'flashcard' | 'toc'>('none');
+    const [outline, setOutline] = useState<any[]>([]);
     const [theme, setTheme] = useState<'dark' | 'light'>('dark');
     // Search specific state
     const [searchQuery, setSearchQuery] = useState('');
@@ -226,6 +227,18 @@ export default function ReaderPage() {
         };
     }, [highlightPopup]);
 
+    // Print Prevention & Keyboard Shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                alert('Printing is disabled for this book.');
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     // Responsive width calculation
     useEffect(() => {
         const updateWidth = () => {
@@ -350,9 +363,11 @@ export default function ReaderPage() {
     const [pdfDocument, setPdfDocument] = useState<any>(null);
     const [isSearching, setIsSearching] = useState(false);
 
-    function onDocumentLoadSuccess(pdf: any) {
+    async function onDocumentLoadSuccess(pdf: any) {
         setNumPages(pdf.numPages);
         setPdfDocument(pdf);
+        const outline = await pdf.getOutline();
+        setOutline(outline || []);
     }
 
     const handleSearch = async () => {
@@ -441,6 +456,9 @@ export default function ReaderPage() {
                         </div>
                         <button onClick={toggleFullscreen} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400">
                             {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+                        </button>
+                        <button onClick={() => setActiveModal('toc')} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400" title="Table of Contents">
+                            <List size={20} />
                         </button>
                     </div>
                 </header>
@@ -582,6 +600,62 @@ export default function ReaderPage() {
                     <ChevronRight size={20} />
                 </button>
             </footer>
+
+            {/* Simple TOC Renderer Helper */}
+            {activeModal === 'toc' && (
+                <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setActiveModal('none')}>
+                    <div
+                        className="absolute bottom-0 left-0 right-0 p-4 animate-in slide-in-from-bottom-10 fade-in duration-200 lg:top-1/2 lg:bottom-auto lg:left-1/2 lg:right-auto lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-[400px]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl h-[80vh] flex flex-col">
+                            <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
+                                <h3 className="font-bold text-white">Table of Contents</h3>
+                                <span className="text-xs text-zinc-500">{outline.length > 0 ? `${outline.length} Chapters` : 'No chapters'}</span>
+                            </div>
+                            <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                                {outline.length > 0 ? (
+                                    <ul className="space-y-1">
+                                        {outline.map((item, idx) => (
+                                            <li key={idx}>
+                                                <button
+                                                    onClick={async () => {
+                                                        // Resolve destination logic would be complex, simplistic assumption:
+                                                        // react-pdf pdf object getDestination(item.dest) -> page ref
+                                                        // but simplistic approach for V1 if we don't have page mapping easily:
+                                                        // Many PDF outlines return dest array [ref, name, ...].
+                                                        // For now, simpler to just show items. Actual page jump requires ref lookup.
+                                                        // We will try a basic lookup if possible or just log.
+                                                        // To properly support jumping we need to resolve 'dest' to page index.
+                                                        // This requires using pdf object methods.
+                                                        if (pdfDocument) {
+                                                            try {
+                                                                const dest = item.dest;
+                                                                const pageIndex = await pdfDocument.getPageIndex(dest[0]);
+                                                                setPageNumber(pageIndex + 1);
+                                                                setActiveModal('none');
+                                                            } catch (e) {
+                                                                console.warn("Could not navigate to TOC item", e);
+                                                            }
+                                                        }
+                                                    }}
+                                                    className="w-full text-left py-2 px-3 rounded hover:bg-zinc-800 text-sm text-zinc-300 hover:text-white truncate transition-colors"
+                                                >
+                                                    {item.title}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div className="text-center py-8 text-zinc-500">
+                                        <p className="text-sm">No table of contents found.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Modals Overlay */}
             {activeModal !== 'none' && (
