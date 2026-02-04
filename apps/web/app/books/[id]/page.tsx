@@ -109,7 +109,7 @@ export default function BookDetailPage() {
             <div className={`min-h-screen pb-80 transition-colors duration-300 ${themeClasses[theme] || themeClasses.dark}`}>
                 {/* Header */}
                 <div className="pt-8 px-4 flex flex-col items-center text-center space-y-4">
-                    <div className="w-32 h-48 rounded-lg shadow-2xl overflow-hidden mb-2">
+                    <div className="w-40 h-60 md:w-48 md:h-72 rounded-xl shadow-2xl overflow-hidden mb-2 transition-all">
                         {book?.cover_image ? (
                             <img
                                 src={resolveAssetUrl(book.cover_image)}
@@ -118,28 +118,28 @@ export default function BookDetailPage() {
                             />
                         ) : (
                             <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
-                                <BookOpen className="text-zinc-600" />
+                                <BookOpen className="text-zinc-600" size={40} />
                             </div>
                         )}
                     </div>
-                    <div>
-                        <h1 className="text-xl font-bold font-serif mb-1">{book?.title}</h1>
-                        <p className={`text-sm mb-1 ${subTextClasses[theme] || subTextClasses.dark}`}>{book?.author}</p>
-                        <p className="text-blue-500 text-xs font-medium uppercase tracking-wider">
+                    <div className="max-w-[80vw]">
+                        <h1 className="text-2xl md:text-3xl font-bold font-serif mb-2 leading-tight">{book?.title}</h1>
+                        <p className={`text-base md:text-lg mb-2 ${subTextClasses[theme] || subTextClasses.dark}`}>{book?.author}</p>
+                        <p className="text-blue-500 text-xs md:text-sm font-bold uppercase tracking-widest">
                             {book?.subject?.name} • {book?.progress?.total_pages || '?'} pages
                         </p>
                     </div>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="max-w-xl mx-auto px-6 mt-8">
-                    <div className={`h-1.5 rounded-full overflow-hidden mb-2 ${theme === 'dark' ? 'bg-zinc-800' : 'bg-slate-200'}`}>
+                <div className="max-w-xl mx-auto px-4 md:px-6 mt-8">
+                    <div className={`h-2 rounded-full overflow-hidden mb-3 ${theme === 'dark' ? 'bg-zinc-800' : 'bg-slate-200'}`}>
                         <div
                             className="h-full bg-blue-600 rounded-full"
                             style={{ width: `${Math.max(0, Math.min(100, book?.progress?.percentage_completed || 0))}%` }}
                         />
                     </div>
-                    <div className={`flex justify-between text-[11px] font-medium uppercase tracking-wider ${subTextClasses[theme] || subTextClasses.dark}`}>
+                    <div className={`flex justify-between text-xs font-bold uppercase tracking-wider ${subTextClasses[theme] || subTextClasses.dark}`}>
                         <span>Page {book?.progress?.current_page || 0}</span>
                         <span>{book?.progress?.total_pages || '?'} pages</span>
                     </div>
@@ -147,19 +147,19 @@ export default function BookDetailPage() {
 
                 {/* Chapters List */}
                 <div
-                    className="max-w-xl mx-auto px-6 mt-10 space-y-2"
+                    className="max-w-xl mx-auto px-4 md:px-6 mt-8 space-y-2"
                 >
-                    <h3 className={`text-xs font-bold uppercase tracking-wider mb-4 ${subTextClasses[theme]}`}>Chapters</h3>
+                    <h3 className={`text-xs font-bold uppercase tracking-wider mb-4 pl-1 ${subTextClasses[theme]}`}>Chapters</h3>
                     <div className="space-y-3">
                         {chapters.map((chapter) => (
-                            <div key={chapter.number} className={`p-4 rounded-xl flex items-center justify-between group cursor-pointer transition-colors ${cardClasses[theme]}`}>
+                            <div key={chapter.number} className={`p-4 rounded-2xl flex items-center justify-between group cursor-pointer transition-colors ${cardClasses[theme]}`}>
                                 <div>
-                                    <div className="flex items-center gap-2 mb-1">
+                                    <div className="flex items-center gap-3 mb-1">
                                         <span className={`text-xs font-bold ${subTextClasses[theme]}`}>{chapter.number}</span>
-                                        <h4 className="font-medium">{chapter.title}</h4>
+                                        <h4 className="font-semibold text-base">{chapter.title}</h4>
                                         <div className="w-1.5 h-1.5 rounded-full bg-blue-600 ml-1"></div>
                                     </div>
-                                    <p className={`text-[11px] pl-4 ${subTextClasses[theme]}`}>{chapter.pages} pages • Starting page {chapter.startPage}</p>
+                                    <p className={`text-xs pl-5 ${subTextClasses[theme]}`}>{chapter.pages} pages • Starting page {chapter.startPage}</p>
                                 </div>
                             </div>
                         ))}
@@ -167,13 +167,13 @@ export default function BookDetailPage() {
                 </div>
 
                 {/* Stats */}
-                <div className="max-w-xl mx-auto px-6 mt-6">
-                    <div className={`border rounded-xl p-4 space-y-2 ${theme === 'dark' ? 'bg-zinc-900/30 border-zinc-800' : 'bg-slate-50 border-slate-200'}`}>
-                        <div className="flex justify-between items-center text-sm">
+                <div className="max-w-xl mx-auto px-4 md:px-6 mt-6">
+                    <div className={`border rounded-2xl p-5 space-y-3 ${theme === 'dark' ? 'bg-zinc-900/30 border-zinc-800' : 'bg-slate-50 border-slate-200'}`}>
+                        <div className="flex justify-between items-center text-sm md:text-base">
                             <span className={subTextClasses[theme]}>Time spent</span>
                             <span className="font-medium">30h 47m</span>
                         </div>
-                        <div className="flex justify-between items-center text-sm">
+                        <div className="flex justify-between items-center text-sm md:text-base">
                             <span className={subTextClasses[theme]}>Progress</span>
                             <span className="font-medium">{Math.round(book.progress.percentage_completed)}% complete</span>
                         </div>
@@ -181,9 +181,9 @@ export default function BookDetailPage() {
                 </div>
 
                 {/* Info Footer */}
-                <div className="max-w-xl mx-auto px-8 mt-4">
-                    <div className={`text-[10px] flex items-center gap-1.5 ${subTextClasses[theme]}`}>
-                        <div className="w-1 h-1 rounded-full bg-blue-600"></div>
+                <div className="max-w-xl mx-auto px-4 mt-6 mb-8 text-center md:text-left">
+                    <div className={`text-xs flex items-center justify-center md:justify-start gap-2 ${subTextClasses[theme]}`}>
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
                         Protected content • User ID: #Q2/Q9QG30
                     </div>
                 </div>
