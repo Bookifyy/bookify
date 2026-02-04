@@ -2,243 +2,188 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
-import { Upload, X, Book as BookIcon, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { BookOpen, Search, Plus, Trash2, Edit2, Star } from 'lucide-react';
+
+interface Book {
+    id: number;
+    title: string;
+    author: string;
+    cover_image?: string;
+    subject?: { name: string };
+    is_premium: boolean;
+    created_at: string;
+}
 
 export default function AdminBooksPage() {
     const { token } = useAuth();
     const router = useRouter();
-    const [subjects, setSubjects] = useState<{ id: number; name: string }[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    const [formData, setFormData] = useState({
-        title: '',
-        author: '',
-        subject_id: '',
-        description: '',
-        isbn: '',
-        language: 'en',
-        publisher: '',
-        is_premium: false,
-    });
-
-    const [files, setFiles] = useState<{ book_file: File | null; cover_image: File | null }>({
-        book_file: null,
-        cover_image: null,
-    });
+    const [books, setBooks] = useState<Book[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        fetch(`${apiUrl}/api/subjects`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json'
-            }
-        })
-            .then(res => res.json())
-            .then(setSubjects)
-            .catch(err => console.error('Failed to fetch subjects:', err));
+        fetchBooks();
     }, [token]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-
-        const data = new FormData();
-        Object.entries(formData).forEach(([key, value]) => {
-            if (key === 'is_premium') {
-                data.append(key, value ? '1' : '0');
-            } else {
-                data.append(key, value.toString());
-            }
-        });
-        if (files.book_file) data.append('book_file', files.book_file);
-        if (files.cover_image) data.append('cover_image', files.cover_image);
-
+    const fetchBooks = async () => {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
             const res = await fetch(`${apiUrl}/api/books`, {
-                method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json'
-                },
-                body: data,
-            });
-
-            if (res.ok) {
-                setSuccess(true);
-                setTimeout(() => router.push('/library'), 2000);
-            } else {
-                let message = 'Failed to upload book';
-                const clonedRes = res.clone();
-                try {
-                    const errData = await res.json();
-                    if (errData.errors) {
-                        // Laravel validation errors object
-                        const errorDetails = Object.values(errData.errors).flat().join(', ');
-                        message = `Validation Error: ${errorDetails}`;
-                    } else {
-                        message = errData.message || message;
-                    }
-                } catch (e) {
-                    const errorText = await clonedRes.text();
-                    if (res.status === 413) message = 'File too large (Server limit exceeded)';
-                    else message = `Server Error (${res.status}): ${errorText.substring(0, 100)}...`;
                 }
-                setError(message);
-            }
+            });
+            if (!res.ok) throw new Error('Failed to fetch books');
+            const data = await res.json();
+            setBooks(data);
+            setLoading(false);
         } catch (err: any) {
-            console.error('Upload Error:', err);
-            setError(err.message || 'An error occurred during upload. Check your connection.');
-        } finally {
+            setError(err.message);
             setLoading(false);
         }
     };
 
+    const handleDeleteBook = async (id: number) => {
+        if (!confirm('Are you sure you want to delete this book? This action cannot be undone.')) return;
+
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const res = await fetch(`${apiUrl}/api/books/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (res.ok) {
+                setBooks(books.filter(b => b.id !== id));
+            } else {
+                alert('Failed to delete book');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error deleting book');
+        }
+    };
+
+    const resolveAssetUrl = (path: string) => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path;
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        return `${apiUrl}/storage/${path}`;
+    };
+
+    const filteredBooks = books.filter(book =>
+        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
-        <div className="p-8 max-w-4xl mx-auto space-y-8">
-            <div className="flex items-center justify-between">
+        <div className="space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-white tracking-tight">Upload New Book</h1>
-                    <p className="text-zinc-500 text-sm">Add a new book to the platform library.</p>
+                    <h1 className="text-3xl font-bold text-white tracking-tight">Book Management</h1>
+                    <p className="text-zinc-400 text-sm">Manage library content, availability, and metadata.</p>
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-3">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                        <input
+                            type="text"
+                            placeholder="Search books..."
+                            className="bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <button
+                        onClick={() => router.push('/admin/books/create')}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm shadow-lg shadow-indigo-500/20"
+                    >
+                        <Plus size={18} />
+                        Add Book
+                    </button>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {success ? (
-                    <div className="bg-green-500/10 border border-green-500/50 rounded-xl p-8 flex flex-col items-center gap-4 text-center text-green-500">
-                        <CheckCircle2 size={48} />
-                        <div className="space-y-1">
-                            <h3 className="font-bold text-lg">Upload Successful!</h3>
-                            <p className="text-sm opacity-80">The book has been added to the library. Redirecting...</p>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Left Column: Metadata */}
-                        <div className="space-y-4">
-                            <div className="space-y-1">
-                                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Book Title</label>
-                                <input
-                                    required
-                                    type="text"
-                                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                                    value={formData.title}
-                                    onChange={e => setFormData({ ...formData, title: e.target.value })}
-                                />
-                            </div>
+            {error && <div className="p-4 bg-red-500/10 text-red-500 rounded-xl text-sm border border-red-500/20">{error}</div>}
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1">
-                                    <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Author</label>
-                                    <input
-                                        required
-                                        type="text"
-                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                                        value={formData.author}
-                                        onChange={e => setFormData({ ...formData, author: e.target.value })}
-                                    />
-                                </div>
-                                <div className="space-y-1">
-                                    <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Subject</label>
-                                    <select
-                                        required
-                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                                        value={formData.subject_id}
-                                        onChange={e => setFormData({ ...formData, subject_id: e.target.value })}
-                                    >
-                                        <option value="">Select Subject</option>
-                                        {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                                    </select>
-                                    {subjects.length === 0 && !loading && (
-                                        <p className="text-[10px] text-amber-500 mt-1">
-                                            No subjects found. Please run the seeder or add subjects via database.
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="space-y-1">
-                                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Description</label>
-                                <textarea
-                                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all h-32"
-                                    value={formData.description}
-                                    onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="flex items-center gap-3 bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl">
-                                <input
-                                    type="checkbox"
-                                    id="is_premium"
-                                    className="h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500"
-                                    checked={formData.is_premium}
-                                    onChange={e => setFormData({ ...formData, is_premium: e.target.checked })}
-                                />
-                                <label htmlFor="is_premium" className="text-sm font-medium text-white">Premium Content</label>
-                            </div>
-                        </div>
-
-                        {/* Right Column: Files */}
-                        <div className="space-y-6">
-                            <div className="space-y-1">
-                                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Book File (PDF/EPUB)</label>
-                                <div className="relative group">
-                                    <input
-                                        required
-                                        type="file"
-                                        accept=".pdf,.epub"
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                        onChange={e => setFiles({ ...files, book_file: e.target.files?.[0] || null })}
-                                    />
-                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-zinc-800 rounded-xl p-8 bg-zinc-900 transition-colors group-hover:bg-zinc-800 group-hover:border-indigo-500/50">
-                                        <Upload size={24} className="text-zinc-500 mb-2 group-hover:text-indigo-400" />
-                                        <span className="text-sm font-medium text-zinc-400">
-                                            {files.book_file ? files.book_file.name : 'Select PDF or EPUB'}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="space-y-1">
-                                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Cover Image</label>
-                                <div className="relative group">
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                        onChange={e => setFiles({ ...files, cover_image: e.target.files?.[0] || null })}
-                                    />
-                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-zinc-800 rounded-xl p-8 bg-zinc-900 transition-colors group-hover:bg-zinc-800 group-hover:border-indigo-500/50">
-                                        <BookIcon size={24} className="text-zinc-500 mb-2 group-hover:text-indigo-400" />
-                                        <span className="text-sm font-medium text-zinc-400">
-                                            {files.cover_image ? files.cover_image.name : 'Select Cover Image'}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {error && (
-                                <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 text-red-500 text-xs font-medium">
-                                    {error}
-                                </div>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                        <thead className="bg-zinc-950/50 border-b border-zinc-800">
+                            <tr>
+                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Book</th>
+                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Subject</th>
+                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Status</th>
+                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-800">
+                            {loading ? (
+                                <tr><td colSpan={4} className="p-8 text-center text-zinc-500">Loading books...</td></tr>
+                            ) : filteredBooks.length === 0 ? (
+                                <tr><td colSpan={4} className="p-8 text-center text-zinc-500">No books found.</td></tr>
+                            ) : (
+                                filteredBooks.map(book => (
+                                    <tr key={book.id} className="group hover:bg-zinc-800/30 transition-colors">
+                                        <td className="p-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-14 bg-zinc-800 rounded overflow-hidden shrink-0">
+                                                    {book.cover_image ? (
+                                                        <img src={resolveAssetUrl(book.cover_image)} alt={book.title} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-zinc-600"><BookOpen size={16} /></div>
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium text-white text-sm line-clamp-1">{book.title}</p>
+                                                    <p className="text-xs text-zinc-500">{book.author}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="p-4 text-sm text-zinc-400">
+                                            <span className="bg-zinc-800 text-zinc-300 px-2 py-1 rounded text-xs">
+                                                {book.subject?.name || 'Uncategorized'}
+                                            </span>
+                                        </td>
+                                        <td className="p-4">
+                                            {book.is_premium ? (
+                                                <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/20">
+                                                    <Star size={12} fill="currentColor" /> Premium
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium bg-zinc-700/50 text-zinc-400 ring-1 ring-zinc-700">
+                                                    Free
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className="p-4 text-right">
+                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors" title="Edit">
+                                                    <Edit2 size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteBook(book.id)}
+                                                    className="p-2 hover:bg-red-500/10 rounded-lg text-zinc-400 hover:text-red-500 transition-colors"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
                             )}
-
-                            <button
-                                disabled={loading}
-                                type="submit"
-                                className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
-                            >
-                                {loading ? 'Uploading...' : 'Save Book'}
-                            </button>
-                        </div>
-                    </div>
-                )}
-            </form>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     );
 }
