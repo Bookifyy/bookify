@@ -73,10 +73,19 @@ class QuizController extends Controller
             ->first();
 
         if ($existingAttempt) {
-            return response()->json([
-                'message' => 'You already have an active attempt.',
-                'attempt' => $existingAttempt
-            ]);
+            // Check if it's expired
+            $startedAt = \Carbon\Carbon::parse($existingAttempt->started_at);
+            $limitMinutes = $quiz->time_limit_minutes;
+
+            if ($startedAt->addMinutes($limitMinutes + 5)->isPast()) {
+                // Add 5 min buffer to be safe. If it's really old, mark as expired and allow new.
+                $existingAttempt->update(['status' => 'expired']);
+            } else {
+                return response()->json([
+                    'message' => 'You already have an active attempt.',
+                    'attempt' => $existingAttempt
+                ]);
+            }
         }
 
         $attempt = QuizAttempt::create([
