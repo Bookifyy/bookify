@@ -43,12 +43,15 @@ export default function AdminBooksPage() {
             });
             if (!res.ok) throw new Error('Failed to fetch books');
             const data = await res.json();
-            // Ensure data is array
-            if (Array.isArray(data)) {
+
+            // Handle Laravel Pagination (data.data) or Direct Array
+            if (data.data && Array.isArray(data.data)) {
+                setBooks(data.data);
+            } else if (Array.isArray(data)) {
                 setBooks(data);
             } else {
                 setBooks([]);
-                console.error('API did not return an array for books:', data);
+                console.error('API return format not recognized:', data);
             }
             setLoading(false);
         } catch (err: any) {

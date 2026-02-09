@@ -29,16 +29,22 @@ export default function AdminDashboard() {
 
             // Parallel data fetching for performance
             const [usersRes, booksRes] = await Promise.all([
-                fetch(`${apiUrl}/api/users`, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }),
+                fetch(`${apiUrl}/api/admin/users`, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }),
                 fetch(`${apiUrl}/api/books`, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } })
             ]);
 
-            const users = usersRes.ok ? await usersRes.json() : [];
-            const books = booksRes.ok ? await booksRes.json() : [];
+            let totalUsers_count = 0;
+            if (usersRes.ok) {
+                const usersData = await usersRes.json();
+                totalUsers_count = Array.isArray(usersData) ? usersData.length : (usersData.total || 0);
+            }
 
-            // Calculate derived stats
-            const totalUsers_count = Array.isArray(users) ? users.length : 0;
-            const totalBooks_count = Array.isArray(books) ? books.length : 0;
+            let totalBooks_count = 0;
+            if (booksRes.ok) {
+                const booksData = await booksRes.json();
+                // Handle pagination or array
+                totalBooks_count = booksData.total !== undefined ? booksData.total : (Array.isArray(booksData) ? booksData.length : 0);
+            }
             // Mocking these for now as we don't have tracking endpoints yet
             const activeUsers_count = Math.floor(totalUsers_count * 0.4);
             const premiumUsers_count = Math.floor(totalUsers_count * 0.1);
