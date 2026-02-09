@@ -26,7 +26,13 @@ class AdminQuizController extends Controller
             'book_id' => 'nullable|exists:books,id',
             'time_limit_minutes' => 'integer|min:1',
             'passing_score' => 'integer|min:0|max:100',
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx|max:10240', // Max 10MB
         ]);
+
+        $attachmentPath = null;
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = $request->file('attachment')->store('quiz-attachments', 'public');
+        }
 
         $quiz = Quiz::create([
             'title' => $request->title,
@@ -34,7 +40,8 @@ class AdminQuizController extends Controller
             'book_id' => $request->book_id,
             'time_limit_minutes' => $request->time_limit_minutes ?? 30,
             'passing_score' => $request->passing_score ?? 70,
-            'created_by' => $request->user()->id
+            'created_by' => $request->user()->id,
+            'attachment_path' => $attachmentPath
         ]);
 
         return response()->json($quiz, 201);

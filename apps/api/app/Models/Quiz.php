@@ -15,8 +15,14 @@ class Quiz extends Model
         'book_id',
         'time_limit_minutes',
         'passing_score',
-        'created_by'
+        'created_by',
+        'attachment_path'
     ];
+
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
+    }
 
     public function questions()
     {
@@ -26,11 +32,6 @@ class Quiz extends Model
     public function attempts()
     {
         return $this->hasMany(QuizAttempt::class);
-    }
-
-    public function book()
-    {
-        return $this->belongsTo(Book::class);
     }
 
     public function creator()

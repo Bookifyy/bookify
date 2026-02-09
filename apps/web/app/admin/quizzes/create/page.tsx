@@ -24,6 +24,7 @@ export default function CreateQuizPage() {
     const [bookId, setBookId] = useState('');
     const [timeLimit, setTimeLimit] = useState(30);
     const [passingScore, setPassingScore] = useState(70);
+    const [attachment, setAttachment] = useState<File | null>(null);
 
     useEffect(() => {
         // Fetch books for selection
@@ -47,24 +48,28 @@ export default function CreateQuizPage() {
 
         try {
             const apiUrl = getApiUrl();
+
+            // Use FormData for file upload
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+            if (bookId) formData.append('book_id', bookId);
+            formData.append('time_limit_minutes', timeLimit.toString());
+            formData.append('passing_score', passingScore.toString());
+            if (attachment) formData.append('attachment', attachment);
+
             const res = await fetch(`${apiUrl}/api/admin/quizzes`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    // Content-Type is set automatically with FormData
                 },
-                body: JSON.stringify({
-                    title,
-                    description,
-                    book_id: bookId ? parseInt(bookId) : null,
-                    time_limit_minutes: timeLimit,
-                    passing_score: passingScore
-                })
+                body: formData
             });
 
             if (res.ok) {
                 const quiz = await res.json();
-                router.push(`/admin/quizzes/${quiz.id}`); // Redirect to edit page to add questions
+                router.push(`/admin/quizzes/${quiz.id}`); // Redirect to edit page
             } else {
                 const error = await res.json();
                 alert(`Error: ${error.message || 'Failed to create quiz'}`);
@@ -114,6 +119,31 @@ export default function CreateQuizPage() {
                         rows={3}
                         className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
                     />
+                </div>
+
+                {/* Attachment (Question Paper) */}
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+                        <Save size={16} /> {/* Using Save icon for now, could be FileText */}
+                        Question Paper (PDF) <span className="text-zinc-500 text-xs font-normal">(Optional)</span>
+                    </label>
+                    <div className="flex items-center gap-4">
+                        <input
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            onChange={e => setAttachment(e.target.files ? e.target.files[0] : null)}
+                            className="block w-full text-sm text-zinc-400
+                                file:mr-4 file:py-2.5 file:px-4
+                                file:rounded-lg file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-zinc-800 file:text-white
+                                hover:file:bg-zinc-700
+                                cursor-pointer"
+                        />
+                    </div>
+                    <p className="text-xs text-zinc-500">
+                        Upload a PDF exam paper if you don't want to create individual questions manually.
+                    </p>
                 </div>
 
                 {/* Related Book */}

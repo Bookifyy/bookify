@@ -107,6 +107,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // General Book & Subject Routes
     Route::get('/books', function (Request $request) {
         $query = Book::with('subject')->latest();
+        // ... (existing code)
+        // We need to add a similar mapping for Quizzes if we want to expose the full URL
+        // But for now, let's just make sure the QuizController returns the correct URL
+        // Actually, the storage link logic handles /storage prefix.
+        // We will modify the QuizController to append the full URL or handle it in Frontend.
+        // Let's stick to the current plan and handle URL generation in the Controller or Model accessor.
+        // Let's stick to the current plan and handle URL generation in the Controller or Model accessor.
 
         if ($request->has('subject_id')) {
             $query->where('subject_id', $request->subject_id);

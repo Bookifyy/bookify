@@ -100,16 +100,29 @@ class QuizController extends Controller
             ->where('status', 'in_progress')
             ->firstOrFail();
 
-        $answers = $request->input('answers'); // Array of {question_id, user_answer}
+        $request->validate([
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'answers' => 'nullable|array' // Optional if attachment is provided
+        ]);
+
+        $attachmentPath = null;
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = $request->file('attachment')->store('quiz-submissions', 'public');
+        }
+
+        // If file is uploaded but no answers, mark as pending review (or completed with 0 score for now)
+        // If answers are provided, grade them as usual
+
+        $answers = $request->input('answers') ?? []; // Array of {question_id, user_answer}
         $totalScore = 0;
         $maxScore = 0;
 
         DB::beginTransaction();
         try {
+            // Process structured questions if any
             foreach ($quiz->questions as $question) {
                 $maxScore += $question->points;
 
-                // Find user answer for this question
                 $userAnswerData = collect($answers)->firstWhere('question_id', $question->id);
                 $userValue = $userAnswerData ? $userAnswerData['user_answer'] : null;
 
@@ -119,22 +132,30 @@ class QuizController extends Controller
                     $totalScore += $question->points;
                 }
 
-                QuizAnswer::create([
-                    'quiz_attempt_id' => $attempt->id,
-                    'question_id' => $question->id,
-                    'user_answer' => $userValue ?? '',
-                    'is_correct' => $isCorrect
-                ]);
+                if ($userValue !== null) {
+                    QuizAnswer::create([
+                        'quiz_attempt_id' => $attempt->id,
+                        'question_id' => $question->id,
+                        'user_answer' => $userValue,
+                        'is_correct' => $isCorrect
+                    ]);
+                }
             }
 
-            // Calculate percentage if needed, but here we store raw points or percentage
-            // Let's store percentage for consistency with passing_score
+            // If we have an attachment, the score might need manual grading.
+            // For now, we calculate score based on structured answers only.
+            // If strictly file-based, maxScore might be 0 here if no questions exist.
+
             $percentageObj = ($maxScore > 0) ? round(($totalScore / $maxScore) * 100) : 0;
+
+            // If manually uploaded file exists, maybe set status to 'pending_review' instead of completed?
+            // For simplicity based on user request, we mark as completed.
 
             $attempt->update([
                 'status' => 'completed',
                 'score' => $percentageObj,
-                'completed_at' => now()
+                'completed_at' => now(),
+                'attachment_path' => $attachmentPath
             ]);
 
             DB::commit();

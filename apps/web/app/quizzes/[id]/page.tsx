@@ -40,6 +40,7 @@ export default function QuizTakingPage() {
     const [submitting, setSubmitting] = useState(false);
     const [submittedData, setSubmittedData] = useState<any>(null); // To show results
     const [error, setError] = useState('');
+    const [attachment, setAttachment] = useState<File | null>(null);
 
     useEffect(() => {
         if (token && id) {
@@ -128,24 +129,39 @@ export default function QuizTakingPage() {
     const handleSubmit = async (auto = false) => {
         if (!quiz || submitting || submittedData) return;
 
-        if (!auto && !confirm('Are you sure you want to submit your answers?')) return;
+        if (!auto && !confirm('Are you sure you want to submit?')) return;
 
         setSubmitting(true);
         try {
+            const apiUrl = getApiUrl();
+
+            const formData = new FormData();
+
             // Format answers for API
             const formattedAnswers = Object.entries(answers).map(([qId, val]) => ({
                 question_id: parseInt(qId),
                 user_answer: val
             }));
 
-            const apiUrl = getApiUrl();
+            // Append explicit answers if any
+            if (formattedAnswers.length > 0) {
+                formattedAnswers.forEach((ans, index) => {
+                    formData.append(`answers[${index}][question_id]`, ans.question_id.toString());
+                    formData.append(`answers[${index}][user_answer]`, ans.user_answer);
+                });
+            }
+
+            if (attachment) {
+                formData.append('attachment', attachment);
+            }
+
             const res = await fetch(`${apiUrl}/api/quizzes/${id}/submit`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    // Content-Type is set automatically by FormData
                 },
-                body: JSON.stringify({ answers: formattedAnswers })
+                body: formData
             });
 
             if (res.ok) {
@@ -153,7 +169,8 @@ export default function QuizTakingPage() {
                 setSubmittedData(data);
                 window.scrollTo(0, 0);
             } else {
-                alert('Submission failed. Please try again.');
+                const errData = await res.json();
+                alert(`Submission failed: ${errData.message || 'Unknown error'}`);
             }
         } catch (err) {
             console.error(err);
@@ -257,78 +274,124 @@ export default function QuizTakingPage() {
                 </div>
             </div>
 
-            {/* Questions Form */}
-            <div className="space-y-8">
-                {quiz.questions?.map((q, index) => (
-                    <div key={q.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
-                        <div className="flex items-start gap-4 mb-6">
-                            <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 text-sm flex-shrink-0">
-                                {index + 1}
-                            </div>
-                            <h3 className="text-lg text-white font-medium leading-relaxed">{q.question_text}</h3>
-                        </div>
-
-                        <div className="space-y-3 ml-12">
-                            {q.type === 'multiple_choice' ? (
-                                q.options?.map((opt, i) => (
-                                    <label
-                                        key={i}
-                                        className={`
-                                            flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all
-                                            ${answers[q.id] === opt
-                                                ? 'bg-indigo-600/10 border-indigo-500 text-white'
-                                                : 'bg-black border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-700'}
-                                        `}
-                                    >
-                                        <div className={`
-                                            w-5 h-5 rounded-full border flex items-center justify-center
-                                            ${answers[q.id] === opt ? 'border-indigo-500' : 'border-zinc-600'}
-                                        `}>
-                                            {answers[q.id] === opt && <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />}
-                                        </div>
-                                        <input
-                                            type="radio"
-                                            name={`q-${q.id}`}
-                                            value={opt}
-                                            checked={answers[q.id] === opt}
-                                            onChange={() => handleAnswerChange(q.id, opt)}
-                                            className="hidden"
-                                        />
-                                        <span className="text-sm md:text-base">{opt}</span>
-                                    </label>
-                                ))
-                            ) : (
-                                ['True', 'False'].map(val => (
-                                    <label
-                                        key={val}
-                                        className={`
-                                            flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all
-                                            ${answers[q.id] === val
-                                                ? 'bg-indigo-600/10 border-indigo-500 text-white'
-                                                : 'bg-black border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-700'}
-                                        `}
-                                    >
-                                        <div className={`
-                                            w-5 h-5 rounded-full border flex items-center justify-center
-                                            ${answers[q.id] === val ? 'border-indigo-500' : 'border-zinc-600'}
-                                        `}>
-                                            {answers[q.id] === val && <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />}
-                                        </div>
-                                        <input
-                                            type="radio"
-                                            name={`q-${q.id}`}
-                                            value={val}
-                                            checked={answers[q.id] === val}
-                                            onChange={() => handleAnswerChange(q.id, val)}
-                                            className="hidden"
-                                        />
-                                        <span className="font-bold">{val}</span>
-                                    </label>
-                                ))
-                            )}
-                        </div>
+            {/* Question Paper Download */}
+            {quiz.attachment_path && (
+                <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <h3 className="text-lg text-white font-medium mb-1">Question Paper</h3>
+                        <p className="text-zinc-400 text-sm">Download the attached file to view questions/instructions.</p>
                     </div>
-                ))}
+                    <a
+                        href={`${getApiUrl()}/storage/${quiz.attachment_path}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded-lg font-bold transition-colors"
+                    >
+                        <Download size={18} />
+                        Download PDF
+                    </a>
+                </div>
+            )}
+
+            {/* Questions Form */}
+            {quiz.questions && quiz.questions.length > 0 ? (
+                <div className="space-y-8">
+                    {quiz.questions.map((q, index) => (
+                        <div key={q.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+                            {/* ... existing question rendering ... */}
+                            <div className="flex items-start gap-4 mb-6">
+                                <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 text-sm flex-shrink-0">
+                                    {index + 1}
+                                </div>
+                                <h3 className="text-lg text-white font-medium leading-relaxed">{q.question_text}</h3>
+                            </div>
+
+                            <div className="space-y-3 ml-12">
+                                {q.type === 'multiple_choice' ? (
+                                    q.options?.map((opt, i) => (
+                                        <label
+                                            key={i}
+                                            className={`
+                                                flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all
+                                                ${answers[q.id] === opt
+                                                    ? 'bg-indigo-600/10 border-indigo-500 text-white'
+                                                    : 'bg-black border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-700'}
+                                            `}
+                                        >
+                                            <div className={`
+                                                w-5 h-5 rounded-full border flex items-center justify-center
+                                                ${answers[q.id] === opt ? 'border-indigo-500' : 'border-zinc-600'}
+                                            `}>
+                                                {answers[q.id] === opt && <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />}
+                                            </div>
+                                            <input
+                                                type="radio"
+                                                name={`q-${q.id}`}
+                                                value={opt}
+                                                checked={answers[q.id] === opt}
+                                                onChange={() => handleAnswerChange(q.id, opt)}
+                                                className="hidden"
+                                            />
+                                            <span className="text-sm md:text-base">{opt}</span>
+                                        </label>
+                                    ))
+                                ) : (
+                                    ['True', 'False'].map(val => (
+                                        <label
+                                            key={val}
+                                            className={`
+                                                flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all
+                                                ${answers[q.id] === val
+                                                    ? 'bg-indigo-600/10 border-indigo-500 text-white'
+                                                    : 'bg-black border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-700'}
+                                            `}
+                                        >
+                                            <div className={`
+                                                w-5 h-5 rounded-full border flex items-center justify-center
+                                                ${answers[q.id] === val ? 'border-indigo-500' : 'border-zinc-600'}
+                                            `}>
+                                                {answers[q.id] === val && <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />}
+                                            </div>
+                                            <input
+                                                type="radio"
+                                                name={`q-${q.id}`}
+                                                value={val}
+                                                checked={answers[q.id] === val}
+                                                onChange={() => handleAnswerChange(q.id, val)}
+                                                className="hidden"
+                                            />
+                                            <span className="font-bold">{val}</span>
+                                        </label>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center">
+                    <p className="text-zinc-400">No interactive questions in this quiz. Please refer to the Question Paper above.</p>
+                </div>
+            )}
+
+            {/* Answer Sheet Upload */}
+            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+                <div className="mb-4">
+                    <h3 className="text-lg text-white font-medium mb-1">Upload Answer Sheet (Optional)</h3>
+                    <p className="text-zinc-400 text-sm">Attach your work in a PDF, Word, or Image file.</p>
+                </div>
+                <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                    onChange={e => setAttachment(e.target.files ? e.target.files[0] : null)}
+                    className="block w-full text-sm text-zinc-400
+                        file:mr-4 file:py-2.5 file:px-4
+                        file:rounded-lg file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-zinc-800 file:text-white
+                        hover:file:bg-zinc-700
+                        cursor-pointer"
+                />
             </div>
 
             {/* Footer Actions */}
