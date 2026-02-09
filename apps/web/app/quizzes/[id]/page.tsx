@@ -44,6 +44,7 @@ export default function QuizTakingPage() {
     const [submittedData, setSubmittedData] = useState<any>(null); // To show results
     const [error, setError] = useState('');
     const [attachment, setAttachment] = useState<File | null>(null);
+    const [timeOffset, setTimeOffset] = useState<number>(0); // Client Time - Server Time
 
     // Modal State
     const [showSubmitModal, setShowSubmitModal] = useState(false);
@@ -54,7 +55,7 @@ export default function QuizTakingPage() {
         }
     }, [token, id]);
 
-    // Timer Logic (Robust)
+    // Timer Logic (Robust with Server Sync)
     useEffect(() => {
         if (!quiz?.active_attempt || quiz.active_attempt.status !== 'in_progress') return;
 
@@ -62,11 +63,7 @@ export default function QuizTakingPage() {
         const startedAt = new Date(quiz.active_attempt.started_at).getTime();
 
         const tick = () => {
-            const now = Date.now(); // Local time
-            // Compare with startedAt which is parsed from DB string. 
-            // Assuming DB returns ISO UTC string, new Date(string) handles local conversion.
-            // But if server time and client time drift significantly > time limit, it's an issue.
-            // Ideally we sync server time, but for now relies on system clock.
+            const now = Date.now() - timeOffset; // Adjusted to Server Time
 
             const elapsed = Math.floor((now - startedAt) / 1000);
             const remaining = Math.max(0, limitSeconds - elapsed);
@@ -76,6 +73,8 @@ export default function QuizTakingPage() {
             if (remaining <= 0) {
                 // Auto submit
                 if (!submitting && !submittedData) {
+                    // Safety check: if elapsed is huge (e.g. > limit + buffer) immediately upon load, maybe it's an old attempt?
+                    // If it's just 0, submit.
                     submitToApi(true);
                 }
             }
@@ -85,7 +84,7 @@ export default function QuizTakingPage() {
         const timer = setInterval(tick, 1000);
 
         return () => clearInterval(timer);
-    }, [quiz?.active_attempt]);
+    }, [quiz?.active_attempt, timeOffset]);
 
     const fetchQuizDetails = async () => {
         try {
@@ -95,7 +94,18 @@ export default function QuizTakingPage() {
             });
             if (res.ok) {
                 const data = await res.json();
-                setQuiz(data);
+
+                // Handle new response structure with server_time
+                const quizData = data.quiz || data; // Fallback if API changed
+                const serverTimeStr = data.server_time;
+
+                setQuiz(quizData);
+
+                if (serverTimeStr) {
+                    const serverTime = new Date(serverTimeStr).getTime();
+                    const clientTime = Date.now();
+                    setTimeOffset(clientTime - serverTime); // Offset to subtract from Client Time to get Server Time
+                }
             } else {
                 setError('Failed to load quiz');
             }
