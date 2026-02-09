@@ -104,7 +104,16 @@ export default function AdminBooksPage() {
         if (!path) return '';
         if (path.startsWith('http')) return path;
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        return `${apiUrl}/storage/${path}`;
+
+        // Remove leading slash for cleaner handling
+        const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+
+        // If the path already includes 'storage/', just prepend API URL
+        if (cleanPath.startsWith('storage/')) {
+            return `${apiUrl}/${cleanPath}`;
+        }
+
+        return `${apiUrl}/storage/${cleanPath}`;
     };
 
     const filteredBooks = books.filter(book =>
