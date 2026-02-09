@@ -203,5 +203,23 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/flashcards', [App\Http\Controllers\ReadingFeaturesController::class, 'storeFlashcard']);
         Route::delete('/flashcards/{id}', [App\Http\Controllers\ReadingFeaturesController::class, 'deleteFlashcard']);
     });
+
+    // --- Quiz Routes (Student) ---
+    Route::get('/quizzes', [\App\Http\Controllers\QuizController::class, 'index']);
+    Route::get('/quizzes/{id}', [\App\Http\Controllers\QuizController::class, 'show']);
+    Route::post('/quizzes/{id}/start', [\App\Http\Controllers\QuizController::class, 'start']);
+    Route::post('/quizzes/{id}/submit', [\App\Http\Controllers\QuizController::class, 'submit']);
+
+    // --- Admin Quiz Routes ---
+    Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function () {
+        Route::get('/quizzes', [\App\Http\Controllers\AdminQuizController::class, 'index']);
+        Route::post('/quizzes', [\App\Http\Controllers\AdminQuizController::class, 'store']);
+        Route::get('/quizzes/{id}', [\App\Http\Controllers\AdminQuizController::class, 'show']);
+        Route::delete('/quizzes/{id}', [\App\Http\Controllers\AdminQuizController::class, 'destroy']);
+
+        // Question Management
+        Route::post('/quizzes/{id}/questions', [\App\Http\Controllers\AdminQuizController::class, 'addQuestion']);
+        Route::delete('/quizzes/{id}/questions/{questionId}', [\App\Http\Controllers\AdminQuizController::class, 'destroyQuestion']);
+    });
 });
 
