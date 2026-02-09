@@ -26,6 +26,7 @@ interface Quiz {
     time_limit_minutes: number;
     passing_score: number;
     latest_attempt?: QuizAttempt;
+    attachment_path?: string;
 }
 
 export default function StudentQuizzesPage() {

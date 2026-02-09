@@ -20,6 +20,7 @@ interface Quiz {
     time_limit_minutes: number;
     passing_score: number;
     created_at: string;
+    attachment_path?: string;
 }
 
 export default function AdminQuizzesPage() {

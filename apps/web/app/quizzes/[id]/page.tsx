@@ -25,6 +25,7 @@ interface Quiz {
         started_at: string;
         status: string;
     };
+    attachment_path?: string;
 }
 
 export default function QuizTakingPage() {
