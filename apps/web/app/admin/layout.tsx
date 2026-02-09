@@ -20,7 +20,8 @@ import {
     Menu,
     X,
     Building2,
-    Lock
+    Lock,
+    GraduationCap
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -60,6 +61,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             items: [
                 { name: 'Users', href: '/admin/users', icon: Users },
                 { name: 'Books', href: '/admin/books', icon: BookOpen },
+                { name: 'Quizzes', href: '/admin/quizzes', icon: GraduationCap },
                 { name: 'Publishers', href: '/admin/publishers', icon: Building2 },
                 { name: 'Licenses', href: '/admin/licenses', icon: FileText },
                 { name: 'Subscriptions', href: '/admin/subscriptions', icon: CreditCard },
