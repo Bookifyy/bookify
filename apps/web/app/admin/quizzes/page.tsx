@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Plus, Search, Trash2, Edit, FileText, Clock, Award, BookOpen } from 'lucide-react';
-import { getApiUrl } from '../../../lib/utils';
+import { getApiUrl } from '../../lib/utils';
 import Link from 'next/link';
 
 interface Quiz {

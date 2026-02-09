@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Play, Clock, Award, BookOpen, CheckCircle, AlertCircle } from 'lucide-react';
-import { getApiUrl } from '../../lib/utils';
+import { getApiUrl } from '../lib/utils';
 import Link from 'next/link';
 
 interface QuizAttempt {

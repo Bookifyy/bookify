@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../../../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { useParams, useRouter } from 'next/navigation';
 import { Clock, ArrowLeft, CheckCircle, AlertTriangle, Loader2, Home } from 'lucide-react';
-import { getApiUrl } from '../../../../lib/utils';
+import { getApiUrl } from '../../lib/utils';
 import Link from 'next/link';
 
 interface Question {

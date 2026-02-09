@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, BookOpen, Clock, Award, Save, Loader2 } from 'lucide-react';
-import { getApiUrl } from '../../../../lib/utils';
+import { getApiUrl } from '../../../lib/utils';
 import Link from 'next/link';
 
 interface Book {

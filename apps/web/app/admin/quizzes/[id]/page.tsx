@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../context/AuthContext';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, Trash2, Save, X, CheckSquare, AlignLeft, AlertCircle } from 'lucide-react';
-import { getApiUrl } from '../../../../lib/utils';
+import { getApiUrl } from '../../../lib/utils';
 import Link from 'next/link';
 
 interface Question {
