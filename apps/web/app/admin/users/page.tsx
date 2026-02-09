@@ -43,7 +43,14 @@ export default function AdminUsersPage() {
             setUsers(data);
             setLoading(false);
         } catch (err: any) {
-            setError(err.message);
+            console.error(err);
+            setError('Failed to load users. Showing demo data.');
+            // Fallback mock data
+            setUsers([
+                { id: 1, name: 'Admin User', email: 'admin@bookify.com', roles: [{ name: 'Admin' }], created_at: new Date().toISOString(), is_active: true },
+                { id: 2, name: 'John Doe', email: 'john@example.com', roles: [{ name: 'User' }], created_at: new Date().toISOString(), is_active: true },
+                { id: 3, name: 'Jane Smith', email: 'jane@example.com', roles: [{ name: 'User' }], created_at: new Date().toISOString(), is_active: true },
+            ]);
             setLoading(false);
         }
     };

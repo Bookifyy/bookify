@@ -55,7 +55,14 @@ export default function AdminBooksPage() {
             }
             setLoading(false);
         } catch (err: any) {
-            setError(err.message);
+            console.error(err);
+            setError('Failed to load books. Showing demo data.');
+            // Fallback mock data
+            setBooks([
+                { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', is_premium: false, created_at: new Date().toISOString(), subject: { name: 'Fiction' } },
+                { id: 2, title: 'Clean Code', author: 'Robert C. Martin', is_premium: true, created_at: new Date().toISOString(), subject: { name: 'Technology' } },
+                { id: 3, title: '1984', author: 'George Orwell', is_premium: false, created_at: new Date().toISOString(), subject: { name: 'Fiction' } },
+            ]);
             setLoading(false);
         }
     };
