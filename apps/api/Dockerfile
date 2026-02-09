@@ -23,7 +23,7 @@ RUN echo "upload_max_filesize=$MAX_UPLOAD" > /usr/local/etc/php/conf.d/uploads.i
 WORKDIR /app
 
 # Copy composer files
-COPY composer.json composer.lock ./
+COPY composer.json ./
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
