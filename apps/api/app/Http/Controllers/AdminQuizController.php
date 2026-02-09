@@ -62,15 +62,25 @@ class AdminQuizController extends Controller
         $request->validate([
             'question_text' => 'required|string',
             'type' => 'required|in:multiple_choice,true_false',
-            'options' => 'required_if:type,multiple_choice|array',
+            'options' => 'required_if:type,multiple_choice|nullable|array',
             'correct_answer' => 'required|string',
             'points' => 'integer|min:1'
         ]);
 
+        // Logic for options based on type
+        // Explicitly set options for true_false to standard ['True', 'False'] to avoid null issues
+        $options = $request->type === 'multiple_choice' ? $request->options : ['True', 'False'];
+
+        // If true_false, we can explicitly store the options or leave them null depending on frontend expectation.
+        // The frontend seems to handle null options for true_false by hardcoding ['True', 'False'].
+        // So saving null is fine, assuming DB column is nullable. 
+        // If strict, we could save ['True', 'False']. 
+        // Let's safe-guard by using null if not multiple_choice.
+
         $question = $quiz->questions()->create([
             'question_text' => $request->question_text,
             'type' => $request->type,
-            'options' => $request->options,
+            'options' => $options,
             'correct_answer' => $request->correct_answer,
             'points' => $request->points ?? 1
         ]);
