@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
-import { Play, Clock, BookOpen, Star, Share2, ArrowLeft, Home } from 'lucide-react';
+import { Play, Clock, BookOpen, Star, Share2, ArrowLeft } from 'lucide-react';
 import { resolveAssetUrl, getApiUrl } from '../../lib/utils';
 
 interface Book {
@@ -108,20 +108,6 @@ export default function BookDetailPage() {
         return (
             <div className={`min-h-screen pb-80 transition-colors duration-300 ${themeClasses[theme] || themeClasses.dark}`}>
                 {/* Header */}
-                <div className="absolute top-4 left-4 z-10 flex gap-4">
-                    <button
-                        onClick={() => router.back()}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md"
-                    >
-                        <ArrowLeft size={20} />
-                    </button>
-                    <button
-                        onClick={() => router.push('/')}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md"
-                    >
-                        <Home size={20} />
-                    </button>
-                </div>
                 <div className="pt-8 px-4 flex flex-col items-center text-center space-y-4">
                     <div className="w-40 h-60 md:w-48 md:h-72 rounded-xl shadow-2xl overflow-hidden mb-2 transition-all">
                         {book?.cover_image ? (

@@ -145,6 +145,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 <p className="text-xs text-zinc-500 truncate">Administrator</p>
                             </div>
                         </div>
+                        <Link
+                            href="/"
+                            className="w-full flex items-center justify-center gap-2 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 py-2 rounded-lg transition-colors mb-1"
+                        >
+                            <LogOut size={14} className="rotate-180" />
+                            Back to App
+                        </Link>
                         <button
                             onClick={logout}
                             className="w-full flex items-center justify-center gap-2 text-xs font-bold text-red-500 hover:bg-red-500/10 py-2 rounded-lg transition-colors"

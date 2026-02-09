@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../../context/AuthContext';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ZoomIn, ZoomOut, ArrowLeft, Loader2, Play, Clock, BookOpen, Star, Share2, Sun, Type, Search, Bookmark, Highlighter, List, X, Home } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ZoomIn, ZoomOut, ArrowLeft, Loader2, Play, Clock, BookOpen, Star, Share2, Sun, Type, Search, Bookmark, Highlighter, List, X } from 'lucide-react';
 import { resolveAssetUrl, getApiUrl } from '../../../lib/utils';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -449,13 +449,6 @@ export default function ReaderPage() {
                         className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400 hover:text-white"
                     >
                         <ArrowLeft size={20} />
-                    </button>
-                    <button
-                        onClick={() => router.push('/')}
-                        className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400 hover:text-white"
-                        title="Go Home"
-                    >
-                        <Home size={20} />
                     </button>
                     <div>
                         <h1 className="text-sm font-bold tracking-tight truncate max-w-[200px] md:max-w-md">{book.title}</h1>
