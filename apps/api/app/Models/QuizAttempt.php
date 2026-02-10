@@ -19,6 +19,16 @@ class QuizAttempt extends Model
         'attachment_path'
     ];
 
+    protected $casts = [
+        'started_at' => 'datetime',
+        'completed_at' => 'datetime',
+    ];
+
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('c'); // ISO 8601 format with timezone
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
