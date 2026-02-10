@@ -48,6 +48,9 @@ export default function QuizTakingPage() {
 
     // Modal State
     const [showSubmitModal, setShowSubmitModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [modalErrorTitle, setModalErrorTitle] = useState('Error');
+    const [modalErrorMessage, setModalErrorMessage] = useState('');
 
     useEffect(() => {
         if (token && id) {
@@ -375,6 +378,26 @@ export default function QuizTakingPage() {
                             className="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white py-2.5 rounded-lg font-bold transition-colors"
                         >
                             Confirm Submit
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Error/Info Modal */}
+            <Modal isOpen={showErrorModal} onClose={() => setShowErrorModal(false)} title={modalErrorTitle}>
+                <div className="space-y-4 text-center">
+                    <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+                        <AlertTriangle size={32} className="text-red-500" />
+                    </div>
+                    <p className="text-zinc-300 text-lg">
+                        {modalErrorMessage}
+                    </p>
+                    <div className="pt-4">
+                        <button
+                            onClick={() => setShowErrorModal(false)}
+                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                        >
+                            Understood
                         </button>
                     </div>
                 </div>
