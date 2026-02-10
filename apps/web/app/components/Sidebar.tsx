@@ -80,14 +80,14 @@ export function Sidebar({ className, onClose }: SidebarProps) {
                     <div className="pt-4 space-y-1">
                         <p className="px-3 text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2">Management</p>
                         <Link
-                            href="/admin/books"
+                            href="/admin"
                             onClick={onClose}
-                            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${pathname === '/admin/books'
+                            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${pathname?.startsWith('/admin')
                                 ? 'bg-zinc-900 text-white'
                                 : 'hover:bg-zinc-900/50 hover:text-white'
                                 }`}
                         >
-                            <ShieldCheck size={20} className={pathname === '/admin/books' ? 'text-indigo-400' : ''} />
+                            <ShieldCheck size={20} className={pathname?.startsWith('/admin') ? 'text-indigo-400' : ''} />
                             Admin Panel
                         </Link>
                     </div>
