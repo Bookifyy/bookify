@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext'; // Adjusted path
-import { getApiUrl } from '../../../lib/utils'; // Adjusted path
+import { getApiUrl } from '../../lib/utils'; // Adjusted path
 import Link from 'next/link';
 import { Loader2, Search, Filter, Eye, CheckCircle, Clock } from 'lucide-react';
 
