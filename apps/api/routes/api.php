@@ -227,6 +227,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // Question Management
         Route::post('/quizzes/{id}/questions', [\App\Http\Controllers\AdminQuizController::class, 'addQuestion']);
         Route::delete('/quizzes/{id}/questions/{questionId}', [\App\Http\Controllers\AdminQuizController::class, 'destroyQuestion']);
+
+        // Quiz Submissions & Grading
+        Route::get('/submissions', [\App\Http\Controllers\AdminSubmissionController::class, 'index']);
+        Route::get('/submissions/{id}', [\App\Http\Controllers\AdminSubmissionController::class, 'show']);
+        Route::post('/submissions/{id}/grade', [\App\Http\Controllers\AdminSubmissionController::class, 'grade']);
     });
 });
 
