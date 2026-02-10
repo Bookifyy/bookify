@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { getApiUrl } from '../../../lib/utils';
 import { Loader2, ArrowLeft, Download, Save, FileText, User, Calendar, BookOpen, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
+import { Modal } from '../../../components/Modal';
 
 interface AttemptDetail {
     id: number;
@@ -285,6 +286,32 @@ export default function AdminGradingPage() {
                 </div>
 
             </div>
+            {/* Notification Modal */}
+            <Modal isOpen={showModal} onClose={() => {
+                setShowModal(false);
+                if (modalType === 'success') router.push('/admin/submissions');
+            }} title={modalTitle}>
+                <div className="space-y-4 text-center">
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border ${modalType === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'
+                        }`}>
+                        {modalType === 'success' ? <CheckCircle size={32} /> : <XCircle size={32} />}
+                    </div>
+                    <p className="text-zinc-300 text-lg">
+                        {modalMessage}
+                    </p>
+                    <div className="pt-4">
+                        <button
+                            onClick={() => {
+                                setShowModal(false);
+                                if (modalType === 'success') router.push('/admin/submissions');
+                            }}
+                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                        >
+                            {modalType === 'success' ? 'Continue' : 'Close'}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

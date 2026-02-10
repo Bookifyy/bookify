@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { Plus, Search, Trash2, Edit, FileText, Clock, Award, BookOpen } from 'lucide-react';
+import { Plus, Search, Trash2, Edit, FileText, Clock, Award, BookOpen, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { getApiUrl } from '../../lib/utils';
 import Link from 'next/link';
+import { Modal } from '../../components/Modal';
 
 interface Quiz {
     id: number;
@@ -29,6 +30,20 @@ export default function AdminQuizzesPage() {
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+
+    // Modal State
+    const [showModal, setShowModal] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalType, setModalType] = useState<'success' | 'error' | 'confirm'>('success');
+    const [quizToDelete, setQuizToDelete] = useState<number | null>(null);
+
+    const showNotification = (title: string, message: string, type: 'success' | 'error' = 'success') => {
+        setModalTitle(title);
+        setModalMessage(message);
+        setModalType(type);
+        setShowModal(true);
+    };
 
     useEffect(() => {
         if (token) {
@@ -55,12 +70,20 @@ export default function AdminQuizzesPage() {
         }
     };
 
-    const handleDelete = async (id: number) => {
-        if (!confirm('Are you sure you want to delete this quiz?')) return;
+    const confirmDelete = (id: number) => {
+        setQuizToDelete(id);
+        setModalTitle('Delete Quiz?');
+        setModalMessage('Are you sure you want to delete this quiz? This action cannot be undone.');
+        setModalType('confirm');
+        setShowModal(true);
+    };
+
+    const executeDelete = async () => {
+        if (!quizToDelete) return;
 
         try {
             const apiUrl = getApiUrl();
-            const res = await fetch(`${apiUrl}/api/admin/quizzes/${id}`, {
+            const res = await fetch(`${apiUrl}/api/admin/quizzes/${quizToDelete}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -68,13 +91,17 @@ export default function AdminQuizzesPage() {
             });
 
             if (res.ok) {
-                setQuizzes(quizzes.filter(q => q.id !== id));
+                setQuizzes(quizzes.filter(q => q.id !== quizToDelete));
+                setShowModal(false);
+                setQuizToDelete(null);
             } else {
-                alert('Failed to delete quiz');
+                setShowModal(false);
+                setTimeout(() => showNotification('Error', 'Failed to delete quiz', 'error'), 100);
             }
         } catch (error) {
             console.error('Error deleting quiz:', error);
-            alert('Error deleting quiz');
+            setShowModal(false);
+            setTimeout(() => showNotification('Error', 'Connection error while deleting quiz', 'error'), 100);
         }
     };
 
@@ -165,7 +192,7 @@ export default function AdminQuizzesPage() {
                                     Manage
                                 </Link>
                                 <button
-                                    onClick={() => handleDelete(quiz.id)}
+                                    onClick={() => confirmDelete(quiz.id)}
                                     className="p-2 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                     title="Delete Quiz"
                                 >
@@ -176,6 +203,47 @@ export default function AdminQuizzesPage() {
                     ))
                 )}
             </div>
+            {/* Modal */}
+            <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={modalTitle}>
+                <div className="space-y-4 text-center">
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border ${modalType === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' :
+                        modalType === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-500' :
+                            'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
+                        }`}>
+                        {modalType === 'success' ? <CheckCircle size={32} /> :
+                            modalType === 'error' ? <XCircle size={32} /> :
+                                <AlertTriangle size={32} />}
+                    </div>
+                    <p className="text-zinc-300 text-lg">
+                        {modalMessage}
+                    </p>
+                    <div className="pt-4 flex gap-3">
+                        {modalType === 'confirm' ? (
+                            <>
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={executeDelete}
+                                    className="flex-1 bg-red-600 hover:bg-red-500 text-white py-3 rounded-lg font-bold transition-colors"
+                                >
+                                    Delete
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                            >
+                                Close
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

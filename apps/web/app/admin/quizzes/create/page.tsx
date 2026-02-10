@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, BookOpen, Clock, Award, Save, Loader2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Clock, Award, Save, Loader2, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { getApiUrl } from '../../../lib/utils';
 import Link from 'next/link';
+import { Modal } from '../../components/Modal';
 
 interface Book {
     id: number;
@@ -25,6 +26,19 @@ export default function CreateQuizPage() {
     const [timeLimit, setTimeLimit] = useState(30);
     const [passingScore, setPassingScore] = useState(70);
     const [attachment, setAttachment] = useState<File | null>(null);
+
+    // Modal State
+    const [showModal, setShowModal] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalType, setModalType] = useState<'success' | 'error'>('success');
+
+    const showNotification = (title: string, message: string, type: 'success' | 'error' = 'success') => {
+        setModalTitle(title);
+        setModalMessage(message);
+        setModalType(type);
+        setShowModal(true);
+    };
 
     useEffect(() => {
         // Fetch books for selection
@@ -72,11 +86,11 @@ export default function CreateQuizPage() {
                 router.push(`/admin/quizzes/${quiz.id}`); // Redirect to edit page
             } else {
                 const error = await res.json();
-                alert(`Error: ${error.message || 'Failed to create quiz'}`);
+                showNotification('Error', error.message || 'Failed to create quiz', 'error');
             }
         } catch (err) {
             console.error(err);
-            alert('Failed to connect to server');
+            showNotification('Connection Error', 'Failed to connect to server', 'error');
         } finally {
             setLoading(false);
         }
@@ -213,6 +227,28 @@ export default function CreateQuizPage() {
                     </button>
                 </div>
             </form>
+        </form>
+
+            {/* Notification Modal */ }
+    <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={modalTitle}>
+        <div className="space-y-4 text-center">
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border ${modalType === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'
+                }`}>
+                {modalType === 'success' ? <CheckCircle size={32} /> : <XCircle size={32} />}
+            </div>
+            <p className="text-zinc-300 text-lg">
+                {modalMessage}
+            </p>
+            <div className="pt-4">
+                <button
+                    onClick={() => setShowModal(false)}
+                    className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                >
+                    Close
+                </button>
+            </div>
         </div>
+    </Modal>
+        </div >
     );
 }
