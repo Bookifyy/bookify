@@ -227,28 +227,27 @@ export default function CreateQuizPage() {
                     </button>
                 </div>
             </form>
-        </form>
 
-            {/* Notification Modal */ }
-    <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={modalTitle}>
-        <div className="space-y-4 text-center">
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border ${modalType === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'
-                }`}>
-                {modalType === 'success' ? <CheckCircle size={32} /> : <XCircle size={32} />}
-            </div>
-            <p className="text-zinc-300 text-lg">
-                {modalMessage}
-            </p>
-            <div className="pt-4">
-                <button
-                    onClick={() => setShowModal(false)}
-                    className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
-                >
-                    Close
-                </button>
-            </div>
-        </div>
-    </Modal>
+            {/* Notification Modal */}
+            <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={modalTitle}>
+                <div className="space-y-4 text-center">
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border ${modalType === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'
+                        }`}>
+                        {modalType === 'success' ? <CheckCircle size={32} /> : <XCircle size={32} />}
+                    </div>
+                    <p className="text-zinc-300 text-lg">
+                        {modalMessage}
+                    </p>
+                    <div className="pt-4">
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div >
     );
 }
