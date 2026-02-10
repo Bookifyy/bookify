@@ -21,7 +21,8 @@ import {
     X,
     Building2,
     Lock,
-    GraduationCap
+    GraduationCap,
+    ClipboardCheck
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -62,6 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 { name: 'Users', href: '/admin/users', icon: Users },
                 { name: 'Books', href: '/admin/books', icon: BookOpen },
                 { name: 'Quizzes', href: '/admin/quizzes', icon: GraduationCap },
+                { name: 'Submissions', href: '/admin/submissions', icon: ClipboardCheck },
                 { name: 'Publishers', href: '/admin/publishers', icon: Building2 },
                 { name: 'Licenses', href: '/admin/licenses', icon: FileText },
                 { name: 'Subscriptions', href: '/admin/subscriptions', icon: CreditCard },
