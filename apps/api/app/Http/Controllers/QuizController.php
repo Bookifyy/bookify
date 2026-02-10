@@ -77,8 +77,8 @@ class QuizController extends Controller
             $startedAt = \Carbon\Carbon::parse($existingAttempt->started_at);
             $limitMinutes = $quiz->time_limit_minutes;
 
-            if ($startedAt->addMinutes($limitMinutes + 5)->isPast()) {
-                // Add 5 min buffer to be safe. If it's really old, mark as expired and allow new.
+            if ($startedAt->addMinutes($limitMinutes)->isPast()) {
+                // Time limit has passed. Mark as expired and allow a new attempt.
                 $existingAttempt->update(['status' => 'expired']);
             } else {
                 return response()->json([

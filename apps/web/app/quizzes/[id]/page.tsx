@@ -56,6 +56,8 @@ export default function QuizTakingPage() {
     }, [token, id]);
 
     // Timer Logic (Robust with Server Sync)
+    const expiryHandled = useRef(false);
+
     useEffect(() => {
         if (!quiz?.active_attempt || quiz.active_attempt.status !== 'in_progress') return;
 
@@ -72,9 +74,8 @@ export default function QuizTakingPage() {
 
             if (remaining <= 0) {
                 // Auto submit
-                if (!submitting && !submittedData) {
-                    // Safety check: if elapsed is huge (e.g. > limit + buffer) immediately upon load, maybe it's an old attempt?
-                    // If it's just 0, submit.
+                if (!submitting && !submittedData && !expiryHandled.current) {
+                    expiryHandled.current = true; // Prevent multiple calls
                     submitToApi(true);
                 }
             }
@@ -84,7 +85,7 @@ export default function QuizTakingPage() {
         const timer = setInterval(tick, 1000);
 
         return () => clearInterval(timer);
-    }, [quiz?.active_attempt, timeOffset]);
+    }, [quiz?.active_attempt, timeOffset, submitting, submittedData]);
 
     const fetchQuizDetails = async () => {
         try {
@@ -182,6 +183,7 @@ export default function QuizTakingPage() {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
                     // Content-Type is set automatically by FormData
                 },
                 body: formData
@@ -192,14 +194,24 @@ export default function QuizTakingPage() {
                 setSubmittedData(data);
                 window.scrollTo(0, 0);
             } else {
-                const errData = await res.json();
-                // If it's a validation error (e.g. strict file requirement), show alert or modal?
-                // For now alert, user requested modal for *confirmation*, but error handling can be alert or toast.
-                alert(`Submission failed: ${errData.message || 'Unknown error'}`);
+                const errData = await res.json().catch(() => ({ message: 'Submission failed' }));
+
+                // If auto-submit fails (likely due to missing file), we shouldn't just alert and leave them stuck.
+                // We should show a modal explaining they ran out of time and MUST upload.
+                if (auto) {
+                    // Reset submitting to allow manual retry, but keep expiryHandled true to strict auto-loop
+                    // expiryHandled is ref, so we don't change it here.
+                    // But maybe we should reset it if we want them to *try* again? 
+                    // No, manual submit should be allowed.
+                    setError(errData.message || 'Time expired. Submission failed (Missing File?). Please upload and submit manually.');
+                } else {
+                    alert(`Submission failed: ${errData.message || 'Unknown error'}`);
+                }
             }
         } catch (err) {
             console.error(err);
-            alert('Connection error during submission');
+            if (!auto) alert('Connection error during submission');
+            else setError('Time expired. Connection error. Please try submitting manually.');
         } finally {
             setSubmitting(false);
         }
