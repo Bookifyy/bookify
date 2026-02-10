@@ -100,6 +100,16 @@ class QuizController extends Controller
             }
         }
 
+        // Check for max attempts (Limit: 2)
+        $attemptsCount = QuizAttempt::where('user_id', $user->id)
+            ->where('quiz_id', $id)
+            ->whereIn('status', ['completed', 'pending_review'])
+            ->count();
+
+        if ($attemptsCount >= 2) {
+            return response()->json(['message' => 'Maximum attempts (2) reached for this quiz.'], 403);
+        }
+
         $attempt = QuizAttempt::create([
             'user_id' => $user->id,
             'quiz_id' => $id,
@@ -124,45 +134,24 @@ class QuizController extends Controller
             ->where('status', 'in_progress')
             ->firstOrFail();
 
-        // --- VALIDATION RULES BASED ON QUIZ TYPE ---
+        // --- VALIDATION RULES ---
         $hasQuestions = $quiz->questions->count() > 0;
         $hasAttachment = !empty($quiz->attachment_path);
-
-        // 1. If Admin brought only questions -> Student NOT allowed to submit PDF (Questions Only)
-        // 2. If Admin provided file -> Student MUST submit file (File Only OR Hybrid)
-        // 3. Hybrid (File + Questions) -> Student MUST submit File AND Answers
 
         $rules = [
             'answers' => 'nullable|array',
             'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
         ];
 
-        // Enforce Logic
-        if ($hasQuestions && !$hasAttachment) {
-            // Questions Only
-            // Ensure no attachment triggers an error? Or just ignore it? 
-            // User says "not allowed to submit a pdf".
-            // We can strictly forbid it or just silence it. Let's forbid to be precise.
-            // Actually, let's keep it flexible but prevent storing if not allowed.
-            // But user requirement 5: "if admin brought only questions the student is not allowed to submit a pdf"
-            // So we validation fail if attachment is present?
-        }
-
         if ($hasAttachment) {
-            // File Only OR Hybrid
-            // User says: "it has to deny and tell them that they have also to submit the file"
-            // So attachment is REQUIRED.
             $rules['attachment'] = 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240';
         }
 
         $request->validate($rules);
 
-
         // --- HANDLE SUBMISSION ---
-
         $attachmentPath = null;
         if ($request->hasFile('attachment')) {
-            // Check if allowed
             if (!$hasAttachment && $hasQuestions) {
                 return response()->json(['message' => 'File submission is not allowed for this quiz.'], 422);
             }
@@ -175,17 +164,9 @@ class QuizController extends Controller
 
         DB::beginTransaction();
         try {
-            // Process structured questions if any
             if ($hasQuestions) {
-                // If Hybrid, user must have submitted answers too? 
-                // "submission only the quiz questions without a file attachment -> deny" (Covered by 'required' validation above)
-                // What about "submission only file without questions"? User implies Hybrid requires BOTH.
-                // We should check if answers count matches? Or at least some answers?
-                // For now, standard behavior: auto-grade what is sent.
-
                 foreach ($quiz->questions as $question) {
                     $maxScore += $question->points;
-
                     $userAnswerData = collect($answers)->firstWhere('question_id', $question->id);
                     $userValue = $userAnswerData ? $userAnswerData['user_answer'] : null;
 
@@ -209,23 +190,13 @@ class QuizController extends Controller
             $percentageObj = ($maxScore > 0) ? round(($totalScore / $maxScore) * 100) : 0;
 
             // --- DETERMINE STATUS ---
-            // Requirement 6: "system can't show result directly... prompt user once corrected"
-            // If attachment is present -> Manual Grading Needed -> 'pending_review'
-            // If Only Questions -> Auto Graded -> 'completed'
-
-            $status = 'completed';
-            if ($attachmentPath) {
-                $status = 'pending_review';
-            }
+            // ALL submissions go to 'pending_review' for manual grading by Admin.
+            // We save the auto-calculated score for Admin reference, but status is pending.
+            $status = 'pending_review';
 
             $attempt->update([
                 'status' => $status,
-                'score' => ($status === 'completed') ? $percentageObj : null, // Hide score if pending? Or store it but don't show?
-                // Let's store the auto-score component, but status determines visibility.
-                // Actually, if pending review, the final score might change. 
-                // Let's store the partial score for now.
-                // 'score' => $percentageObj, 
-                // User said "check their marks shortly".
+                'score' => $percentageObj, // Saved for admin, but pending review
                 'completed_at' => now(),
                 'attachment_path' => $attachmentPath
             ]);
@@ -233,9 +204,9 @@ class QuizController extends Controller
             DB::commit();
 
             return response()->json([
-                'message' => $status === 'pending_review' ? 'Submission received. Your quiz will be graded shortly.' : 'Quiz submitted successfully.',
-                'score' => $status === 'completed' ? $percentageObj : null,
-                'passed' => $status === 'completed' ? ($percentageObj >= $quiz->passing_score) : null,
+                'message' => 'Submission received. Your quiz will be graded shortly.',
+                'score' => null, // Hide score
+                'passed' => null,
                 'status' => $status,
                 'attempt' => $attempt
             ]);
