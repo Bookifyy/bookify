@@ -14,12 +14,24 @@ class QuizController extends Controller
     // List available quizzes for the student
     public function index()
     {
-        $quizzes = Quiz::with('book')
-            ->withCount('questions')
-            ->get();
+        $user = request()->user();
+
+        $query = Quiz::with('book')
+            ->withCount('questions');
+
+        // Filter: Show quizzes that are NOT linked to a book OR linked to a book the user has started reading
+        if ($user) {
+            $startedBookIds = \App\Models\ReadingProgress::where('user_id', $user->id)->pluck('book_id');
+
+            $query->where(function ($q) use ($startedBookIds) {
+                $q->whereNull('book_id')
+                    ->orWhereIn('book_id', $startedBookIds);
+            });
+        }
+
+        $quizzes = $query->get();
 
         // Attach user's latest attempt status
-        $user = request()->user();
         if ($user) {
             $quizzes->each(function ($quiz) use ($user) {
                 $latestAttempt = QuizAttempt::where('user_id', $user->id)
