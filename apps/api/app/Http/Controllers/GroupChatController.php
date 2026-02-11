@@ -43,19 +43,23 @@ class GroupChatController extends Controller
 
         // Notify members about new message
         // Optimized: queue or job in production, but direct create for now
-        $members = $group->members()->where('user_id', '!=', $request->user()->id)->get();
+        try {
+            $members = $group->members()->where('user_id', '!=', $request->user()->id)->get();
 
-        foreach ($members as $member) {
-            \App\Models\Notification::create([
-                'user_id' => $member->user_id,
-                'type' => 'new_message',
-                'data' => [
-                    'group_id' => $group->id,
-                    'group_name' => $group->name,
-                    'sender_name' => $request->user()->name,
-                    'message_preview' => substr($request->input('content'), 0, 50)
-                ]
-            ]);
+            foreach ($members as $member) {
+                \App\Models\Notification::create([
+                    'user_id' => $member->user_id,
+                    'type' => 'new_message',
+                    'data' => [
+                        'group_id' => $group->id,
+                        'group_name' => $group->name,
+                        'sender_name' => $request->user()->name,
+                        'message_preview' => substr($request->input('content'), 0, 50)
+                    ]
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Notification failed: " . $e->getMessage());
         }
 
         return response()->json($message, 201);

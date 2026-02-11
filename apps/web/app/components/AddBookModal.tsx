@@ -115,7 +115,12 @@ export function AddBookModal({ isOpen, onClose, groupId, onBookAdded }: { isOpen
                             <div key={book.id} className="bg-black border border-zinc-800 rounded-xl p-3 flex gap-4 hover:border-zinc-700 transition-colors">
                                 <div className="w-12 h-16 bg-zinc-800 rounded flex-shrink-0 relative overflow-hidden">
                                     {book.cover_image ? (
-                                        <Image src={book.cover_image} alt={book.title} fill className="object-cover" />
+                                        <Image
+                                            src={book.cover_image.startsWith('http') ? book.cover_image : `${getApiUrl()}${book.cover_image}`}
+                                            alt={book.title}
+                                            fill
+                                            className="object-cover"
+                                        />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-zinc-600">
                                             <BookOpen size={16} />

@@ -103,6 +103,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/groups/{id}/join', [GroupController::class, 'join']);
     Route::post('/groups/{id}/leave', [GroupController::class, 'leave']);
     Route::post('/groups/{id}/invite', [GroupController::class, 'invite']);
+    Route::delete('/groups/{id}/members/{userId}', [GroupController::class, 'removeMember']);
 
     // Group Books
     Route::post('/groups/{id}/books', [GroupController::class, 'addBook']);

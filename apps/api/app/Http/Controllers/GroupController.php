@@ -114,23 +114,49 @@ class GroupController extends Controller
         ]);
 
         // Notify members about new book
-        $members = $group->members()->where('user_id', '!=', $request->user()->id)->get();
-        $book = Book::find($request->book_id);
+        try {
+            $members = $group->members()->where('user_id', '!=', $request->user()->id)->get();
+            $book = Book::find($request->book_id);
 
-        foreach ($members as $member) {
-            \App\Models\Notification::create([
-                'user_id' => $member->user_id,
-                'type' => 'book_added',
-                'data' => [
-                    'group_id' => $group->id,
-                    'group_name' => $group->name,
-                    'book_title' => $book ? $book->title : 'Unknown Book',
-                    'added_by' => $request->user()->name
-                ]
-            ]);
+            foreach ($members as $member) {
+                \App\Models\Notification::create([
+                    'user_id' => $member->user_id,
+                    'type' => 'book_added',
+                    'data' => [
+                        'group_id' => $group->id,
+                        'group_name' => $group->name,
+                        'book_title' => $book ? $book->title : 'Unknown Book',
+                        'added_by' => $request->user()->name
+                    ]
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Notification failed: " . $e->getMessage());
         }
 
         return response()->json(['message' => 'Book added to group']);
+    }
+
+    public function removeMember(Request $request, $groupId, $userId)
+    {
+        $group = Group::findOrFail($groupId);
+
+        // Only owner can remove members
+        if ($group->owner_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Cannot remove owner
+        if ($group->owner_id == $userId) {
+            return response()->json(['message' => 'Cannot remove owner'], 400);
+        }
+
+        $member = GroupMember::where('group_id', $groupId)->where('user_id', $userId)->first();
+        if ($member) {
+            $member->delete();
+        }
+
+        return response()->json(['message' => 'Member removed']);
     }
 
     public function invite(Request $request, $id)
@@ -141,8 +167,6 @@ class GroupController extends Controller
         ]);
 
         $group = Group::findOrFail($id);
-        // Check if requester is member? Or only admin/owner? Design implies members can invite?
-        // Let's assume any member can invite for now unless strict
         if (!$group->members()->where('user_id', $request->user()->id)->exists()) {
             return response()->json(['message' => 'Not a member'], 403);
         }
@@ -156,16 +180,20 @@ class GroupController extends Controller
                     'role' => 'member'
                 ]);
 
-                // Send Notification
-                \App\Models\Notification::create([
-                    'user_id' => $uid,
-                    'type' => 'group_invite',
-                    'data' => [
-                        'group_id' => $group->id,
-                        'group_name' => $group->name,
-                        'invited_by' => $request->user()->name
-                    ]
-                ]);
+                // Send Notification (Safely)
+                try {
+                    \App\Models\Notification::create([
+                        'user_id' => $uid,
+                        'type' => 'group_invite',
+                        'data' => [
+                            'group_id' => $group->id,
+                            'group_name' => $group->name,
+                            'invited_by' => $request->user()->name
+                        ]
+                    ]);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("Notification failed: " . $e->getMessage());
+                }
 
                 $count++;
             }

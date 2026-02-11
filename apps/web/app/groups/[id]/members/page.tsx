@@ -53,6 +53,28 @@ export default function GroupMembersPage() {
     const currentUserRole = members.find(m => m.user.id === user?.id)?.role;
     const canInvite = true; // For now allow everyone, later maybe restrict
 
+    const handleRemoveMember = async (userId: number) => {
+        if (!confirm('Are you sure you want to remove this member?')) return;
+
+        try {
+            const apiUrl = getApiUrl();
+            const res = await fetch(`${apiUrl}/api/groups/${id}/members/${userId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                setMembers(prev => prev.filter(m => m.user.id !== userId));
+            } else {
+                const data = await res.json();
+                alert(data.message || 'Failed to remove member');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Connection failed');
+        }
+    };
+
     return (
         <div className="space-y-6">
             <button
@@ -80,7 +102,11 @@ export default function GroupMembersPage() {
 
                         {/* Actions (Kick, Promote) if admin */}
                         {currentUserRole === 'owner' && member.role !== 'owner' && (
-                            <button className="p-2 text-zinc-600 hover:text-red-500 transition-colors tooltip" title="Remove Member">
+                            <button
+                                onClick={() => handleRemoveMember(member.user.id)}
+                                className="p-2 text-zinc-600 hover:text-red-500 transition-colors tooltip"
+                                title="Remove Member"
+                            >
                                 <UserX size={18} />
                             </button>
                         )}
