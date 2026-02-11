@@ -113,6 +113,23 @@ class GroupController extends Controller
             'added_at' => now()
         ]);
 
+        // Notify members about new book
+        $members = $group->members()->where('user_id', '!=', $request->user()->id)->get();
+        $book = Book::find($request->book_id);
+
+        foreach ($members as $member) {
+            \App\Models\Notification::create([
+                'user_id' => $member->user_id,
+                'type' => 'book_added',
+                'data' => [
+                    'group_id' => $group->id,
+                    'group_name' => $group->name,
+                    'book_title' => $book ? $book->title : 'Unknown Book',
+                    'added_by' => $request->user()->name
+                ]
+            ]);
+        }
+
         return response()->json(['message' => 'Book added to group']);
     }
 
@@ -138,6 +155,18 @@ class GroupController extends Controller
                     'user_id' => $uid,
                     'role' => 'member'
                 ]);
+
+                // Send Notification
+                \App\Models\Notification::create([
+                    'user_id' => $uid,
+                    'type' => 'group_invite',
+                    'data' => [
+                        'group_id' => $group->id,
+                        'group_name' => $group->name,
+                        'invited_by' => $request->user()->name
+                    ]
+                ]);
+
                 $count++;
             }
         }

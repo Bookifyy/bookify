@@ -27,6 +27,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupChatController;
 use App\Http\Controllers\GroupNoteController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NotificationController;
 
 // ... imports
 
@@ -121,6 +122,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // User Search
     Route::get('/users/search', [UserController::class, 'search']);
+
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::put('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
 
     // Admin Routes
     Route::group(['middleware' => ['role:Admin']], function () {

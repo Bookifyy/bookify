@@ -36,10 +36,27 @@ class GroupChatController extends Controller
         $message = GroupMessage::create([
             'group_id' => $groupId,
             'user_id' => $request->user()->id,
-            'content' => $request->content
+            'content' => $request->input('content')
         ]);
 
         $message->load('user:id,name,email');
+
+        // Notify members about new message
+        // Optimized: queue or job in production, but direct create for now
+        $members = $group->members()->where('user_id', '!=', $request->user()->id)->get();
+
+        foreach ($members as $member) {
+            \App\Models\Notification::create([
+                'user_id' => $member->user_id,
+                'type' => 'new_message',
+                'data' => [
+                    'group_id' => $group->id,
+                    'group_name' => $group->name,
+                    'sender_name' => $request->user()->name,
+                    'message_preview' => substr($request->input('content'), 0, 50)
+                ]
+            ]);
+        }
 
         return response()->json($message, 201);
     }

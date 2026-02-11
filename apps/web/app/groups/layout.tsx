@@ -62,10 +62,18 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
         return date.toLocaleDateString();
     };
 
+    const isGroupSelected = !!params.id;
+
     return (
         <div className="flex h-[calc(100vh-64px)] overflow-hidden">
-            {/* Secondary Sidebar - Group List */}
-            <div className="w-80 border-r border-zinc-800 bg-black flex flex-col flex-shrink-0">
+            {/* Secondary Sidebar - Group List 
+                Mobile: Hidden if group selected
+                Desktop: Always visible
+            */}
+            <div className={`
+                w-full lg:w-80 border-r border-zinc-800 bg-black flex-col flex-shrink-0
+                ${isGroupSelected ? 'hidden lg:flex' : 'flex'}
+            `}>
                 <div className="p-4 border-b border-zinc-800">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-bold text-white">Groups</h2>
@@ -144,8 +152,14 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                 </div>
             </div>
 
-            {/* Main Content Area */}
-            <div className="flex-1 flex flex-col bg-black overflow-hidden relative">
+            {/* Main Content Area 
+                Mobile: Hidden if NO group selected (show list instead)
+                Desktop: Always visible (shows Empty State if no group)
+            */}
+            <div className={`
+                flex-1 flex-col bg-black overflow-hidden relative
+                ${!isGroupSelected ? 'hidden lg:flex' : 'flex'}
+            `}>
                 {children}
 
                 {/* Create Group Modal Trigger (Floating Action Button style or in empty state?) 

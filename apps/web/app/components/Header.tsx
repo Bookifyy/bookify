@@ -4,6 +4,8 @@ import { Search, Menu } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
 
+import { NotificationBell } from './NotificationBell';
+
 interface HeaderProps {
     onMenuClick?: () => void;
 }
@@ -52,6 +54,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
             {/* Actions */}
             <div className="flex items-center gap-4 text-zinc-400">
+                <NotificationBell />
                 <button className="hover:text-white transition-colors text-xs font-medium uppercase tracking-wider">
                     Settings
                 </button>

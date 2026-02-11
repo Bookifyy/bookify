@@ -32,12 +32,14 @@ export function AddBookModal({ isOpen, onClose, groupId, onBookAdded }: { isOpen
         setLoading(true);
         try {
             const apiUrl = getApiUrl();
-            const res = await fetch(`${apiUrl}/api/library`, {
+            const res = await fetch(`${apiUrl}/api/books`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
                 const data = await res.json();
-                setBooks(data.data || []); // Accessing paginated data or direct array
+                // api/books returns paginated data { data: [...] } or just [...] depend on implementation
+                // Looking at api.php line 158: returns $books (paginated)
+                setBooks(data.data || []);
             }
         } catch (err) {
             console.error(err);
