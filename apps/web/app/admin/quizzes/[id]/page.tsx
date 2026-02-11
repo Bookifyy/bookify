@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, Trash2, Save, X, CheckSquare, AlignLeft, AlertCircle } from 'lucide-react';
 import { getApiUrl } from '../../../lib/utils';
 import Link from 'next/link';
+import { Modal } from '../../../components/Modal';
 
 interface Question {
     id: number;
@@ -37,6 +38,19 @@ export default function EditQuizPage() {
     const [correctAnswer, setCorrectAnswer] = useState('');
     const [points, setPoints] = useState(1);
     const [submitting, setSubmitting] = useState(false);
+
+    // Modal State
+    const [showModal, setShowModal] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalType, setModalType] = useState<'success' | 'error'>('success');
+
+    const showNotification = (title: string, message: string, type: 'success' | 'error' = 'success') => {
+        setModalTitle(title);
+        setModalMessage(message);
+        setModalType(type);
+        setShowModal(true);
+    };
 
     useEffect(() => {
         if (token && id) fetchQuiz();
@@ -87,7 +101,7 @@ export default function EditQuizPage() {
                 setShowAddModal(false);
                 resetForm();
             } else {
-                alert('Failed to add question');
+                showNotification('Error', 'Failed to add question', 'error');
             }
         } catch (err) {
             console.error(err);
@@ -313,6 +327,22 @@ export default function EditQuizPage() {
                     </div>
                 </div>
             )}
+            {/* Notification Modal */}
+            <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={modalTitle}>
+                <div className="space-y-4 text-center">
+                    <p className="text-zinc-300">
+                        {modalMessage}
+                    </p>
+                    <div className="pt-4">
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }
