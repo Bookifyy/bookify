@@ -91,6 +91,21 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         return $request->user()->load('roles');
     });
 
+    // Groups
+    Route::get('/groups', [GroupController::class, 'index']);
+    Route::post('/groups', [GroupController::class, 'store']);
+    Route::get('/groups/{id}', [GroupController::class, 'show']);
+    Route::post('/groups/{id}/join', [GroupController::class, 'join']);
+    Route::post('/groups/{id}/leave', [GroupController::class, 'leave']);
+    Route::post('/groups/{id}/invite', [GroupController::class, 'invite']);
+
+    // Group Books
+    Route::post('/groups/{id}/books', [GroupController::class, 'addBook']);
+
+    // Group Chat
+    Route::get('/groups/{id}/messages', [GroupChatController::class, 'index']);
+    Route::post('/groups/{id}/messages', [GroupChatController::class, 'store']);
+
     // Email Verification
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.send');
