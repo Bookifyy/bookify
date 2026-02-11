@@ -40,11 +40,18 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }: { isOpen: boole
                 setDescription('');
                 setPrivacy('invite_only');
             } else {
-                const data = await res.json();
-                setError(data.message || 'Failed to create group');
+                let errorMessage = `Error ${res.status}: ${res.statusText}`;
+                try {
+                    const data = await res.json();
+                    errorMessage = data.message || errorMessage;
+                } catch (e) {
+                    console.error('Failed to parse error response', e);
+                }
+                setError(errorMessage);
             }
         } catch (err) {
-            setError('Connection failed');
+            console.error('Group creation error:', err);
+            setError('Connection failed. Please check your network or server logs.');
         } finally {
             setLoading(false);
         }

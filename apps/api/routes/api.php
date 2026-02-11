@@ -248,5 +248,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/submissions/{id}', [\App\Http\Controllers\AdminSubmissionController::class, 'show']);
         Route::post('/submissions/{id}/grade', [\App\Http\Controllers\AdminSubmissionController::class, 'grade']);
     });
+
+
+    // Temporary Migration Route (Delete after use)
+    Route::get('/migrate-groups', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            return response()->json([
+                'message' => 'Migration completed successfully',
+                'output' => \Illuminate\Support\Facades\Artisan::output()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
 });
 
