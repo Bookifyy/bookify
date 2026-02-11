@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, BookOpen, Clock, Award, Save, Loader2, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { getApiUrl } from '../../../lib/utils';
 import Link from 'next/link';
-import { Modal } from '../../components/Modal';
+import { Modal } from '../../../components/Modal';
 
 interface Book {
     id: number;
