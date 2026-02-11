@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { getApiUrl } from '../lib/utils';
 import { Loader2, X, Search, Check, BookOpen } from 'lucide-react';
 import Image from 'next/image';
