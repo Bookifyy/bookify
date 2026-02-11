@@ -31,28 +31,20 @@ export function InviteMemberModal({ isOpen, onClose, groupId }: { isOpen: boolea
         }
 
         setSearching(true);
-        // Mock search for now or implement endpoint
-        // Assuming we might need a search endpoint. 
-        // For verify, I'll just skip and focus on UI or basic implementation if endpoint exists.
-        // Let's assume we can use /api/users?search=... if it existed.
-        // Or fetch all users (bad for scale) but okay for MVP?
-        // Let's implement a real search later, for now mock empty or simple fetch.
-
-        // Actually, let's try to hit /api/admin/users if admin? No.
-        // Let's just mock it for UI as per requirement "Front-end Actions".
-        // Real implementation requires backend endpoint for user search.
-
-        // Simulating search delay
-        setTimeout(() => {
-            // Mock Data
-            const mockUsers = [
-                { id: 101, name: 'Alice Johnson', email: 'alice@example.com' },
-                { id: 102, name: 'Bob Smith', email: 'bob@example.com' },
-                { id: 103, name: 'Charlie Brown', email: 'charlie@example.com' },
-            ].filter(u => u.name.toLowerCase().includes(query.toLowerCase()));
-            setSearchResults(mockUsers);
+        try {
+            const apiUrl = getApiUrl();
+            const res = await fetch(`${apiUrl}/api/users/search?query=${encodeURIComponent(query)}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setSearchResults(data);
+            }
+        } catch (error) {
+            console.error('Search failed', error);
+        } finally {
             setSearching(false);
-        }, 500);
+        }
     };
 
     const toggleUser = (userId: number) => {

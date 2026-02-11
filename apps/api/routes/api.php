@@ -25,6 +25,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupChatController;
+use App\Http\Controllers\GroupNoteController;
+use App\Http\Controllers\UserController;
 
 // ... imports
 
@@ -111,6 +113,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Email Verification
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.send');
+
+    // Group Notes
+    Route::get('/groups/{id}/notes', [GroupNoteController::class, 'index']);
+    Route::post('/groups/{id}/notes', [GroupNoteController::class, 'store']);
+    Route::delete('/groups/{groupId}/notes/{id}', [GroupNoteController::class, 'destroy']);
+
+    // User Search
+    Route::get('/users/search', [UserController::class, 'search']);
 
     // Admin Routes
     Route::group(['middleware' => ['role:Admin']], function () {

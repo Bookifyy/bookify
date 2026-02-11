@@ -36,4 +36,9 @@ class Group extends Model
     {
         return $this->hasMany(GroupMessage::class);
     }
+
+    public function notes()
+    {
+        return $this->hasMany(GroupNote::class);
+    }
 }

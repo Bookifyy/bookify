@@ -6,6 +6,7 @@ import { getApiUrl } from '../../../lib/utils';
 import { useParams } from 'next/navigation';
 import { Plus, BookOpen, Clock, Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import { AddBookModal } from '../../../components/AddBookModal';
 
 interface GroupBook {
     id: number;
@@ -113,7 +114,13 @@ export default function GroupBooksPage() {
                 )}
             </div>
 
-            {/* Add Book Modal will be implemented here or imported */}
+            {/* Add Book Modal */}
+            <AddBookModal
+                isOpen={showAddModal}
+                onClose={() => setShowAddModal(false)}
+                groupId={Number(id)}
+                onBookAdded={fetchBooks}
+            />
         </div>
     );
 }
