@@ -250,18 +250,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
 
-    // Temporary Migration Route (Delete after use)
-    Route::get('/migrate-groups', function () {
-        try {
-            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-            return response()->json([
-                'message' => 'Migration completed successfully',
-                'output' => \Illuminate\Support\Facades\Artisan::output()
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    });
 });
 
- 
+// Temporary Migration Route (Delete after use)
+Route::get('/migrate-groups', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return response()->json([
+            'message' => 'Migration completed successfully',
+            'output' => \Illuminate\Support\Facades\Artisan::output()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
+
