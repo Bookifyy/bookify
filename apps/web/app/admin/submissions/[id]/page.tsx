@@ -48,6 +48,19 @@ export default function AdminGradingPage() {
     const [grade, setGrade] = useState<string>('');
     const [submitting, setSubmitting] = useState(false);
 
+    // Modal State
+    const [showModal, setShowModal] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalType, setModalType] = useState<'success' | 'error'>('success');
+
+    const showNotification = (title: string, message: string, type: 'success' | 'error' = 'success') => {
+        setModalTitle(title);
+        setModalMessage(message);
+        setModalType(type);
+        setShowModal(true);
+    };
+
     useEffect(() => {
         if (token && id) {
             fetchSubmission();
@@ -80,7 +93,7 @@ export default function AdminGradingPage() {
 
         const scoreNum = parseFloat(grade);
         if (isNaN(scoreNum) || scoreNum < 0 || scoreNum > 100) {
-            alert('Please enter a valid score between 0 and 100');
+            showNotification('Invalid Input', 'Please enter a valid score between 0 and 100', 'error');
             return;
         }
 
@@ -97,14 +110,14 @@ export default function AdminGradingPage() {
             });
 
             if (res.ok) {
-                alert('Grade saved successfully!');
-                router.push('/admin/submissions');
+                showNotification('Success', 'Grade saved successfully!', 'success');
+                // router.push('/admin/submissions'); // Handled by modal close
             } else {
-                alert('Failed to save grade');
+                showNotification('Error', 'Failed to save grade', 'error');
             }
         } catch (error) {
             console.error(error);
-            alert('Connection error');
+            showNotification('Error', 'Connection error', 'error');
         } finally {
             setSubmitting(false);
         }
