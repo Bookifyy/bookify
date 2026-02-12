@@ -26,6 +26,8 @@ export default function GroupChatPage() {
     const [input, setInput] = useState('');
     const [sending, setSending] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const userScrolledUp = useRef(false);
 
     useEffect(() => {
         if (token && id) {
@@ -36,11 +38,22 @@ export default function GroupChatPage() {
     }, [token, id]);
 
     useEffect(() => {
-        scrollToBottom();
+        if (!userScrolledUp.current) {
+            scrollToBottom();
+        }
     }, [messages]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleScroll = () => {
+        if (scrollContainerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+            // If user is within 100px of bottom, they consider "at bottom"
+            const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
+            userScrolledUp.current = !isAtBottom;
+        }
     };
 
     const fetchMessages = async () => {
@@ -51,7 +64,6 @@ export default function GroupChatPage() {
             });
             if (res.ok) {
                 const data = await res.json();
-                // Basic diff check to avoid re-renders if same? React handles this mostly.
                 setMessages(data);
             }
         } catch (error) {
@@ -64,6 +76,9 @@ export default function GroupChatPage() {
         if (!input.trim() || sending) return;
 
         setSending(true);
+        // Force scroll on send
+        userScrolledUp.current = false;
+
         try {
             const apiUrl = getApiUrl();
             const res = await fetch(`${apiUrl}/api/groups/${id}/messages`, {
@@ -77,7 +92,8 @@ export default function GroupChatPage() {
 
             if (res.ok) {
                 setInput('');
-                fetchMessages(); // Immediate refresh
+                fetchMessages();
+                scrollToBottom();
             }
         } catch (error) {
             console.error(error);
@@ -89,7 +105,11 @@ export default function GroupChatPage() {
     return (
         <div className="flex flex-col h-full relative">
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto space-y-4 pb-20">
+            <div
+                ref={scrollContainerRef}
+                onScroll={handleScroll}
+                className="flex-1 overflow-y-auto space-y-4 pb-20"
+            >
                 {messages.length === 0 ? (
                     <div className="text-center py-10 text-zinc-500">
                         <p>No messages yet. Start the conversation!</p>
