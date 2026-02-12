@@ -6,6 +6,7 @@ import { getApiUrl } from '../lib/utils';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { Plus, Users, Search, MoreVertical, Loader2 } from 'lucide-react';
+import { CreateGroupModal } from '../components/CreateGroupModal';
 
 interface Group {
     id: number;
@@ -77,12 +78,12 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                 <div className="p-4 border-b border-zinc-800">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-bold text-white">Groups</h2>
-                        {/* <button 
+                        <button
                             onClick={() => setShowCreateModal(true)}
                             className="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors"
                         >
                             <Plus size={20} />
-                        </button> */}
+                        </button>
                     </div>
 
                     <div className="relative">
@@ -133,8 +134,6 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                                                 <h3 className={`font-medium truncate ${isActive ? 'text-white' : 'text-zinc-300'}`}>
                                                     {group.name}
                                                 </h3>
-                                                {/* Notification Badge if needed */}
-                                                {/* <span className="bg-indigo-600 text-white text-[10px] px-1.5 py-0.5 rounded-full">3</span> */}
                                             </div>
                                             <div className="flex items-center gap-3 text-xs text-zinc-500 mt-1">
                                                 <span className="flex items-center gap-1">
@@ -152,22 +151,21 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                 </div>
             </div>
 
-            {/* Main Content Area 
-                Mobile: Hidden if NO group selected (show list instead)
-                Desktop: Always visible (shows Empty State if no group)
-            */}
+            {/* Main Content Area */}
             <div className={`
                 flex-1 flex-col bg-black overflow-hidden relative
                 ${!isGroupSelected ? 'hidden lg:flex' : 'flex'}
             `}>
                 {children}
-
-                {/* Create Group Modal Trigger (Floating Action Button style or in empty state?) 
-                    The design shows "Create Group" button in the empty state main area.
-                */}
             </div>
 
-            {/* Modals will go here later */}
+            <CreateGroupModal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                onSuccess={() => {
+                    fetchGroups();
+                }}
+            />
         </div>
     );
 }

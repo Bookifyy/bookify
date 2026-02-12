@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Menu } from 'lucide-react';
+import { Search, Menu, User, Settings } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
 
@@ -53,14 +53,17 @@ export function Header({ onMenuClick }: HeaderProps) {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-4 text-zinc-400">
+            {/* Actions */}
+            <div className="flex items-center gap-2 sm:gap-4 text-zinc-400">
                 <NotificationBell />
-                <button className="hover:text-white transition-colors text-xs font-medium uppercase tracking-wider">
-                    Settings
+                <button className="hover:text-white transition-colors p-2">
+                    <span className="hidden sm:inline text-xs font-medium uppercase tracking-wider">Settings</span>
+                    <Settings className="sm:hidden w-5 h-5" />
                 </button>
-                <span className="text-zinc-600">•</span>
-                <button className="hover:text-white transition-colors text-xs font-medium uppercase tracking-wider">
-                    Profile
+                <div className="w-px h-4 bg-zinc-800 hidden sm:block"></div>
+                <button className="hover:text-white transition-colors p-2">
+                    <span className="hidden sm:inline text-xs font-medium uppercase tracking-wider">Profile</span>
+                    <User className="sm:hidden w-5 h-5" />
                 </button>
             </div>
         </header>
