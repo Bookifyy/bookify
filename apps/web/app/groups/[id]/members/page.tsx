@@ -6,6 +6,7 @@ import { getApiUrl } from '../../../lib/utils';
 import { useParams } from 'next/navigation';
 import { Plus, User, Shield, UserX, Loader2 } from 'lucide-react';
 import { InviteMemberModal } from '../../../components/InviteMemberModal';
+import { RemoveMemberModal } from '../../../components/RemoveMemberModal';
 
 interface GroupMember {
     id: number;
@@ -16,6 +17,7 @@ interface GroupMember {
     };
     role: 'owner' | 'admin' | 'member';
     joined_at: string;
+    status?: 'pending' | 'active';
 }
 
 export default function GroupMembersPage() {
@@ -26,6 +28,7 @@ export default function GroupMembersPage() {
     const [members, setMembers] = useState<GroupMember[]>([]);
     const [loading, setLoading] = useState(true);
     const [showInviteModal, setShowInviteModal] = useState(false);
+    const [removeModal, setRemoveModal] = useState<{ isOpen: boolean; userId: number; userName: string } | null>(null);
 
     useEffect(() => {
         if (token && id) fetchMembers();
@@ -52,28 +55,6 @@ export default function GroupMembersPage() {
 
     const currentUserRole = members.find(m => m.user.id === user?.id)?.role;
     const canInvite = true; // For now allow everyone, later maybe restrict
-
-    const handleRemoveMember = async (userId: number) => {
-        if (!confirm('Are you sure you want to remove this member?')) return;
-
-        try {
-            const apiUrl = getApiUrl();
-            const res = await fetch(`${apiUrl}/api/groups/${id}/members/${userId}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            if (res.ok) {
-                setMembers(prev => prev.filter(m => m.user.id !== userId));
-            } else {
-                const data = await res.json();
-                alert(data.message || 'Failed to remove member');
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Connection failed');
-        }
-    };
 
     return (
         <div className="space-y-6">
@@ -103,7 +84,7 @@ export default function GroupMembersPage() {
                         {/* Actions (Kick, Promote) if admin */}
                         {currentUserRole === 'owner' && member.role !== 'owner' && (
                             <button
-                                onClick={() => handleRemoveMember(member.user.id)}
+                                onClick={() => setRemoveModal({ isOpen: true, userId: member.user.id, userName: member.user.name })}
                                 className="p-2 text-zinc-600 hover:text-red-500 transition-colors tooltip"
                                 title="Remove Member"
                             >
@@ -119,6 +100,20 @@ export default function GroupMembersPage() {
                 onClose={() => setShowInviteModal(false)}
                 groupId={Number(id)}
             />
+
+            {removeModal && (
+                <RemoveMemberModal
+                    isOpen={removeModal.isOpen}
+                    onClose={() => setRemoveModal(null)}
+                    groupId={Number(id)}
+                    userId={removeModal.userId}
+                    userName={removeModal.userName}
+                    onMemberRemoved={() => {
+                        setMembers(prev => prev.filter(m => m.user.id !== removeModal.userId));
+                        setRemoveModal(null);
+                    }}
+                />
+            )}
         </div>
     );
 }
