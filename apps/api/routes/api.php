@@ -103,6 +103,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/groups/{id}/join', [GroupController::class, 'join']);
     Route::post('/groups/{id}/leave', [GroupController::class, 'leave']);
     Route::post('/groups/{id}/invite', [GroupController::class, 'invite']);
+    Route::post('/groups/{id}/accept', [GroupController::class, 'acceptInvite']);
+    Route::post('/groups/{id}/reject', [GroupController::class, 'rejectInvite']);
     Route::delete('/groups/{id}/members/{userId}', [GroupController::class, 'removeMember']);
 
     // Group Books
@@ -128,6 +130,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
     Route::put('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::delete('/notifications', [NotificationController::class, 'destroyAll']);
 
     // Admin Routes
     Route::group(['middleware' => ['role:Admin']], function () {

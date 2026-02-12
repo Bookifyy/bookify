@@ -63,10 +63,12 @@ class LibraryController extends Controller
             ->where('book_id', $bookId)
             ->first();
 
+        $isNew = false;
         if (!$progress) {
             $progress = new ReadingProgress();
             $progress->user_id = $user->id;
             $progress->book_id = $bookId;
+            $isNew = true;
         }
 
         $progress->current_page = $request->current_page;
@@ -80,6 +82,38 @@ class LibraryController extends Controller
 
         $progress->last_read_at = now();
         $progress->save();
+
+        // Notify groups if just started (New record & > 0% progress)
+        if ($isNew && $progress->percentage_completed > 0) {
+            try {
+                // Find groups where this user is a member
+                $groups = \App\Models\Group::whereHas('members', function ($q) use ($user) {
+                    $q->where('user_id', $user->id)->where('status', 'active');
+                })->get();
+
+                $book = Book::find($bookId);
+
+                foreach ($groups as $group) {
+                    // Notify other members of the group
+                    $members = $group->members()->where('user_id', '!=', $user->id)->where('status', 'active')->get();
+                    foreach ($members as $member) {
+                        \App\Models\Notification::create([
+                            'user_id' => $member->user_id,
+                            'type' => 'book_started', // New type
+                            'data' => [
+                                'group_id' => $group->id,
+                                'group_name' => $group->name,
+                                'book_title' => $book ? $book->title : 'Unknown Book',
+                                'user_name' => $user->name,
+                                'book_id' => $bookId
+                            ]
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send book started notification: " . $e->getMessage());
+            }
+        }
 
         return response()->json([
             'message' => 'Progress updated',

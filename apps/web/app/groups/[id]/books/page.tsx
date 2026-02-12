@@ -75,7 +75,7 @@ export default function GroupBooksPage() {
                             <div className="w-16 h-24 bg-zinc-800 rounded-lg flex-shrink-0 overflow-hidden relative">
                                 {book.cover_image ? (
                                     <Image
-                                        src={book.cover_image}
+                                        src={book.cover_image?.startsWith('http') ? book.cover_image : `${getApiUrl()}${book.cover_image}`}
                                         alt={book.title}
                                         fill
                                         className="object-cover"

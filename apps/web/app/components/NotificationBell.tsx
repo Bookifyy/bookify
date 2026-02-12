@@ -14,15 +14,17 @@ interface Notification {
     created_at: string;
 }
 
+import { InvitationModal } from './InvitationModal';
+
 export function NotificationBell() {
     const { token } = useAuth();
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [inviteModal, setInviteModal] = useState<{ isOpen: boolean; notificationId: string; groupId: number; groupName: string; invitedBy: string } | null>(null);
 
     useEffect(() => {
         if (token) fetchNotifications();
-        // Optional: Poll every 30s
         const interval = setInterval(() => {
             if (token) fetchNotifications();
         }, 30000);
@@ -52,7 +54,6 @@ export function NotificationBell() {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            // Update local state
             setNotifications(prev => prev.map(n =>
                 n.id === id ? { ...n, read_at: new Date().toISOString() } : n
             ));
@@ -62,13 +63,45 @@ export function NotificationBell() {
         }
     };
 
+    const clearAll = async () => {
+        try {
+            const apiUrl = getApiUrl();
+            await fetch(`${apiUrl}/api/notifications`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setNotifications([]);
+            setUnreadCount(0);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleNotificationClick = (n: Notification) => {
+        if (!n.read_at) markAsRead(n.id);
+
+        if (n.type === 'group_invite') {
+            setInviteModal({
+                isOpen: true,
+                notificationId: n.id,
+                groupId: n.data.group_id,
+                groupName: n.data.group_name,
+                invitedBy: n.data.invited_by
+            });
+            setIsOpen(false);
+        } else {
+            setIsOpen(false);
+        }
+    };
+
     const getNotificationContent = (n: Notification) => {
         switch (n.type) {
             case 'group_invite':
                 return {
                     text: `Invited you to group "${n.data.group_name}"`,
-                    href: `/groups/${n.data.group_id}`,
-                    user: n.data.invited_by
+                    href: '#', // Handle click manually
+                    user: n.data.invited_by,
+                    subtext: 'Click to accept or reject'
                 };
             case 'new_message':
                 return {
@@ -82,6 +115,12 @@ export function NotificationBell() {
                     text: `Added "${n.data.book_title}" to "${n.data.group_name}"`,
                     href: `/groups/${n.data.group_id}/books`,
                     user: n.data.added_by
+                };
+            case 'book_started':
+                return {
+                    text: `Started reading "${n.data.book_title}" in "${n.data.group_name}"`,
+                    href: `/groups/${n.data.group_id}/books`,
+                    user: n.data.user_name
                 };
             default:
                 return { text: 'New notification', href: '#' };
@@ -110,14 +149,24 @@ export function NotificationBell() {
                     <div className="absolute right-0 mt-2 w-80 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden">
                         <div className="p-3 border-b border-zinc-800 flex justify-between items-center">
                             <h3 className="font-semibold text-white text-sm">Notifications</h3>
-                            {unreadCount > 0 && (
-                                <button
-                                    onClick={fetchNotifications}
-                                    className="text-[10px] text-indigo-400 hover:text-indigo-300"
-                                >
-                                    Refresh
-                                </button>
-                            )}
+                            <div className="flex gap-2">
+                                {unreadCount > 0 && (
+                                    <button
+                                        onClick={fetchNotifications}
+                                        className="text-[10px] text-indigo-400 hover:text-indigo-300"
+                                    >
+                                        Refresh
+                                    </button>
+                                )}
+                                {notifications.length > 0 && (
+                                    <button
+                                        onClick={clearAll}
+                                        className="text-[10px] text-zinc-400 hover:text-white"
+                                    >
+                                        Clear All
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         <div className="max-h-96 overflow-y-auto">
                             {notifications.length === 0 ? (
@@ -131,9 +180,13 @@ export function NotificationBell() {
                                         <Link
                                             key={n.id}
                                             href={href}
-                                            onClick={() => {
-                                                if (!n.read_at) markAsRead(n.id);
-                                                setIsOpen(false);
+                                            onClick={(e) => {
+                                                if (n.type === 'group_invite') {
+                                                    e.preventDefault();
+                                                    handleNotificationClick(n);
+                                                } else {
+                                                    handleNotificationClick(n);
+                                                }
                                             }}
                                             className={`
                                                 block p-3 hover:bg-zinc-800/50 transition-colors border-b border-zinc-800/50 last:border-0
@@ -165,6 +218,18 @@ export function NotificationBell() {
                         </div>
                     </div>
                 </>
+            )}
+
+            {inviteModal && (
+                <InvitationModal
+                    isOpen={inviteModal.isOpen}
+                    onClose={() => setInviteModal(null)}
+                    notificationId={inviteModal.notificationId}
+                    groupId={inviteModal.groupId}
+                    groupName={inviteModal.groupName}
+                    invitedBy={inviteModal.invitedBy}
+                    onActionComplete={fetchNotifications}
+                />
             )}
         </div>
     );

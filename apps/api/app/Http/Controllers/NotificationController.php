@@ -36,6 +36,12 @@ class NotificationController extends Controller
         return response()->json(['message' => 'All marked as read']);
     }
 
+    public function destroyAll(Request $request)
+    {
+        Notification::where('user_id', $request->user()->id)->delete();
+        return response()->json(['message' => 'All notifications cleared']);
+    }
+
     // Internal helper to send notification
     public static function send($userId, $type, $data)
     {

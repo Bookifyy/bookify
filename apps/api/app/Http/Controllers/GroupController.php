@@ -167,6 +167,14 @@ class GroupController extends Controller
         ]);
 
         $group = Group::findOrFail($id);
+    public function invite(Request $request, $id)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'exists:users,id'
+        ]);
+
+        $group = Group::findOrFail($id);
         if (!$group->members()->where('user_id', $request->user()->id)->exists()) {
             return response()->json(['message' => 'Not a member'], 403);
         }
@@ -177,7 +185,8 @@ class GroupController extends Controller
                 GroupMember::create([
                     'group_id' => $group->id,
                     'user_id' => $uid,
-                    'role' => 'member'
+                    'role' => 'member',
+                    'status' => 'pending' // Default is active in migration, but let's be explicit for invites
                 ]);
 
                 // Send Notification (Safely)
@@ -200,5 +209,31 @@ class GroupController extends Controller
         }
 
         return response()->json(['message' => "Invited $count members successfully"]);
+    }
+
+    public function acceptInvite(Request $request, $id)
+    {
+        $member = GroupMember::where('group_id', $id)
+            ->where('user_id', $request->user()->id)
+            ->where('status', 'pending')
+            ->firstOrFail();
+
+        $member->update(['status' => 'active']);
+
+        return response()->json(['message' => 'Joined group successfully']);
+    }
+
+    public function rejectInvite(Request $request, $id)
+    {
+        $member = GroupMember::where('group_id', $id)
+            ->where('user_id', $request->user()->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($member) {
+            $member->delete();
+        }
+
+        return response()->json(['message' => 'Invite rejected']);
     }
 }
