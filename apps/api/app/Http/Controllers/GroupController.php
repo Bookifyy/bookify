@@ -207,8 +207,11 @@ class GroupController extends Controller
     {
         $member = GroupMember::where('group_id', $id)
             ->where('user_id', $request->user()->id)
-            ->where('status', 'pending')
             ->firstOrFail();
+
+        if ($member->status === 'active') {
+            return response()->json(['message' => 'Already joined']);
+        }
 
         $member->update(['status' => 'active']);
 
@@ -219,10 +222,28 @@ class GroupController extends Controller
     {
         $member = GroupMember::where('group_id', $id)
             ->where('user_id', $request->user()->id)
-            ->where('status', 'pending')
             ->first();
 
         if ($member) {
+            // Send Rejection Notification to Owner
+            try {
+                $group = Group::find($id);
+                // Notify Owner
+                if ($group) {
+                    \App\Models\Notification::create([
+                        'user_id' => $group->owner_id,
+                        'type' => 'invite_rejected',
+                        'data' => [
+                            'group_id' => $id,
+                            'group_name' => $group->name,
+                            'user_name' => $request->user()->name
+                        ]
+                    ]);
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Notification failed: " . $e->getMessage());
+            }
+
             $member->delete();
         }
 

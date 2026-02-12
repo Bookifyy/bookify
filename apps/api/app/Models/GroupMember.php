@@ -15,7 +15,8 @@ class GroupMember extends Model
         'group_id',
         'user_id',
         'role',
-        'joined_at'
+        'joined_at',
+        'status'
     ];
 
     protected $casts = [
