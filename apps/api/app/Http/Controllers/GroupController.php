@@ -13,9 +13,10 @@ class GroupController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        // meaningful query: groups the user is a member of
+        // meaningful query: groups the user is an active member of
         $groups = Group::whereHas('members', function ($q) use ($user) {
-            $q->where('user_id', $user->id);
+            $q->where('user_id', $user->id)
+                ->where('status', 'active');
         })->withCount('members')->get();
 
         return response()->json($groups);
@@ -153,6 +154,21 @@ class GroupController extends Controller
 
         $member = GroupMember::where('group_id', $groupId)->where('user_id', $userId)->first();
         if ($member) {
+            // Notify the removed member
+            try {
+                \App\Models\Notification::create([
+                    'user_id' => $userId,
+                    'type' => 'member_removed',
+                    'data' => [
+                        'group_id' => $group->id,
+                        'group_name' => $group->name,
+                        'removed_by' => $request->user()->name
+                    ]
+                ]);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Notification failed: " . $e->getMessage());
+            }
+
             $member->delete();
         }
 
@@ -178,7 +194,7 @@ class GroupController extends Controller
                     'group_id' => $group->id,
                     'user_id' => $uid,
                     'role' => 'member',
-                    'status' => 'pending' // Default is active in migration, but let's be explicit for invites
+                    'status' => 'pending'
                 ]);
 
                 // Send Notification (Safely)
@@ -214,6 +230,24 @@ class GroupController extends Controller
         }
 
         $member->update(['status' => 'active']);
+
+        // Notify Owner about acceptance
+        try {
+            $group = Group::find($id);
+            if ($group) {
+                \App\Models\Notification::create([
+                    'user_id' => $group->owner_id,
+                    'type' => 'invite_accepted',
+                    'data' => [
+                        'group_id' => $id,
+                        'group_name' => $group->name,
+                        'user_name' => $request->user()->name
+                    ]
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Notification failed: " . $e->getMessage());
+        }
 
         return response()->json(['message' => 'Joined group successfully']);
     }

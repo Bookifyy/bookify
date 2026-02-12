@@ -122,6 +122,25 @@ export function NotificationBell() {
                     href: `/groups/${n.data.group_id}/books`,
                     user: n.data.user_name
                 };
+            case 'invite_accepted':
+                return {
+                    text: `Accepted your invite to "${n.data.group_name}"`,
+                    href: `/groups/${n.data.group_id}/members`,
+                    user: n.data.user_name
+                };
+            case 'invite_rejected':
+                return {
+                    text: `Declined your invited to "${n.data.group_name}"`,
+                    href: `/groups/${n.data.group_id}/members`,
+                    user: n.data.user_name
+                };
+            case 'member_removed':
+                return {
+                    text: `You have been removed from "${n.data.group_name}"`,
+                    href: '#',
+                    user: 'System', // or n.data.removed_by
+                    subtext: `Removed by ${n.data.removed_by}`
+                };
             default:
                 return { text: 'New notification', href: '#' };
         }
