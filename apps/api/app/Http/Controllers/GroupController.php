@@ -167,14 +167,6 @@ class GroupController extends Controller
         ]);
 
         $group = Group::findOrFail($id);
-    public function invite(Request $request, $id)
-    {
-        $request->validate([
-            'user_ids' => 'required|array',
-            'user_ids.*' => 'exists:users,id'
-        ]);
-
-        $group = Group::findOrFail($id);
         if (!$group->members()->where('user_id', $request->user()->id)->exists()) {
             return response()->json(['message' => 'Not a member'], 403);
         }
