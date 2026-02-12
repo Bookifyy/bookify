@@ -15,8 +15,11 @@ interface InvitationModalProps {
     onActionComplete: () => void;
 }
 
+import { useRouter } from 'next/navigation';
+
 export function InvitationModal({ isOpen, onClose, notificationId, groupId, groupName, invitedBy, onActionComplete }: InvitationModalProps) {
     const { token } = useAuth();
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
 
     if (!isOpen) return null;
@@ -38,6 +41,7 @@ export function InvitationModal({ isOpen, onClose, notificationId, groupId, grou
                 });
                 onActionComplete();
                 onClose();
+                router.refresh(); // Refresh state/sidebar
             } else {
                 alert('Failed to process request');
             }

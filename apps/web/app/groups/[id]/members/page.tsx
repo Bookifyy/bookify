@@ -20,9 +20,12 @@ interface GroupMember {
     status?: 'pending' | 'active';
 }
 
+import { useRouter } from 'next/navigation';
+
 export default function GroupMembersPage() {
     const { token, user } = useAuth();
     const params = useParams();
+    const router = useRouter(); // Initialize router
     const id = params.id;
 
     const [members, setMembers] = useState<GroupMember[]>([]);
@@ -51,20 +54,53 @@ export default function GroupMembersPage() {
         }
     };
 
+    const handleLeaveGroup = async () => {
+        if (!confirm('Are you sure you want to leave this group?')) return;
+        try {
+            const apiUrl = getApiUrl();
+            const res = await fetch(`${apiUrl}/api/groups/${id}/leave`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                router.push('/groups'); // Redirect to groups list
+                router.refresh();      // Refresh to update sidebar
+            } else {
+                alert('Failed to leave group');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Connection error');
+        }
+    };
+
     if (loading) return <div className="flex justify-center p-8"><Loader2 className="animate-spin text-indigo-500" /></div>;
 
-    const currentUserRole = members.find(m => m.user.id === user?.id)?.role;
-    const canInvite = true; // For now allow everyone, later maybe restrict
+    const currentUserMember = members.find(m => m.user.id === user?.id);
+    const currentUserRole = currentUserMember?.role;
+    const canInvite = true;
 
     return (
         <div className="space-y-6">
-            <button
-                onClick={() => setShowInviteModal(true)}
-                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
-            >
-                <Plus size={20} />
-                Invite Members
-            </button>
+            <div className="flex gap-3">
+                <button
+                    onClick={() => setShowInviteModal(true)}
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                >
+                    <Plus size={20} />
+                    Invite Members
+                </button>
+
+                {currentUserRole !== 'owner' && (
+                    <button
+                        onClick={handleLeaveGroup}
+                        className="px-4 py-3 bg-zinc-800 hover:bg-red-500/20 hover:text-red-500 text-zinc-400 rounded-xl font-bold transition-all flex items-center justify-center gap-2 border border-zinc-700 hover:border-red-500/50"
+                        title="Leave Group"
+                    >
+                        <UserX size={20} />
+                    </button>
+                )}
+            </div>
 
             <div className="space-y-4">
                 {members.map(member => (
@@ -77,6 +113,7 @@ export default function GroupMembersPage() {
                                 <h3 className="font-bold text-white truncate">{member.user.name}</h3>
                                 {member.role === 'owner' && <span className="text-[10px] bg-indigo-500/20 text-indigo-400 px-1.5 py-0.5 rounded uppercase tracking-wide">Owner</span>}
                                 {member.user.id === user?.id && <span className="text-[10px] bg-zinc-700 text-zinc-300 px-1.5 py-0.5 rounded uppercase tracking-wide">You</span>}
+                                {member.status === 'pending' && <span className="text-[10px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded uppercase tracking-wide">Pending</span>}
                             </div>
                             <p className="text-sm text-zinc-400 truncate">{member.user.email}</p>
                         </div>
@@ -111,6 +148,7 @@ export default function GroupMembersPage() {
                     onMemberRemoved={() => {
                         setMembers(prev => prev.filter(m => m.user.id !== removeModal.userId));
                         setRemoveModal(null);
+                        router.refresh();
                     }}
                 />
             )}

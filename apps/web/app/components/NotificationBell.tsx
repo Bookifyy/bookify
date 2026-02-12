@@ -141,6 +141,12 @@ export function NotificationBell() {
                     user: 'System', // or n.data.removed_by
                     subtext: `Removed by ${n.data.removed_by}`
                 };
+            case 'member_left_group':
+                return {
+                    text: `Left the group "${n.data.group_name}"`,
+                    href: `/groups/${n.data.group_id}/members`,
+                    user: n.data.user_name
+                };
             default:
                 return { text: 'New notification', href: '#' };
         }

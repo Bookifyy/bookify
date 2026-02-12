@@ -90,6 +90,25 @@ class GroupController extends Controller
             return response()->json(['message' => 'Owner cannot leave group. Delete the group instead or transfer ownership.'], 400);
         }
 
+        $group = Group::find($id);
+
+        // Notify owner
+        try {
+            if ($group) {
+                \App\Models\Notification::create([
+                    'user_id' => $group->owner_id,
+                    'type' => 'member_left_group',
+                    'data' => [
+                        'group_id' => $group->id,
+                        'group_name' => $group->name,
+                        'user_name' => $user->name
+                    ]
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Notification failed: " . $e->getMessage());
+        }
+
         $member->delete();
         return response()->json(['message' => 'Left group successfully']);
     }
