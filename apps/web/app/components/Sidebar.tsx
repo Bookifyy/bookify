@@ -8,7 +8,7 @@ import {
     FileText,
     GraduationCap,
     Users,
-    LayoutGrid,
+    Layers,
     BarChart3,
     Moon,
     Sun,
@@ -31,7 +31,7 @@ const menuItems = [
     { icon: FileText, label: 'Notes', href: '/notes' },
     { icon: GraduationCap, label: 'Quizzes', href: '/quizzes' },
     { icon: Users, label: 'Groups', href: '/groups' },
-    { icon: LayoutGrid, label: 'Collections', href: '/collections' },
+    { icon: Layers, label: 'Collections', href: '/collections' },
     { icon: BarChart3, label: 'Dashboard', href: '/dashboard' },
 ];
 
