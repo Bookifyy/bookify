@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getApiUrl } from '../lib/utils';
@@ -9,12 +9,13 @@ import Link from 'next/link';
 interface Notification {
     id: string;
     type: string;
-    data: any;
+    data: Record<string, unknown>;
     read_at: string | null;
     created_at: string;
 }
 
 import { InvitationModal } from './InvitationModal';
+import { CollectionInvitationModal } from './CollectionInvitationModal';
 
 export function NotificationBell() {
     const { token } = useAuth();
@@ -22,16 +23,9 @@ export function NotificationBell() {
     const [isOpen, setIsOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
     const [inviteModal, setInviteModal] = useState<{ isOpen: boolean; notificationId: string; groupId: number; groupName: string; invitedBy: string } | null>(null);
+    const [collectionInviteModal, setCollectionInviteModal] = useState<{ isOpen: boolean; notificationId: string; collectionId: string; collectionName: string; invitedBy: string } | null>(null);
 
-    useEffect(() => {
-        if (token) fetchNotifications();
-        const interval = setInterval(() => {
-            if (token) fetchNotifications();
-        }, 30000);
-        return () => clearInterval(interval);
-    }, [token]);
-
-    const fetchNotifications = async () => {
+    const fetchNotifications = useCallback(async () => {
         try {
             const apiUrl = getApiUrl();
             const res = await fetch(`${apiUrl}/api/notifications`, {
@@ -45,7 +39,16 @@ export function NotificationBell() {
         } catch (error) {
             console.error('Failed to fetch notifications', error);
         }
-    };
+    }, [token]);
+
+    useEffect(() => {
+        const load = async () => {
+            if (token) await fetchNotifications();
+        };
+        load();
+        const interval = setInterval(load, 30000);
+        return () => clearInterval(interval);
+    }, [token, fetchNotifications]);
 
     const markAsRead = async (id: string) => {
         try {
@@ -84,9 +87,18 @@ export function NotificationBell() {
             setInviteModal({
                 isOpen: true,
                 notificationId: n.id,
-                groupId: n.data.group_id,
-                groupName: n.data.group_name,
-                invitedBy: n.data.invited_by
+                groupId: n.data.group_id as number,
+                groupName: n.data.group_name as string,
+                invitedBy: n.data.invited_by as string
+            });
+            setIsOpen(false);
+        } else if (n.type === 'collection_invite') {
+            setCollectionInviteModal({
+                isOpen: true,
+                notificationId: n.id,
+                collectionId: n.data.collection_id as string,
+                collectionName: n.data.collection_name as string,
+                invitedBy: n.data.sender_name as string
             });
             setIsOpen(false);
         } else {
@@ -98,54 +110,61 @@ export function NotificationBell() {
         switch (n.type) {
             case 'group_invite':
                 return {
-                    text: `Invited you to group "${n.data.group_name}"`,
+                    text: `Invited you to group "${n.data.group_name as string}"`,
                     href: '#', // Handle click manually
-                    user: n.data.invited_by,
+                    user: n.data.invited_by as string,
+                    subtext: 'Click to accept or reject'
+                };
+            case 'collection_invite':
+                return {
+                    text: `Invited you to view the collection "${n.data.collection_name as string}"`,
+                    href: '#', 
+                    user: n.data.sender_name as string,
                     subtext: 'Click to accept or reject'
                 };
             case 'new_message':
                 return {
-                    text: `Sent a message in "${n.data.group_name}"`,
-                    subtext: n.data.message_preview,
-                    href: `/groups/${n.data.group_id}/chat`,
-                    user: n.data.sender_name
+                    text: `Sent a message in "${n.data.group_name as string}"`,
+                    subtext: n.data.message_preview as string,
+                    href: `/groups/${n.data.group_id as number}/chat`,
+                    user: n.data.sender_name as string
                 };
             case 'book_added':
                 return {
-                    text: `Added "${n.data.book_title}" to "${n.data.group_name}"`,
-                    href: `/groups/${n.data.group_id}/books`,
-                    user: n.data.added_by
+                    text: `Added "${n.data.book_title as string}" to "${n.data.group_name as string}"`,
+                    href: `/groups/${n.data.group_id as number}/books`,
+                    user: n.data.added_by as string
                 };
             case 'book_started':
                 return {
-                    text: `Started reading "${n.data.book_title}" in "${n.data.group_name}"`,
-                    href: `/groups/${n.data.group_id}/books`,
-                    user: n.data.user_name
+                    text: `Started reading "${n.data.book_title as string}" in "${n.data.group_name as string}"`,
+                    href: `/groups/${n.data.group_id as number}/books`,
+                    user: n.data.user_name as string
                 };
             case 'invite_accepted':
                 return {
-                    text: `Accepted your invite to "${n.data.group_name}"`,
-                    href: `/groups/${n.data.group_id}/members`,
-                    user: n.data.user_name
+                    text: `Accepted your invite to "${n.data.group_name as string}"`,
+                    href: `/groups/${n.data.group_id as number}/members`,
+                    user: n.data.user_name as string
                 };
             case 'invite_rejected':
                 return {
-                    text: `Declined your invited to "${n.data.group_name}"`,
-                    href: `/groups/${n.data.group_id}/members`,
-                    user: n.data.user_name
+                    text: `Declined your invited to "${n.data.group_name as string}"`,
+                    href: `/groups/${n.data.group_id as number}/members`,
+                    user: n.data.user_name as string
                 };
             case 'member_removed':
                 return {
-                    text: `You have been removed from "${n.data.group_name}"`,
+                    text: `You have been removed from "${n.data.group_name as string}"`,
                     href: '#',
                     user: 'System', // or n.data.removed_by
-                    subtext: `Removed by ${n.data.removed_by}`
+                    subtext: `Removed by ${n.data.removed_by as string}`
                 };
             case 'member_left_group':
                 return {
-                    text: `Left the group "${n.data.group_name}"`,
-                    href: `/groups/${n.data.group_id}/members`,
-                    user: n.data.user_name
+                    text: `Left the group "${n.data.group_name as string}"`,
+                    href: `/groups/${n.data.group_id as number}/members`,
+                    user: n.data.user_name as string
                 };
             default:
                 return { text: 'New notification', href: '#' };
@@ -209,6 +228,9 @@ export function NotificationBell() {
                                                 if (n.type === 'group_invite') {
                                                     e.preventDefault();
                                                     handleNotificationClick(n);
+                                                } else if (n.type === 'collection_invite') {
+                                                    e.preventDefault();
+                                                    handleNotificationClick(n);
                                                 } else {
                                                     handleNotificationClick(n);
                                                 }
@@ -228,7 +250,7 @@ export function NotificationBell() {
                                                     </p>
                                                     {subtext && (
                                                         <p className="text-[10px] text-zinc-500 mt-1 truncate max-w-[200px]">
-                                                            "{subtext}"
+                                                            &quot;{subtext}&quot;
                                                         </p>
                                                     )}
                                                     <p className="text-[10px] text-zinc-600 mt-1">
@@ -253,6 +275,18 @@ export function NotificationBell() {
                     groupId={inviteModal.groupId}
                     groupName={inviteModal.groupName}
                     invitedBy={inviteModal.invitedBy}
+                    onActionComplete={fetchNotifications}
+                />
+            )}
+
+            {collectionInviteModal && (
+                <CollectionInvitationModal
+                    isOpen={collectionInviteModal.isOpen}
+                    onClose={() => setCollectionInviteModal(null)}
+                    notificationId={collectionInviteModal.notificationId}
+                    collectionId={collectionInviteModal.collectionId}
+                    collectionName={collectionInviteModal.collectionName}
+                    invitedBy={collectionInviteModal.invitedBy}
                     onActionComplete={fetchNotifications}
                 />
             )}

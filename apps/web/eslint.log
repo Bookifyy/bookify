@@ -1,0 +1,42 @@
+
+/home/mbokani-pr/bookify/apps/web/app/components/CollectionInvitationModal.tsx
+  42:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/mbokani-pr/bookify/apps/web/app/components/NotificationBell.tsx
+   12:11  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+   29:20  error    Error: Cannot access variable before it is declared
+
+`fetchNotifications` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/mbokani-pr/bookify/apps/web/app/components/NotificationBell.tsx:29:20
+  27 |
+  28 |     useEffect(() => {
+> 29 |         if (token) fetchNotifications();
+     |                    ^^^^^^^^^^^^^^^^^^ `fetchNotifications` accessed before it is declared
+  30 |         const interval = setInterval(() => {
+  31 |             if (token) fetchNotifications();
+  32 |         }, 30000);
+
+/home/mbokani-pr/bookify/apps/web/app/components/NotificationBell.tsx:36:5
+  34 |     }, [token]);
+  35 |
+> 36 |     const fetchNotifications = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 37 |         try {
+     | ^^^^^^^^^^^^^
+> 38 |             const apiUrl = getApiUrl();
+     …
+     | ^^^^^^^^^^^^^
+> 49 |         }
+     | ^^^^^^^^^^^^^
+> 50 |     };
+     | ^^^^^^^ `fetchNotifications` is declared here
+  51 |
+  52 |     const markAsRead = async (id: string) => {
+  53 |         try {  react-hooks/immutability
+   34:8   warning  React Hook useEffect has a missing dependency: 'fetchNotifications'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+  252:61  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react/no-unescaped-entities
+  252:71  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react/no-unescaped-entities
+
+✖ 6 problems (5 errors, 1 warning)
+
