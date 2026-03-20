@@ -67,35 +67,50 @@ export default function LibraryPage() {
         if (token) fetchBooks();
     }, [token]);
 
-    // Load Collections from LocalStorage
+    // Load Collections from API
     useEffect(() => {
-        const saved = localStorage.getItem('bookify_collections');
-        if (saved) {
+        const fetchCollections = async () => {
+            if (!token) return;
             try {
-                setCollections(JSON.parse(saved));
-            } catch (e) {
-                console.error('Failed to parse collections', e);
+                const res = await fetch(`${getApiUrl()}/api/collections`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    setCollections(await res.json());
+                }
+            } catch (err) {
+                console.error("Failed fetching collections", err);
             }
-        }
-    }, []);
-
-    // Save Collections to LocalStorage
-    useEffect(() => {
-        localStorage.setItem('bookify_collections', JSON.stringify(collections));
-    }, [collections]);
-
-    const handleCreateCollection = (newCollectionData: { id: string; name: string }) => {
-        const newCollection: Collection = {
-            id: newCollectionData.id,
-            name: newCollectionData.name,
-            bookIds: []
         };
-        setCollections([...collections, newCollection]);
-        setShowCreateCollection(false);
+
+        fetchCollections();
+    }, [token]);
+
+    const handleCreateCollection = async (newCollectionData: { name: string; description: string; visibility: string }) => {
+        try {
+            const res = await fetch(`${getApiUrl()}/api/collections`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newCollectionData)
+            });
+            
+            if (res.ok) {
+                const newCollection = await res.json();
+                setCollections([...collections, newCollection]);
+                setShowCreateCollection(false);
+            }
+        } catch (err) {
+            console.error("Network error creating collection", err);
+        }
     };
 
     const handleDeleteCollection = (id: string) => {
-        if (confirm('Are you sure you want to delete this collection?')) {
+        if (confirm('Are you sure you want to completely discard this collection?')) {
+            // Note: If you want to delete via API, you should implement `DELETE /api/collections/{id}`
+            // Right now we only delete books via API in detailed view.
             setCollections(collections.filter(c => c.id !== id));
             if (viewingCollectionId === id) setViewingCollectionId(null);
         }

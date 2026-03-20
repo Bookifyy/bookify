@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Plus, Check } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { getApiUrl } from '../lib/utils';
 
 interface Collection {
     id: string;
@@ -15,6 +17,7 @@ interface AddToCollectionModalProps {
 }
 
 export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCollections }: AddToCollectionModalProps) {
+    const { token } = useAuth();
     const [localCollections, setLocalCollections] = useState<Collection[]>(collections);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -28,31 +31,85 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
         c.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const toggleBookInCollection = (collectionId: string) => {
-        const updated = localCollections.map(c => {
-            if (c.id === collectionId) {
-                const bookIds = c.bookIds.includes(bookId)
-                    ? c.bookIds.filter(id => id !== bookId)
-                    : [...c.bookIds, bookId];
-                return { ...c, bookIds };
+    const toggleBookInCollection = async (collectionId: string) => {
+        if (!token) return;
+        const targetCollection = localCollections.find(c => c.id === collectionId);
+        if (!targetCollection) return;
+
+        const isAdded = targetCollection.bookIds.includes(bookId);
+        const method = isAdded ? 'DELETE' : 'POST';
+        const url = isAdded 
+            ? `${getApiUrl()}/api/collections/${collectionId}/books/${bookId}`
+            : `${getApiUrl()}/api/collections/${collectionId}/books`;
+
+        try {
+            const res = await fetch(url, {
+                method,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: isAdded ? undefined : JSON.stringify({ book_id: bookId })
+            });
+
+            if (res.ok) {
+                const updated = localCollections.map(c => {
+                    if (c.id === collectionId) {
+                        const bookIds = isAdded
+                            ? c.bookIds.filter(id => id !== bookId)
+                            : [...c.bookIds, bookId];
+                        return { ...c, bookIds };
+                    }
+                    return c;
+                });
+                setLocalCollections(updated);
+                onUpdateCollections(updated);
             }
-            return c;
-        });
-        setLocalCollections(updated);
-        onUpdateCollections(updated);
+        } catch (err) {
+            console.error("Failed to toggle book in collection", err);
+        }
     };
 
-    const handleCreateNew = () => {
-        if (!searchQuery.trim()) return;
-        const newCollection: Collection = {
-            id: Date.now().toString(),
-            name: searchQuery,
-            bookIds: [bookId] // Auto add this book
-        };
-        const updated = [...localCollections, newCollection];
-        setLocalCollections(updated);
-        onUpdateCollections(updated);
-        setSearchQuery('');
+    const handleCreateNew = async () => {
+        if (!searchQuery.trim() || !token) return;
+        
+        try {
+            // First create the collection
+            const colRes = await fetch(`${getApiUrl()}/api/collections`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: searchQuery,
+                    description: '',
+                    visibility: 'Private'
+                })
+            });
+            
+            if (colRes.ok) {
+                const newCollection = await colRes.json();
+                
+                // Then immediately add this book to it
+                await fetch(`${getApiUrl()}/api/collections/${newCollection.id}/books`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ book_id: bookId })
+                });
+                
+                newCollection.bookIds = [bookId]; // Optimistically update
+                const updated = [...localCollections, newCollection];
+                setLocalCollections(updated);
+                onUpdateCollections(updated);
+                setSearchQuery('');
+            }
+        } catch (err) {
+            console.error("Failed creating collection and adding book", err);
+        }
     };
 
     return (

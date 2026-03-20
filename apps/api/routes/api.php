@@ -135,6 +135,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Collection Shares
     Route::post('/collections/share', [NotificationController::class, 'sendShareInvite']);
     Route::post('/collections/share-email', [NotificationController::class, 'sendEmailInvite']);
+    
+    // Collections (Native Database)
+    Route::get('/collections', [\App\Http\Controllers\CollectionController::class, 'index']);
+    Route::post('/collections', [\App\Http\Controllers\CollectionController::class, 'store']);
+    Route::get('/collections/{id}', [\App\Http\Controllers\CollectionController::class, 'show']);
+    Route::post('/collections/{id}/books', [\App\Http\Controllers\CollectionController::class, 'addBook']);
+    Route::delete('/collections/{id}/books/{bookId}', [\App\Http\Controllers\CollectionController::class, 'removeBook']);
+    Route::post('/collections/{id}/accept', [\App\Http\Controllers\CollectionController::class, 'acceptInvite']);
 
     // Admin Routes
     Route::group(['middleware' => ['role:Admin']], function () {

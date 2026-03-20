@@ -14,7 +14,15 @@ export default function CollectionDetailPage() {
     const router = useRouter();
     const { token } = useAuth();
     
-    const [collection, setCollection] = useState<{ id: string; name: string; description?: string; visibility?: string; isSmart?: boolean; bookIds: number[] } | null>(null);
+    const [collection, setCollection] = useState<{ 
+        id: string; 
+        name: string; 
+        description?: string; 
+        visibility?: string; 
+        isSmart?: boolean; 
+        bookIds: number[];
+        activities?: { id: number; action: string; created_at: string; user: { id: number; name: string } }[];
+    } | null>(null);
     const [books, setBooks] = useState<{ percentage_completed: string; book: { id: number; title: string; author: string; cover_image: string; } }[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'Activity' | 'Notes'>('Activity');
@@ -34,44 +42,42 @@ export default function CollectionDetailPage() {
     useEffect(() => {
         const fetchCollectionData = async () => {
             try {
-                // Load collection from local storage
-                const saved = localStorage.getItem('bookify_collections');
-                if (saved) {
-                    const collections = JSON.parse(saved);
-                    const current = collections.find((c: { id: string }) => c.id === params.id);
-                    if (current) {
-                        setCollection(current);
+                if (!token) return;
+                const apiUrl = getApiUrl();
+                
+                // Fetch live collection payload
+                const colRes = await fetch(`${apiUrl}/api/collections/${params.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                if (!colRes.ok) return;
+                const current = await colRes.json();
+                setCollection(current);
+                setNotes(current.notes || []);
 
-                        // Fetch books to populate the grid
-                        if (current.bookIds && current.bookIds.length > 0 && token) {
-                            const apiUrl = getApiUrl();
-                            const idsParams = current.bookIds.join(',');
+                // Fetch books to populate the grid
+                if (current.bookIds && current.bookIds.length > 0) {
+                    const idsParams = current.bookIds.join(',');
 
-                            const [libRes, booksRes] = await Promise.all([
-                                fetch(`${apiUrl}/api/library`, { headers: { 'Authorization': `Bearer ${token}` } }),
-                                fetch(`${apiUrl}/api/books?ids=${idsParams}`, { headers: { 'Authorization': `Bearer ${token}` } })
-                            ]);
+                    const [libRes, booksRes] = await Promise.all([
+                        fetch(`${apiUrl}/api/library`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                        fetch(`${apiUrl}/api/books?ids=${idsParams}`, { headers: { 'Authorization': `Bearer ${token}` } })
+                    ]);
 
-                            if (libRes.ok && booksRes.ok) {
-                                const libraryData = await libRes.json();
-                                const booksData = await booksRes.json();
-                                
-                                // If returned paginated or direct array
-                                const globalBooks = Array.isArray(booksData) ? booksData : (booksData.data || []);
-                                
-                                const mappedCollection = globalBooks.map((gb: { id: number; title: string; author: string; cover_image: string; }) => {
-                                    // Check if user owns this book inside their library
-                                    const owned = libraryData.find((lb: { book: { id: number }; percentage_completed: string }) => lb.book.id === gb.id);
-                                    return {
-                                        percentage_completed: owned ? owned.percentage_completed : "0",
-                                        book: gb
-                                    };
-                                });
+                    if (libRes.ok && booksRes.ok) {
+                        const libraryData = await libRes.json();
+                        const booksData = await booksRes.json();
+                        
+                        // If returned paginated or direct array
+                        const globalBooks = Array.isArray(booksData) ? booksData : (booksData.data || []);
+                        
+                        const mappedCollection = globalBooks.map((gb: { id: number; title: string; author: string; cover_image: string; }) => {
+                            // Check if user owns this book inside their library
+                            const owned = libraryData.find((lb: { book: { id: number }; percentage_completed: string }) => lb.book.id === gb.id);
+                            return {
+                                percentage_completed: owned ? owned.percentage_completed : "0",
+                                book: gb
+                            };
+                        });
 
-                                setBooks(mappedCollection);
-                                setNotes(current.notes || []);
-                            }
-                        }
+                        setBooks(mappedCollection);
                     }
                 }
             } catch (err) {
@@ -82,6 +88,7 @@ export default function CollectionDetailPage() {
         };
 
         fetchCollectionData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id, token]);
 
     if (loading) {
@@ -117,21 +124,23 @@ export default function CollectionDetailPage() {
         }
     };
 
-    const handleDeleteSelected = () => {
-        if (selectedBookIds.length === 0) return;
+    const handleDeleteSelected = async () => {
+        if (selectedBookIds.length === 0 || !token) return;
         
-        const updatedBooks = books.filter(b => !selectedBookIds.includes(b.book.id));
-        setBooks(updatedBooks);
-        
-        // Save to localStorage
-        const saved = localStorage.getItem('bookify_collections');
-        if (saved && collection) {
-            const collections = JSON.parse(saved);
-            const index = collections.findIndex((c: { id: string }) => c.id === collection.id);
-            if (index !== -1) {
-                collections[index].bookIds = collections[index].bookIds.filter((id: number) => !selectedBookIds.includes(id));
-                localStorage.setItem('bookify_collections', JSON.stringify(collections));
-            }
+        try {
+            await Promise.all(selectedBookIds.map(bookId => 
+                fetch(`${getApiUrl()}/api/collections/${params.id}/books/${bookId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+            ));
+            
+            const updatedBooks = books.filter(b => !selectedBookIds.includes(b.book.id));
+            setBooks(updatedBooks);
+            
+            // Note: In real app, we might want to refresh the collection to get new activities
+        } catch (err) {
+            console.error("Delete failed", err);
         }
         
         setSelectedBookIds([]);
@@ -349,34 +358,24 @@ export default function CollectionDetailPage() {
 
                 {activeTab === 'Activity' && (
                     <div className="space-y-6">
-                        {/* Mock Timeline */}
-                        {books.length > 0 && (
-                            <div className="flex gap-4">
+                        {collection.activities && collection.activities.map((act) => (
+                            <div key={act.id} className="flex gap-4">
                                 <div className="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center flex-shrink-0 mt-1">
                                     <div className="w-2 h-2 rounded-full bg-indigo-500" />
                                 </div>
                                 <div>
                                     <p className="text-sm text-zinc-300 leading-snug">
-                                        You added <span className="font-medium text-white">{books[0].book.title}</span>
+                                        <span className="font-medium text-white">{act.user.name}</span> {act.action}
                                     </p>
-                                    <p className="text-xs text-zinc-500 mt-1">Today</p>
+                                    <p className="text-xs text-zinc-500 mt-1">
+                                        {new Date(act.created_at).toLocaleDateString()}
+                                    </p>
                                 </div>
                             </div>
+                        ))}
+                        {(!collection.activities || collection.activities.length === 0) && (
+                            <p className="text-xs text-zinc-500 text-center py-4">No activity yet</p>
                         )}
-
-                        <div className="flex gap-4">
-                            <div className="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center flex-shrink-0 mt-1">
-                                <div className="w-2 h-2 rounded-full bg-indigo-500" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-zinc-300 leading-snug">
-                                    {collection.description?.includes('Shared by') 
-                                        ? `You were invited to this collection by ${collection.description.replace('Shared by ', '')}`
-                                        : "You created this collection"}
-                                </p>
-                                <p className="text-xs text-zinc-500 mt-1">Sep 1</p>
-                            </div>
-                        </div>
                     </div>
                 )}
                 

@@ -28,17 +28,23 @@ export default function CollectionsPage() {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [libraryBooks, setLibraryBooks] = useState<{ book: { id: number; cover_image: string } }[]>([]);
     
-    useEffect(() => {
-        const saved = localStorage.getItem('bookify_collections');
-        if (saved) {
-            try {
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setCollections(JSON.parse(saved));
-            } catch (e) {
-                console.error('Failed to parse collections', e);
+    const fetchCollections = async () => {
+        if (!token) return;
+        try {
+            const res = await fetch(`${getApiUrl()}/api/collections`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                setCollections(await res.json());
             }
+        } catch (err) {
+            console.error("Failed fetching collections", err);
         }
-    }, []);
+    };
+
+    useEffect(() => {
+        fetchCollections();
+    }, [token]);
 
     useEffect(() => {
         const fetchLibrary = async () => {
@@ -78,16 +84,27 @@ export default function CollectionsPage() {
         return result;
     };
 
-    const handleCreateCollection = (data: { id: string; name: string }) => {
-        const newCollection = {
-            id: data.id,
-            name: data.name,
-            bookIds: []
-        };
-        const updated = [...collections, newCollection];
-        setCollections(updated);
-        localStorage.setItem('bookify_collections', JSON.stringify(updated));
-        setShowCreateModal(false);
+    const handleCreateCollection = async (data: { name: string; description: string; visibility: string }) => {
+        try {
+            const res = await fetch(`${getApiUrl()}/api/collections`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (res.ok) {
+                const newCollection = await res.json();
+                setCollections([...collections, newCollection]);
+                setShowCreateModal(false);
+            } else {
+                console.error("Failed to create collection");
+            }
+        } catch (err) {
+            console.error("Network error creating collection", err);
+        }
     };
 
     return (

@@ -36,27 +36,17 @@ export function CollectionInvitationModal({
     const handleAction = async (action: 'accept' | 'reject') => {
         setLoading(true);
         try {
+            const apiUrl = getApiUrl();
+            
             if (action === 'accept') {
-                // Instantly sync collection to localStorage since MVP doesn't have backend collection storage yet
-                const saved = localStorage.getItem('bookify_collections');
-                const collections = saved ? JSON.parse(saved) : [];
-                
-                if (!collections.find((c: { id: string }) => c.id === collectionId)) {
-                    collections.push({
-                        id: collectionId,
-                        name: collectionName,
-                        description: `Shared by ${invitedBy}`,
-                        visibility: 'Group',
-                        isSmart: false,
-                        bookIds: bookIds || [], 
-                        notes: []
-                    });
-                    localStorage.setItem('bookify_collections', JSON.stringify(collections));
-                }
+                // Post to the backend to register as a collection member natively
+                await fetch(`${apiUrl}/api/collections/${collectionId}/accept`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
             }
 
             // Mark notification as read via API
-            const apiUrl = getApiUrl();
             const res = await fetch(`${apiUrl}/api/notifications/${notificationId}/read`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
