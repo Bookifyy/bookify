@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { CreateCollectionModal } from '../components/CreateCollectionModal';
 import { useAuth } from '../../context/AuthContext';
 import { getApiUrl, resolveAssetUrl } from '../lib/utils';
+import { toast } from 'sonner';
 
 interface LocalCollection {
     id: string;
@@ -99,11 +100,13 @@ export default function CollectionsPage() {
                 const newCollection = await res.json();
                 setCollections([...collections, newCollection]);
                 setShowCreateModal(false);
+                toast.success("Collection created successfully!");
             } else {
-                console.error("Failed to create collection");
+                toast.error("Failed to create collection");
             }
         } catch (err) {
             console.error("Network error creating collection", err);
+            toast.error("Network error");
         }
     };
 

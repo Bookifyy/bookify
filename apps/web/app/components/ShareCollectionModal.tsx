@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { X, Loader2, Send, Check } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getApiUrl } from '../lib/utils';
+import { toast } from 'sonner';
 
 interface ShareCollectionModalProps {
     isOpen: boolean;
@@ -20,13 +21,6 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
     const [searchResults, setSearchResults] = useState<{ id: string; name: string; email: string }[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const searchTimeout = useRef<NodeJS.Timeout | null>(null);
-
-    // Toast State
-    const [toastMessage, setToastMessage] = useState<string | null>(null);
-    const showToast = (msg: string) => {
-        setToastMessage(msg);
-        setTimeout(() => setToastMessage(null), 3000);
-    };
 
     // Email Validations
     const isEmailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(searchTerm);
@@ -84,10 +78,13 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                     })
                 });
                 if (res.ok) {
-                    showToast(`Invitation sent to ${user.name}`);
+                    toast.success(`Invitation sent to ${user.name}`);
+                } else {
+                    toast.error("Failed to send invitation");
                 }
             } catch (err) {
                 console.error("Failed to post share invite", err);
+                toast.error("Network error");
             }
         }
         setSearchTerm('');
@@ -114,10 +111,13 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                 })
             });
             if (res.ok) {
-                showToast(`Email invite sent to ${searchTerm}`);
+                toast.success(`Email invite sent to ${searchTerm}`);
+            } else {
+                toast.error("Failed to send email invite");
             }
         } catch (err) {
             console.error("Failed to post email invite", err);
+            toast.error("Network error");
         }
         setSearchTerm('');
     };
@@ -265,14 +265,6 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                     </button>
                 </div>
             </div>
-            
-            {/* Success Toast */}
-            {toastMessage && (
-                <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-xl flex items-center gap-2 z-[60] animate-in fade-in slide-in-from-top-4 duration-300">
-                    <Check size={16} strokeWidth={3} />
-                    {toastMessage}
-                </div>
-            )}
         </div>
     );
 }

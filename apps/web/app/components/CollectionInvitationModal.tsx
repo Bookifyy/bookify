@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Loader2, Check, X } from 'lucide-react';
 import { getApiUrl } from '../lib/utils';
+import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 
@@ -53,15 +54,16 @@ export function CollectionInvitationModal({
             });
 
             if (res.ok) {
+                toast.success(action === 'accept' ? 'Successfully joined collection!' : 'Invitation declined');
                 onActionComplete();
                 onClose();
                 router.refresh(); 
             } else {
-                alert('Failed to process request');
+                toast.error('Failed to process request');
             }
         } catch (error) {
             console.error(error);
-            alert('Connection error');
+            toast.error('Connection error');
         } finally {
             setLoading(false);
         }

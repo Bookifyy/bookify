@@ -7,6 +7,7 @@ import { LibraryTabs } from '../components/LibraryTabs';
 import { AddToCollectionModal } from '../components/AddToCollectionModal';
 import { CreateCollectionModal } from '../components/CreateCollectionModal';
 import { getApiUrl } from '../lib/utils';
+import { toast } from 'sonner';
 import { Loader2, Library as LibraryIcon, Search, SlidersHorizontal, Plus, FolderOpen, Trash2, ArrowLeft, Grid, List as ListIcon } from 'lucide-react';
 
 interface Book {
@@ -101,9 +102,13 @@ export default function LibraryPage() {
                 const newCollection = await res.json();
                 setCollections([...collections, newCollection]);
                 setShowCreateCollection(false);
+                toast.success("Collection created successfully!");
+            } else {
+                toast.error("Failed to create collection");
             }
         } catch (err) {
             console.error("Network error creating collection", err);
+            toast.error("Network error");
         }
     };
 

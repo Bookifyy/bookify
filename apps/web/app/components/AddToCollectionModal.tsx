@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Plus, Check } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getApiUrl } from '../lib/utils';
+import { toast } from 'sonner';
 
 interface Collection {
     id: string;
@@ -64,9 +65,13 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                 });
                 setLocalCollections(updated);
                 onUpdateCollections(updated);
+                toast.success(isAdded ? "Removed from collection" : "Added to collection");
+            } else {
+                toast.error("Action failed.");
             }
         } catch (err) {
             console.error("Failed to toggle book in collection", err);
+            toast.error("Network error.");
         }
     };
 
@@ -106,9 +111,13 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                 setLocalCollections(updated);
                 onUpdateCollections(updated);
                 setSearchQuery('');
+                toast.success("Collection created & book added!");
+            } else {
+                toast.error("Failed to create collection");
             }
         } catch (err) {
             console.error("Failed creating collection and adding book", err);
+            toast.error("Network error.");
         }
     };
 
