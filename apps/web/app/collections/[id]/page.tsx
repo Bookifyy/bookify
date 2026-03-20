@@ -15,7 +15,7 @@ export default function CollectionDetailPage() {
     const { token } = useAuth();
     
     const [collection, setCollection] = useState<{ id: string; name: string; description?: string; visibility?: string; isSmart?: boolean; bookIds: number[] } | null>(null);
-    const [books, setBooks] = useState<{ progress_percentage: number; book: { id: number; title: string; author: string; cover_image: string; } }[]>([]);
+    const [books, setBooks] = useState<{ percentage_completed: string; book: { id: number; title: string; author: string; cover_image: string; } }[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'Activity' | 'Notes'>('Activity');
     const [showShareModal, setShowShareModal] = useState(false);
@@ -135,7 +135,7 @@ export default function CollectionDetailPage() {
     const sortedBooks = [...books].sort((a, b) => {
         if (sortBy === 'Title (A-Z)') return a.book.title.localeCompare(b.book.title);
         if (sortBy === 'Author (A-Z)') return a.book.author.localeCompare(b.book.author);
-        if (sortBy === 'Progress') return (b.progress_percentage || 0) - (a.progress_percentage || 0);
+        if (sortBy === 'Progress') return (parseFloat(b.percentage_completed) || 0) - (parseFloat(a.percentage_completed) || 0);
         return 0; // 'Recently Added' default
     });
 
@@ -286,7 +286,7 @@ export default function CollectionDetailPage() {
                                                     title={item.book.title}
                                                     author={item.book.author}
                                                     coverImage={item.book.cover_image}
-                                                    progress={item.progress_percentage || 0}
+                                                    progress={parseFloat(item.percentage_completed) || 0}
                                                     isDownloaded={true}
                                                     onClick={(e) => {
                                                         if (isSelectMode) {
@@ -354,7 +354,9 @@ export default function CollectionDetailPage() {
                             </div>
                             <div>
                                 <p className="text-sm text-zinc-300 leading-snug">
-                                    You created this collection
+                                    {collection.description?.includes('Shared by') 
+                                        ? `You were invited to this collection by ${collection.description.replace('Shared by ', '')}`
+                                        : "You created this collection"}
                                 </p>
                                 <p className="text-xs text-zinc-500 mt-1">Sep 1</p>
                             </div>

@@ -246,10 +246,10 @@ export default function LibraryPage() {
                                             {collections.length > 0 && (
                                                 <button
                                                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedBookForCollection(item.book.id); }}
-                                                    className="absolute top-3 right-3 bg-black/60 hover:bg-blue-600 text-white p-3 rounded-full backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all z-20"
+                                                    className="absolute top-3 right-3 bg-black/60 hover:bg-blue-600 text-white p-3 rounded-full backdrop-blur-md max-md:opacity-100 opacity-0 md:group-hover:opacity-100 transition-all z-20 shadow-xl"
                                                     title="Add to Collection"
                                                 >
-                                                    <Plus size={24} />
+                                                    <Plus size={20} />
                                                 </button>
                                             )}
                                         </div>

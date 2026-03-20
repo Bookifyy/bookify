@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Layers, MoreVertical, Lock, Users, Clock, Globe, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { CreateCollectionModal } from '../components/CreateCollectionModal';
+import { useAuth } from '../../context/AuthContext';
+import { getApiUrl, resolveAssetUrl } from '../lib/utils';
 
 interface LocalCollection {
     id: string;
@@ -20,14 +22,17 @@ const MOCK_IMAGES = [
 ];
 
 export default function CollectionsPage() {
+    const { token } = useAuth();
     const [activeTab, setActiveTab] = useState<'my' | 'smart'>('my');
     const [collections, setCollections] = useState<LocalCollection[]>([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [libraryBooks, setLibraryBooks] = useState<{ book: { id: number; cover_image: string } }[]>([]);
     
     useEffect(() => {
         const saved = localStorage.getItem('bookify_collections');
         if (saved) {
             try {
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setCollections(JSON.parse(saved));
             } catch (e) {
                 console.error('Failed to parse collections', e);
@@ -35,8 +40,36 @@ export default function CollectionsPage() {
         }
     }, []);
 
-    const getImages = (id: string, totalBooks: number) => {
-        const count = Math.min(Math.max(totalBooks, 1), 3);
+    useEffect(() => {
+        const fetchLibrary = async () => {
+            if (!token) return;
+            try {
+                const res = await fetch(`${getApiUrl()}/api/library`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    setLibraryBooks(await res.json());
+                }
+            } catch (err) {
+                console.error("Failed fetching collection covers", err);
+            }
+        };
+        fetchLibrary();
+    }, [token]);
+
+    const getImages = (id: string, bookIds: number[]) => {
+        if (libraryBooks.length > 0 && bookIds.length > 0) {
+            const covers = libraryBooks
+                .filter(item => bookIds.includes(item.book.id))
+                .map(item => item.book.cover_image)
+                .filter(Boolean);
+            
+            if (covers.length > 0) {
+                return covers.slice(0, 3).map(c => resolveAssetUrl(c));
+            }
+        }
+
+        const count = Math.min(Math.max(bookIds.length, 1), 3);
         const idNum = parseInt(id.replace(/\D/g, '')) || 0;
         const result = [];
         for(let i=0; i<count; i++) {
@@ -104,7 +137,7 @@ export default function CollectionsPage() {
                     collections.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {collections.map((collection) => {
-                                const images = getImages(collection.id, collection.bookIds.length);
+                                const images = getImages(collection.id, collection.bookIds);
                                 return (
                                     <Link
                                         key={collection.id}
