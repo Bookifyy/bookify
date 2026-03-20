@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Layers, MoreVertical, Lock, Users, Clock, Globe, BookOpen } from 'lucide-react';
+import Link from 'next/link';
 import { CreateCollectionModal } from '../components/CreateCollectionModal';
 
 interface LocalCollection {
@@ -105,9 +106,10 @@ export default function CollectionsPage() {
                             {collections.map((collection) => {
                                 const images = getImages(collection.id, collection.bookIds.length);
                                 return (
-                                    <div
+                                    <Link
                                         key={collection.id}
-                                        className="bg-[#0a0a0a] border border-zinc-800 rounded-2xl overflow-hidden group hover:border-zinc-700 transition-colors flex flex-col"
+                                        href={`/collections/${collection.id}`}
+                                        className="bg-[#0a0a0a] border border-zinc-800 rounded-2xl overflow-hidden group hover:border-zinc-700 transition-colors flex flex-col block"
                                     >
                                         {/* Image Layout */}
                                         <div className="relative h-56 bg-zinc-900 border-b border-zinc-800 overflow-hidden">
@@ -181,7 +183,7 @@ export default function CollectionsPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 );
                             })}
                         </div>
