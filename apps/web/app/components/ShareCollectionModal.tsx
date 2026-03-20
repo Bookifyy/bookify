@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { X } from 'lucide-react';
 
 interface ShareCollectionModalProps {
     isOpen: boolean;
@@ -15,7 +16,7 @@ const MOCK_USERS = [
 export function ShareCollectionModal({ isOpen, onClose, collectionName }: ShareCollectionModalProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [role, setRole] = useState('Viewer');
-    const [invitedUsers, setInvitedUsers] = useState<any[]>([]);
+    const [invitedUsers, setInvitedUsers] = useState<{ id: string; name: string; email: string; avatar: string; role: string }[]>([]);
 
     if (!isOpen) return null;
 
@@ -23,7 +24,7 @@ export function ShareCollectionModal({ isOpen, onClose, collectionName }: ShareC
         ? MOCK_USERS.filter(u => u.name.toLowerCase().includes(searchTerm.toLowerCase()) || u.email.toLowerCase().includes(searchTerm.toLowerCase()))
         : MOCK_USERS;
 
-    const handleInvite = (user: any) => {
+    const handleInvite = (user: { id: string; name: string; email: string; avatar: string }) => {
         if (!invitedUsers.find(u => u.id === user.id)) {
             setInvitedUsers([...invitedUsers, { ...user, role }]);
         }
@@ -36,7 +37,7 @@ export function ShareCollectionModal({ isOpen, onClose, collectionName }: ShareC
                 <div className="p-6">
                     <div className="mb-6">
                         <h2 className="text-xl font-bold text-white mb-1">Share Collection</h2>
-                        <p className="text-sm text-zinc-400">Share "{collectionName}" with others</p>
+                        <p className="text-sm text-zinc-400">Share &quot;{collectionName}&quot; with others</p>
                     </div>
 
                     <div className="space-y-6">
@@ -51,9 +52,17 @@ export function ShareCollectionModal({ isOpen, onClose, collectionName }: ShareC
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         placeholder="Search by name or email..."
-                                        className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-lg px-4 py-2.5 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:border-[#0ea5e9]"
+                                        className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-lg px-4 py-2.5 pr-10 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:border-[#0ea5e9]"
                                         autoFocus
                                     />
+                                    {searchTerm && (
+                                        <button 
+                                            onClick={() => setSearchTerm('')}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                                        >
+                                            <X size={16} />
+                                        </button>
+                                    )}
                                     
                                     {/* Dropdown Suggestions */}
                                     {searchTerm && (
@@ -124,7 +133,14 @@ export function ShareCollectionModal({ isOpen, onClose, collectionName }: ShareC
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-zinc-800 flex justify-end bg-[#0a0a0a]">
+                <div className="p-4 border-t border-zinc-800 flex justify-end gap-3 bg-[#0a0a0a]">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-5 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:text-white border border-transparent hover:border-zinc-800 transition-colors"
+                    >
+                        Cancel
+                    </button>
                     <button
                         type="button"
                         onClick={onClose}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, CheckCircle2, ListFilter, Plus, Share2, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ListFilter, Plus, Share2, MoreHorizontal, Trash2, X } from 'lucide-react';
 import Link from 'next/link';
 import { BookCard } from '../../components/BookCard';
 import { ShareCollectionModal } from '../../components/ShareCollectionModal';
@@ -19,6 +19,17 @@ export default function CollectionDetailPage() {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'Activity' | 'Notes'>('Activity');
     const [showShareModal, setShowShareModal] = useState(false);
+
+    // Feature States
+    const [notes, setNotes] = useState<string[]>([]);
+    const [newNote, setNewNote] = useState('');
+    
+    const [showSortDropdown, setShowSortDropdown] = useState(false);
+    const [sortBy, setSortBy] = useState('Recently Added');
+
+    const [isSelectMode, setIsSelectMode] = useState(false);
+    const [selectedBookIds, setSelectedBookIds] = useState<number[]>([]);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     useEffect(() => {
         const fetchCollectionData = async () => {
@@ -42,6 +53,7 @@ export default function CollectionDetailPage() {
                                 // Filter library data to only books in this collection
                                 const collectionBooks = libraryData.filter((b: { book: { id: number } }) => current.bookIds.includes(b.book.id));
                                 setBooks(collectionBooks);
+                                setNotes(current.notes || []);
                             }
                         }
                     }
@@ -70,6 +82,63 @@ export default function CollectionDetailPage() {
             </div>
         );
     }
+
+    const handleAddNote = () => {
+        if (!newNote.trim()) return;
+        const updatedNotes = [...notes, newNote.trim()];
+        setNotes(updatedNotes);
+        setNewNote('');
+        
+        // Save back to localStorage
+        const saved = localStorage.getItem('bookify_collections');
+        if (saved && collection) {
+            const collections = JSON.parse(saved);
+            const index = collections.findIndex((c: { id: string }) => c.id === collection.id);
+            if (index !== -1) {
+                collections[index].notes = updatedNotes;
+                localStorage.setItem('bookify_collections', JSON.stringify(collections));
+            }
+        }
+    };
+
+    const handleDeleteSelected = () => {
+        if (selectedBookIds.length === 0) return;
+        
+        const updatedBooks = books.filter(b => !selectedBookIds.includes(b.book.id));
+        setBooks(updatedBooks);
+        
+        // Save to localStorage
+        const saved = localStorage.getItem('bookify_collections');
+        if (saved && collection) {
+            const collections = JSON.parse(saved);
+            const index = collections.findIndex((c: { id: string }) => c.id === collection.id);
+            if (index !== -1) {
+                collections[index].bookIds = collections[index].bookIds.filter((id: number) => !selectedBookIds.includes(id));
+                localStorage.setItem('bookify_collections', JSON.stringify(collections));
+            }
+        }
+        
+        setSelectedBookIds([]);
+        setIsSelectMode(false);
+        setShowDeleteConfirm(false);
+    };
+
+    const toggleSelection = (id: number) => {
+        if (selectedBookIds.includes(id)) {
+            setSelectedBookIds(selectedBookIds.filter(bid => bid !== id));
+        } else {
+            setSelectedBookIds([...selectedBookIds, id]);
+        }
+    };
+
+    // Sort books logic based on `sortBy` state
+    const sortedBooks = [...books].sort((a, b) => {
+        if (sortBy === 'Title (A-Z)') return a.book.title.localeCompare(b.book.title);
+        if (sortBy === 'Author (A-Z)') return a.book.author.localeCompare(b.book.author);
+        if (sortBy === 'Progress') return (b.progress_percentage || 0) - (a.progress_percentage || 0);
+        return 0; // 'Recently Added' default
+    });
+
 
     return (
         <div className="min-h-screen bg-black text-zinc-300 flex">
@@ -124,12 +193,59 @@ export default function CollectionDetailPage() {
                     {/* Action Bar */}
                     <div className="flex items-center justify-between border-y border-zinc-900 py-3 mb-8 ml-8">
                         <div className="flex items-center gap-6">
-                            <button className="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">
-                                <CheckCircle2 size={16} /> Select
-                            </button>
-                            <button className="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">
-                                <ListFilter size={16} /> Sort
-                            </button>
+                            {isSelectMode ? (
+                                <>
+                                    <button 
+                                        onClick={() => {
+                                            setIsSelectMode(false);
+                                            setSelectedBookIds([]);
+                                        }}
+                                        className="flex items-center gap-2 text-sm font-medium text-white transition-colors"
+                                    >
+                                        <X size={16} /> Cancel
+                                    </button>
+                                    <button 
+                                        onClick={() => setShowDeleteConfirm(true)}
+                                        disabled={selectedBookIds.length === 0}
+                                        className="flex items-center gap-2 text-sm font-medium text-red-500 hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <Trash2 size={16} /> Delete
+                                    </button>
+                                </>
+                            ) : (
+                                <button 
+                                    onClick={() => setIsSelectMode(true)}
+                                    className="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                                >
+                                    <CheckCircle2 size={16} /> Select
+                                </button>
+                            )}
+
+                            <div className="relative">
+                                <button 
+                                    onClick={() => setShowSortDropdown(!showSortDropdown)}
+                                    className="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                                >
+                                    <ListFilter size={16} /> Sort
+                                </button>
+                                {showSortDropdown && (
+                                    <div className="absolute top-full left-0 mt-2 w-48 bg-[#0a0a0a] border border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden py-1">
+                                        {['Recently Added', 'Title (A-Z)', 'Author (A-Z)', 'Progress'].map((option) => (
+                                            <button
+                                                key={option}
+                                                onClick={() => {
+                                                    setSortBy(option);
+                                                    setShowSortDropdown(false);
+                                                }}
+                                                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${sortBy === option ? 'text-white bg-zinc-900' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'}`}
+                                            >
+                                                {option}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
                             <Link href="/library" className="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">
                                 <Plus size={16} /> Add Items
                             </Link>
@@ -151,17 +267,38 @@ export default function CollectionDetailPage() {
                     <div className="ml-8">
                         {books.length > 0 ? (
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-                                {books.map((item) => (
-                                    <BookCard
-                                        key={item.book.id}
-                                        id={item.book.id}
-                                        title={item.book.title}
-                                        author={item.book.author}
-                                        coverImage={item.book.cover_image}
-                                        progress={item.progress_percentage || 0}
-                                        isDownloaded={true}
-                                    />
-                                ))}
+                                {sortedBooks.map((item) => {
+                                    const isSelected = selectedBookIds.includes(item.book.id);
+                                    return (
+                                        <div key={item.book.id} className="relative group">
+                                            {isSelectMode && (
+                                                <div 
+                                                    className={`absolute top-2 right-2 z-20 w-6 h-6 rounded-md border-2 flex items-center justify-center pointer-events-none transition-colors ${
+                                                        isSelected ? 'bg-blue-500 border-blue-500 text-white' : 'bg-black/50 border-zinc-500'
+                                                    }`}
+                                                >
+                                                    {isSelected && <CheckCircle2 size={14} />}
+                                                </div>
+                                            )}
+                                            <div className={`${isSelected && isSelectMode ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-black rounded-md' : ''}`}>
+                                                <BookCard
+                                                    id={item.book.id}
+                                                    title={item.book.title}
+                                                    author={item.book.author}
+                                                    coverImage={item.book.cover_image}
+                                                    progress={item.progress_percentage || 0}
+                                                    isDownloaded={true}
+                                                    onClick={(e) => {
+                                                        if (isSelectMode) {
+                                                            e.preventDefault();
+                                                            toggleSelection(item.book.id);
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div className="text-center py-20 border border-dashed border-zinc-900 rounded-2xl">
@@ -226,11 +363,64 @@ export default function CollectionDetailPage() {
                 )}
                 
                 {activeTab === 'Notes' && (
-                    <div className="text-center py-10">
-                        <p className="text-zinc-500 text-sm">No notes added yet.</p>
+                    <div className="flex flex-col h-[calc(100vh-140px)]">
+                        <div className="flex-1 space-y-4 mb-4 overflow-y-auto pr-2">
+                            {notes.length > 0 ? (
+                                notes.map((note, index) => (
+                                    <div key={index} className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm text-zinc-300 leading-relaxed break-words shadow-sm">
+                                        {note}
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-10 opacity-60">
+                                    <p className="text-zinc-500 text-sm">No notes added yet.</p>
+                                </div>
+                            )}
+                        </div>
+                        <div className="mt-auto pt-4 border-t border-zinc-900">
+                            <textarea
+                                value={newNote}
+                                onChange={(e) => setNewNote(e.target.value)}
+                                placeholder="Write a note..."
+                                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#0ea5e9] resize-none h-24 mb-3 transition-colors"
+                            />
+                            <button
+                                onClick={handleAddNote}
+                                disabled={!newNote.trim()}
+                                className="w-full bg-[#0ea5e9] text-white py-2.5 rounded-lg text-sm font-medium hover:bg-sky-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                            >
+                                Add Note
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
+
+            {/* Custom Delete Confirmation Modal */}
+            {showDeleteConfirm && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="bg-[#0a0a0a] border border-zinc-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+                        <h3 className="text-lg font-bold text-white mb-2">Remove Items</h3>
+                        <p className="text-zinc-400 text-sm mb-6">
+                            Are you sure you want to remove the {selectedBookIds.length} selected items from this collection? This action cannot be undone.
+                        </p>
+                        <div className="flex justify-end gap-3">
+                            <button 
+                                onClick={() => setShowDeleteConfirm(false)}
+                                className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={handleDeleteSelected}
+                                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium shadow transition-colors"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <ShareCollectionModal 
                 isOpen={showShareModal}
