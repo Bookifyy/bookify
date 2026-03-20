@@ -16,12 +16,17 @@ interface AddToCollectionModalProps {
 
 export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCollections }: AddToCollectionModalProps) {
     const [localCollections, setLocalCollections] = useState<Collection[]>(collections);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         setLocalCollections(collections);
     }, [collections]);
 
     if (bookId === null) return null;
+
+    const filteredCollections = localCollections.filter(c => 
+        c.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const toggleBookInCollection = (collectionId: string) => {
         const updated = localCollections.map(c => {
@@ -37,19 +42,45 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
         onUpdateCollections(updated);
     };
 
+    const handleCreateNew = () => {
+        if (!searchQuery.trim()) return;
+        const newCollection: Collection = {
+            id: Date.now().toString(),
+            name: searchQuery,
+            bookIds: [bookId] // Auto add this book
+        };
+        const updated = [...localCollections, newCollection];
+        setLocalCollections(updated);
+        onUpdateCollections(updated);
+        setSearchQuery('');
+    };
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl">
-                <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+            <div className="bg-[#121212] border border-zinc-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl">
+                {/* Header */}
+                <div className="p-5 border-b border-zinc-800 flex items-center justify-between">
                     <h3 className="font-semibold text-white">Add to Collection</h3>
-                    <button onClick={onClose} className="text-zinc-400 hover:text-white">
+                    <button onClick={onClose} className="text-zinc-400 hover:text-white transition-colors">
                         <X size={20} />
                     </button>
                 </div>
 
-                <div className="p-4 max-h-[60vh] overflow-y-auto space-y-2">
-                    {localCollections.length > 0 ? (
-                        localCollections.map(collection => {
+                {/* Input Area */}
+                <div className="p-5 border-b border-zinc-800/50">
+                    <input
+                        type="text"
+                        placeholder="Search or create collection..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-[#1f1f1f] border-none rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all placeholder:text-zinc-500"
+                    />
+                </div>
+
+                {/* Collection List */}
+                <div className="p-5 max-h-[40vh] overflow-y-auto space-y-2">
+                    {filteredCollections.length > 0 ? (
+                        filteredCollections.map(collection => {
                             const isAdded = collection.bookIds.includes(bookId);
                             return (
                                 <button
@@ -57,7 +88,7 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                                     onClick={() => toggleBookInCollection(collection.id)}
                                     className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${isAdded
                                             ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-200'
-                                            : 'bg-zinc-800/50 border-zinc-800 text-zinc-400 hover:bg-zinc-800'
+                                            : 'bg-zinc-800/30 border-zinc-800/50 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-700'
                                         }`}
                                 >
                                     <span className="font-medium">{collection.name}</span>
@@ -66,12 +97,32 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                             );
                         })
                     ) : (
-                        <p className="text-center text-zinc-500 py-4 text-sm">No collections created yet.</p>
+                        <div className="text-center py-2">
+                            <p className="text-zinc-500 text-sm mb-3">No collections match &quot;{searchQuery}&quot;</p>
+                            {searchQuery.trim() && (
+                                <button 
+                                    onClick={handleCreateNew}
+                                    className="text-indigo-400 hover:text-indigo-300 text-sm font-medium flex items-center justify-center gap-2 mx-auto"
+                                >
+                                    <Plus size={16} /> Create &quot;{searchQuery}&quot;
+                                </button>
+                            )}
+                        </div>
                     )}
                 </div>
 
-                <div className="p-4 bg-zinc-950/50 border-t border-zinc-800">
-                    <button onClick={onClose} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg transition-colors">
+                {/* Footer Buttons */}
+                <div className="p-5 bg-[#0a0a0a] border-t border-zinc-800 flex gap-3">
+                    <button 
+                        onClick={onClose} 
+                        className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium py-2.5 rounded-xl transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={onClose} 
+                        className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition-colors"
+                    >
                         Done
                     </button>
                 </div>
