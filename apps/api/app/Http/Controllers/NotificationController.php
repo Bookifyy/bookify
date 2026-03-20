@@ -56,4 +56,46 @@ class NotificationController extends Controller
             \Illuminate\Support\Facades\Log::error('Failed to send notification: ' . $e->getMessage());
         }
     }
+
+    public function sendShareInvite(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required',
+            'collection_id' => 'required',
+            'collection_name' => 'required'
+        ]);
+
+        self::send(
+            $request->user_id,
+            'collection_invite',
+            [
+                'collection_id' => $request->collection_id,
+                'collection_name' => $request->collection_name,
+                'sender_name' => $request->user()->name
+            ]
+        );
+
+        return response()->json(['message' => 'Invite sent successfully.']);
+    }
+
+    public function sendEmailInvite(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'collection_name' => 'required'
+        ]);
+
+        $senderName = $request->user() ? $request->user()->name : 'Someone';
+        
+        try {
+            \Illuminate\Support\Facades\Mail::raw("{$senderName} has invited you to view their collection: {$request->collection_name}. Sign up to Bookify to view it!", function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject("You've been invited to a collection on Bookify");
+            });
+            return response()->json(['message' => 'Email sent successfully.']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send email invite: ' . $e->getMessage());
+            return response()->json(['message' => 'Email send attempted (check logs if failed).']);
+        }
+    }
 }

@@ -132,6 +132,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
     Route::delete('/notifications', [NotificationController::class, 'destroyAll']);
 
+    // Collection Shares
+    Route::post('/collections/share', [NotificationController::class, 'sendShareInvite']);
+    Route::post('/collections/share-email', [NotificationController::class, 'sendEmailInvite']);
+
     // Admin Routes
     Route::group(['middleware' => ['role:Admin']], function () {
         Route::get('/admin/users', [AdminController::class, 'index']);

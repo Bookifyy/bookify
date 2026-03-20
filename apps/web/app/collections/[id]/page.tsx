@@ -377,20 +377,17 @@ export default function CollectionDetailPage() {
                                 </div>
                             )}
                         </div>
-                        <div className="mt-auto pt-4 border-t border-zinc-900">
-                            <textarea
+                        <div className="mt-auto pt-4 flex items-center">
+                            <input
+                                type="text"
                                 value={newNote}
                                 onChange={(e) => setNewNote(e.target.value)}
+                                onKeyDown={(e) => { 
+                                    if(e.key === 'Enter') handleAddNote(); 
+                                }}
                                 placeholder="Write a note..."
-                                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#0ea5e9] resize-none h-24 mb-3 transition-colors"
+                                className="w-full bg-black border border-zinc-800 focus:border-[#0ea5e9] rounded-xl px-4 py-3 text-sm text-white transition-colors focus:outline-none"
                             />
-                            <button
-                                onClick={handleAddNote}
-                                disabled={!newNote.trim()}
-                                className="w-full bg-[#0ea5e9] text-white py-2.5 rounded-lg text-sm font-medium hover:bg-sky-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                            >
-                                Add Note
-                            </button>
                         </div>
                     </div>
                 )}
@@ -425,6 +422,7 @@ export default function CollectionDetailPage() {
             <ShareCollectionModal 
                 isOpen={showShareModal}
                 onClose={() => setShowShareModal(false)}
+                collectionId={collection.id}
                 collectionName={collection.name}
             />
         </div>

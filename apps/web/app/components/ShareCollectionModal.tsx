@@ -1,32 +1,109 @@
-import { useState } from 'react';
-import { X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { X, Loader2, Send } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { getApiUrl } from '../lib/utils';
 
 interface ShareCollectionModalProps {
     isOpen: boolean;
     onClose: () => void;
+    collectionId: string;
     collectionName: string;
 }
 
-const MOCK_USERS = [
-    { id: '1', name: 'Emma Wilson', email: 'emma@example.com', avatar: 'E' },
-    { id: '2', name: 'Michael Chen', email: 'michael@example.com', avatar: 'M' },
-    { id: '3', name: 'Sarah Jenkins', email: 'sarah@example.com', avatar: 'S' }
-];
-
-export function ShareCollectionModal({ isOpen, onClose, collectionName }: ShareCollectionModalProps) {
+export function ShareCollectionModal({ isOpen, onClose, collectionId, collectionName }: ShareCollectionModalProps) {
+    const { token } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const [role, setRole] = useState('Viewer');
-    const [invitedUsers, setInvitedUsers] = useState<{ id: string; name: string; email: string; avatar: string; role: string }[]>([]);
+    const [invitedUsers, setInvitedUsers] = useState<{ id: string; name: string; email: string; role: string; type: 'db' | 'email' }[]>([]);
+    
+    // Live Search States
+    const [searchResults, setSearchResults] = useState<{ id: string; name: string; email: string }[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const searchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+    // Email Validations
+    const isEmailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(searchTerm);
+
+    useEffect(() => {
+        if (!searchTerm.trim()) {
+            setSearchResults([]);
+            return;
+        }
+
+        if (searchTimeout.current) clearTimeout(searchTimeout.current);
+
+        searchTimeout.current = setTimeout(async () => {
+            if (!token) return;
+            setIsSearching(true);
+            try {
+                const res = await fetch(`${getApiUrl()}/api/users/search?query=${encodeURIComponent(searchTerm)}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setSearchResults(data);
+                }
+            } catch (err) {
+                console.error("Failed to search users", err);
+            } finally {
+                setIsSearching(false);
+            }
+        }, 400); // 400ms debounce
+
+        return () => {
+            if (searchTimeout.current) clearTimeout(searchTimeout.current);
+        };
+    }, [searchTerm, token]);
 
     if (!isOpen) return null;
 
-    const filteredUsers = searchTerm.trim() 
-        ? MOCK_USERS.filter(u => u.name.toLowerCase().includes(searchTerm.toLowerCase()) || u.email.toLowerCase().includes(searchTerm.toLowerCase()))
-        : MOCK_USERS;
-
-    const handleInvite = (user: { id: string; name: string; email: string; avatar: string }) => {
+    const handleInviteDBUser = async (user: { id: string; name: string; email: string }) => {
         if (!invitedUsers.find(u => u.id === user.id)) {
-            setInvitedUsers([...invitedUsers, { ...user, role }]);
+            setInvitedUsers(prev => [...prev, { ...user, role, type: 'db' }]);
+            
+            // Post notification to backend
+            try {
+                await fetch(`${getApiUrl()}/api/collections/share`, {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: user.id,
+                        collection_id: collectionId,
+                        collection_name: collectionName
+                    })
+                });
+            } catch (err) {
+                console.error("Failed to post share invite", err);
+            }
+        }
+        setSearchTerm('');
+    };
+
+    const handleInviteEmail = async () => {
+        if (!isEmailFormat) return;
+        
+        // Mock ID for purely UI purposes
+        const mockId = `email_${Date.now()}`;
+        setInvitedUsers(prev => [...prev, { id: mockId, name: searchTerm, email: searchTerm, role: role, type: 'email' }]);
+        
+        // Attempt email API
+        try {
+            await fetch(`${getApiUrl()}/api/collections/share-email`, {
+                method: 'POST',
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: searchTerm,
+                    collection_name: collectionName
+                })
+            });
+        } catch (err) {
+            console.error("Failed to post email invite", err);
         }
         setSearchTerm('');
     };
@@ -66,25 +143,49 @@ export function ShareCollectionModal({ isOpen, onClose, collectionName }: ShareC
                                     
                                     {/* Dropdown Suggestions */}
                                     {searchTerm && (
-                                        <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden z-10 shadow-xl">
-                                            {filteredUsers.length > 0 ? (
-                                                filteredUsers.map(user => (
-                                                    <button
-                                                        key={user.id}
-                                                        onClick={() => handleInvite(user)}
-                                                        className="w-full flex items-center gap-3 p-3 hover:bg-zinc-800/50 transition-colors text-left"
-                                                    >
-                                                        <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold">
-                                                            {user.avatar}
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-sm font-medium text-white">{user.name}</p>
-                                                            <p className="text-xs text-zinc-400">{user.email}</p>
-                                                        </div>
-                                                    </button>
-                                                ))
+                                        <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden z-10 shadow-xl max-h-[300px] overflow-y-auto">
+                                            {isSearching ? (
+                                                <div className="p-4 flex items-center justify-center text-zinc-500">
+                                                    <Loader2 size={16} className="animate-spin" />
+                                                </div>
                                             ) : (
-                                                <div className="p-4 text-sm text-zinc-500 text-center">No users found</div>
+                                                <>
+                                                    {searchResults.length > 0 ? (
+                                                        searchResults.map(user => (
+                                                            <button
+                                                                key={user.id}
+                                                                onClick={() => handleInviteDBUser(user)}
+                                                                className="w-full flex items-center gap-3 p-3 hover:bg-zinc-800/50 transition-colors text-left"
+                                                            >
+                                                                <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold uppercase">
+                                                                    {user.name.charAt(0)}
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-sm font-medium text-white">{user.name}</p>
+                                                                    <p className="text-xs text-zinc-400">{user.email}</p>
+                                                                </div>
+                                                            </button>
+                                                        ))
+                                                    ) : (
+                                                        !isEmailFormat && <div className="p-4 text-sm text-zinc-500 text-center">No users found</div>
+                                                    )}
+                                                    
+                                                    {/* Email Invite Option */}
+                                                    {isEmailFormat && (
+                                                        <button 
+                                                            onClick={handleInviteEmail}
+                                                            className="w-full flex items-center gap-3 p-3 hover:bg-zinc-800/50 transition-colors border-t border-zinc-800"
+                                                        >
+                                                            <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">
+                                                                <Send size={14} />
+                                                            </div>
+                                                            <div className="text-left">
+                                                                <p className="text-sm font-medium text-white">Send Email Invite</p>
+                                                                <p className="text-xs text-emerald-500">{searchTerm}</p>
+                                                            </div>
+                                                        </button>
+                                                    )}
+                                                </>
                                             )}
                                         </div>
                                     )}
@@ -115,8 +216,8 @@ export function ShareCollectionModal({ isOpen, onClose, collectionName }: ShareC
                                     {invitedUsers.map(user => (
                                         <div key={user.id} className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold">
-                                                    {user.avatar}
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${user.type === 'db' ? 'bg-blue-500/20 text-blue-400 uppercase' : 'bg-emerald-500/20 text-emerald-400'}`}>
+                                                    {user.type === 'db' ? user.name.charAt(0) : '@'}
                                                 </div>
                                                 <div>
                                                     <p className="text-sm font-medium text-white">{user.name}</p>
