@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { BookCard } from '../components/BookCard';
 import { LibraryTabs } from '../components/LibraryTabs';
 import { AddToCollectionModal } from '../components/AddToCollectionModal';
+import { CreateCollectionModal } from '../components/CreateCollectionModal';
 import { getApiUrl } from '../lib/utils';
 import { Loader2, Library as LibraryIcon, Search, SlidersHorizontal, Plus, FolderOpen, Trash2, ArrowLeft, Grid, List as ListIcon } from 'lucide-react';
 
@@ -39,7 +40,6 @@ export default function LibraryPage() {
     // Collections State (Mocked with LocalStorage)
     const [collections, setCollections] = useState<Collection[]>([]);
     const [showCreateCollection, setShowCreateCollection] = useState(false);
-    const [newCollectionName, setNewCollectionName] = useState('');
     const [selectedBookForCollection, setSelectedBookForCollection] = useState<number | null>(null);
     const [viewingCollectionId, setViewingCollectionId] = useState<string | null>(null);
 
@@ -84,15 +84,13 @@ export default function LibraryPage() {
         localStorage.setItem('bookify_collections', JSON.stringify(collections));
     }, [collections]);
 
-    const handleCreateCollection = () => {
-        if (!newCollectionName.trim()) return;
+    const handleCreateCollection = (newCollectionData: { id: string; name: string }) => {
         const newCollection: Collection = {
-            id: Date.now().toString(),
-            name: newCollectionName,
+            id: newCollectionData.id,
+            name: newCollectionData.name,
             bookIds: []
         };
         setCollections([...collections, newCollection]);
-        setNewCollectionName('');
         setShowCreateCollection(false);
     };
 
@@ -195,7 +193,7 @@ export default function LibraryPage() {
                                 {(['recent', 'title', 'author', 'progress'] as const).map((type) => (
                                     <button
                                         key={type}
-                                        onClick={() => setSortBy(type as any)}
+                                        onClick={() => setSortBy(type as 'recent' | 'title' | 'author' | 'progress')}
                                         className={`px-4 py-1.5 rounded-lg text-[13px] font-medium transition-all border ${sortBy === type
                                             ? 'bg-blue-600 border-blue-600 text-white'
                                             : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
@@ -272,43 +270,19 @@ export default function LibraryPage() {
                             // Collections View
                             <div className="space-y-6">
                                 {/* Create New Collection "Dropzone" */}
-                                {!showCreateCollection && (
-                                    <button
-                                        onClick={() => setShowCreateCollection(true)}
-                                        className="w-full h-32 border border-dashed border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/20 rounded-2xl flex flex-col items-center justify-center gap-2 text-zinc-500 hover:text-zinc-300 transition-all group"
-                                    >
-                                        <Plus size={24} className="group-hover:scale-110 transition-transform" />
-                                        <span className="font-medium">Create New Collection</span>
-                                    </button>
-                                )}
+                                <button
+                                    onClick={() => setShowCreateCollection(true)}
+                                    className="w-full h-32 border border-dashed border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/20 rounded-2xl flex flex-col items-center justify-center gap-2 text-zinc-500 hover:text-zinc-300 transition-all group"
+                                >
+                                    <Plus size={24} className="group-hover:scale-110 transition-transform" />
+                                    <span className="font-medium">Create New Collection</span>
+                                </button>
 
-                                {showCreateCollection && (
-                                    <div className="bg-zinc-900/30 border border-zinc-800 p-6 rounded-2xl flex items-end gap-4 animate-in fade-in slide-in-from-top-4">
-                                        <div className="flex-1 space-y-2">
-                                            <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Collection Name</label>
-                                            <input
-                                                type="text"
-                                                value={newCollectionName}
-                                                onChange={(e) => setNewCollectionName(e.target.value)}
-                                                placeholder="e.g. Summer Reads"
-                                                className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-600 transition-colors"
-                                                autoFocus
-                                            />
-                                        </div>
-                                        <button
-                                            onClick={handleCreateCollection}
-                                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors text-sm"
-                                        >
-                                            Create Collection
-                                        </button>
-                                        <button
-                                            onClick={() => setShowCreateCollection(false)}
-                                            className="bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white px-6 py-2.5 rounded-lg font-medium transition-colors text-sm"
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                )}
+                                <CreateCollectionModal 
+                                    isOpen={showCreateCollection}
+                                    onClose={() => setShowCreateCollection(false)}
+                                    onCreate={handleCreateCollection}
+                                />
 
                                 {collections.length > 0 && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
