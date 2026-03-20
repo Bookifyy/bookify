@@ -45,14 +45,30 @@ export default function CollectionDetailPage() {
                         // Fetch books to populate the grid
                         if (current.bookIds && current.bookIds.length > 0 && token) {
                             const apiUrl = getApiUrl();
-                            const res = await fetch(`${apiUrl}/api/library`, {
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            });
-                            if (res.ok) {
-                                const libraryData = await res.json();
-                                // Filter library data to only books in this collection
-                                const collectionBooks = libraryData.filter((b: { book: { id: number } }) => current.bookIds.includes(b.book.id));
-                                setBooks(collectionBooks);
+                            const idsParams = current.bookIds.join(',');
+
+                            const [libRes, booksRes] = await Promise.all([
+                                fetch(`${apiUrl}/api/library`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                                fetch(`${apiUrl}/api/books?ids=${idsParams}`, { headers: { 'Authorization': `Bearer ${token}` } })
+                            ]);
+
+                            if (libRes.ok && booksRes.ok) {
+                                const libraryData = await libRes.json();
+                                const booksData = await booksRes.json();
+                                
+                                // If returned paginated or direct array
+                                const globalBooks = Array.isArray(booksData) ? booksData : (booksData.data || []);
+                                
+                                const mappedCollection = globalBooks.map((gb: { id: number; title: string; author: string; cover_image: string; }) => {
+                                    // Check if user owns this book inside their library
+                                    const owned = libraryData.find((lb: { book: { id: number }; percentage_completed: string }) => lb.book.id === gb.id);
+                                    return {
+                                        percentage_completed: owned ? owned.percentage_completed : "0",
+                                        book: gb
+                                    };
+                                });
+
+                                setBooks(mappedCollection);
                                 setNotes(current.notes || []);
                             }
                         }

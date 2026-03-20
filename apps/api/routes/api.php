@@ -160,10 +160,20 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             $query->where('subject_id', $request->subject_id);
         }
 
-        $books = $query->paginate(20);
-
-        // Map to ensure relative URLs starting with /storage
-        $books->through(function ($book) {
+        // Feature: Bypass pagination by providing direct array of string IDs explicitly for Shared features
+        if ($request->has('ids')) {
+            $idArray = array_filter(explode(',', $request->ids));
+            if (!empty($idArray)) {
+                $query->whereIn('id', $idArray);
+                $books = $query->get();
+            } else {
+                $books = $query->paginate(20);
+            }
+        } else {
+            $books = $query->paginate(20);
+        }
+        
+        $mapper = function ($book) {
             if ($book->cover_image) {
                 $path = parse_url($book->cover_image, PHP_URL_PATH) ?? $book->cover_image;
                 $book->cover_image = '/' . ltrim($path, '/');
@@ -179,7 +189,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
                 }
             }
             return $book;
-        });
+        };
+
+        if (method_exists($books, 'through')) {
+            $books->through($mapper);
+        } else {
+            $books->transform($mapper);
+        }
 
         return $books;
     });
