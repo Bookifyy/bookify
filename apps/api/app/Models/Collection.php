@@ -13,7 +13,7 @@ class Collection extends Model
         'name',
         'description',
         'visibility',
-        'isSmart',
+        'is_smart',
         'owner_id'
     ];
 

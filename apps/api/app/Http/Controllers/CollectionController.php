@@ -28,7 +28,7 @@ class CollectionController extends Controller
                     'name' => $c->name,
                     'description' => $c->description,
                     'visibility' => $c->visibility,
-                    'isSmart' => $c->isSmart,
+                    'isSmart' => (bool)$c->is_smart,
                     'bookIds' => $c->books->pluck('book_id')->toArray(),
                     'notes' => []
                 ];
@@ -43,14 +43,15 @@ class CollectionController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'visibility' => 'required|in:Private,Group,Public'
+            'visibility' => 'required|in:Private,Group,Public',
+            'isSmart' => 'nullable|boolean'
         ]);
 
         $collection = Collection::create([
             'name' => $request->name,
             'description' => $request->description,
             'visibility' => $request->visibility,
-            'isSmart' => false,
+            'is_smart' => $request->isSmart ?? false,
             'owner_id' => $request->user()->id
         ]);
 
@@ -65,7 +66,7 @@ class CollectionController extends Controller
             'name' => $collection->name,
             'description' => $collection->description,
             'visibility' => $collection->visibility,
-            'isSmart' => $collection->isSmart,
+            'isSmart' => (bool)$collection->is_smart,
             'bookIds' => [],
             'notes' => []
         ]);

@@ -3,7 +3,7 @@ import { useState } from 'react';
 interface CreateCollectionModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onCreate: (collection: { name: string; description: string; visibility: string }) => void;
+    onCreate: (collection: { name: string; description: string; visibility: string; isSmart?: boolean }) => void;
 }
 
 export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateCollectionModalProps) {
@@ -21,7 +21,8 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
         onCreate({
             name: name.trim(),
             description: description.trim(),
-            visibility
+            visibility,
+            isSmart
         });
         
         // Reset

@@ -87,7 +87,7 @@ export default function LibraryPage() {
         fetchCollections();
     }, [token]);
 
-    const handleCreateCollection = async (newCollectionData: { name: string; description: string; visibility: string }) => {
+    const handleCreateCollection = async (newCollectionData: { name: string; description: string; visibility: string; isSmart?: boolean }) => {
         try {
             const res = await fetch(`${getApiUrl()}/api/collections`, {
                 method: 'POST',
