@@ -71,7 +71,8 @@ class NotificationController extends Controller
             [
                 'collection_id' => $request->collection_id,
                 'collection_name' => $request->collection_name,
-                'sender_name' => $request->user()->name
+                'sender_name' => $request->user()->name,
+                'book_ids' => $request->book_ids ?? []
             ]
         );
 

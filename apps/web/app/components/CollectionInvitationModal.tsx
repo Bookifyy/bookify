@@ -13,6 +13,7 @@ interface CollectionInvitationModalProps {
     collectionId: string;
     collectionName: string;
     invitedBy: string;
+    bookIds: number[];
     onActionComplete: () => void;
 }
 
@@ -23,6 +24,7 @@ export function CollectionInvitationModal({
     collectionId, 
     collectionName, 
     invitedBy, 
+    bookIds,
     onActionComplete 
 }: CollectionInvitationModalProps) {
     const { token } = useAuth();
@@ -46,7 +48,7 @@ export function CollectionInvitationModal({
                         description: `Shared by ${invitedBy}`,
                         visibility: 'Group',
                         isSmart: false,
-                        bookIds: [], // We don't have the book IDs sent via simple notification right now
+                        bookIds: bookIds || [], 
                         notes: []
                     });
                     localStorage.setItem('bookify_collections', JSON.stringify(collections));

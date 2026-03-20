@@ -8,9 +8,10 @@ interface ShareCollectionModalProps {
     onClose: () => void;
     collectionId: string;
     collectionName: string;
+    bookIds: number[];
 }
 
-export function ShareCollectionModal({ isOpen, onClose, collectionId, collectionName }: ShareCollectionModalProps) {
+export function ShareCollectionModal({ isOpen, onClose, collectionId, collectionName, bookIds }: ShareCollectionModalProps) {
     const { token } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const [role, setRole] = useState('Viewer');
@@ -78,7 +79,8 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                     body: JSON.stringify({
                         user_id: user.id,
                         collection_id: collectionId,
-                        collection_name: collectionName
+                        collection_name: collectionName,
+                        book_ids: bookIds
                     })
                 });
                 if (res.ok) {

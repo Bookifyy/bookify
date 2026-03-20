@@ -23,7 +23,7 @@ export function NotificationBell() {
     const [isOpen, setIsOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
     const [inviteModal, setInviteModal] = useState<{ isOpen: boolean; notificationId: string; groupId: number; groupName: string; invitedBy: string } | null>(null);
-    const [collectionInviteModal, setCollectionInviteModal] = useState<{ isOpen: boolean; notificationId: string; collectionId: string; collectionName: string; invitedBy: string } | null>(null);
+    const [collectionInviteModal, setCollectionInviteModal] = useState<{ isOpen: boolean; notificationId: string; collectionId: string; collectionName: string; invitedBy: string; bookIds: number[] } | null>(null);
 
     const fetchNotifications = useCallback(async () => {
         try {
@@ -98,7 +98,8 @@ export function NotificationBell() {
                 notificationId: n.id,
                 collectionId: n.data.collection_id as string,
                 collectionName: n.data.collection_name as string,
-                invitedBy: n.data.sender_name as string
+                invitedBy: n.data.sender_name as string,
+                bookIds: (n.data.book_ids as number[]) || []
             });
             setIsOpen(false);
         } else {
@@ -287,6 +288,7 @@ export function NotificationBell() {
                     collectionId={collectionInviteModal.collectionId}
                     collectionName={collectionInviteModal.collectionName}
                     invitedBy={collectionInviteModal.invitedBy}
+                    bookIds={collectionInviteModal.bookIds}
                     onActionComplete={fetchNotifications}
                 />
             )}

@@ -442,6 +442,7 @@ export default function CollectionDetailPage() {
                 onClose={() => setShowShareModal(false)}
                 collectionId={collection.id}
                 collectionName={collection.name}
+                bookIds={collection.bookIds}
             />
         </div>
     );
