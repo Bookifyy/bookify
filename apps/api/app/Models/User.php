@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'google_id',
         'facebook_id',
+        'settings',
     ];
 
     /**
@@ -43,5 +44,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'settings' => 'array',
     ];
 }
