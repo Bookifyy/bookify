@@ -96,6 +96,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         return $request->user()->load('roles');
     });
     Route::patch('/user/settings', [\App\Http\Controllers\UserSettingsController::class, 'update']);
+    Route::patch('/user/password', [\App\Http\Controllers\UserSecurityController::class, 'updatePassword']);
+    Route::delete('/user', [\App\Http\Controllers\UserSecurityController::class, 'deleteAccount']);
 
     // Groups
     Route::get('/groups', [GroupController::class, 'index']);

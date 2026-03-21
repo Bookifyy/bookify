@@ -43,12 +43,12 @@ export function Sidebar({ className, onClose }: SidebarProps) {
     // Note: LayoutWrapper handles reset, but we can also use Link onClick
 
     return (
-        <aside className={className || "fixed left-0 top-0 z-40 h-screen w-64 flex-col bg-black text-zinc-400 border-r border-zinc-900 hidden lg:flex"}>
+        <aside className={className || "fixed left-0 top-0 z-40 h-screen w-64 flex-col bg-nav text-muted-foreground border-r border-border hidden lg:flex transition-colors duration-200"}>
             {/* Logo */}
             <div className="flex h-16 items-center justify-between px-6">
-                <span className="text-xl font-bold text-white tracking-tight">Bookify</span>
+                <span className="text-xl font-bold text-foreground tracking-tight">Bookify</span>
                 {onClose && (
-                    <button onClick={onClose} className="lg:hidden text-zinc-400 hover:text-white">
+                    <button onClick={onClose} className="lg:hidden text-muted-foreground hover:text-foreground">
                         <X size={24} />
                     </button>
                 )}
@@ -66,8 +66,8 @@ export function Sidebar({ className, onClose }: SidebarProps) {
                             href={item.href}
                             onClick={onClose}
                             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${isActive
-                                ? 'bg-zinc-900 text-white'
-                                : 'hover:bg-zinc-900/50 hover:text-white'
+                                ? 'bg-muted text-foreground'
+                                : 'hover:bg-muted/50 hover:text-foreground'
                                 }`}
                         >
                             <Icon size={20} className={isActive ? 'text-indigo-400' : ''} />
@@ -83,8 +83,8 @@ export function Sidebar({ className, onClose }: SidebarProps) {
                             href="/admin"
                             onClick={onClose}
                             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${pathname?.startsWith('/admin')
-                                ? 'bg-zinc-900 text-white'
-                                : 'hover:bg-zinc-900/50 hover:text-white'
+                                ? 'bg-muted text-foreground'
+                                : 'hover:bg-muted/50 hover:text-foreground'
                                 }`}
                         >
                             <ShieldCheck size={20} className={pathname?.startsWith('/admin') ? 'text-indigo-400' : ''} />
@@ -95,14 +95,14 @@ export function Sidebar({ className, onClose }: SidebarProps) {
             </nav>
 
             {/* User Info & Logout */}
-            <div className="p-4 border-t border-zinc-900 space-y-4">
+            <div className="p-4 border-t border-border space-y-4">
                 <div className="flex items-center gap-3 px-2">
-                    <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white uppercase">
+                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-white uppercase">
                         {user?.name?.[0] || 'U'}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-white truncate">{user?.name}</p>
-                        <p className="text-[10px] text-zinc-500 truncate">{user?.email}</p>
+                        <p className="text-xs font-bold text-foreground truncate">{user?.name}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{user?.email}</p>
                     </div>
                 </div>
                 <button

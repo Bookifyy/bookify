@@ -29,7 +29,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
 
     if (loading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-black">
+            <div className="flex min-h-screen items-center justify-center bg-background">
                 <div className="flex flex-col items-center gap-4">
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
                     <p className="text-zinc-500 text-sm font-medium animate-pulse">Loading Bookify...</p>
@@ -53,7 +53,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
         return (
             <div className="flex min-h-screen relative">
                 <Sidebar
-                    className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-black transition-transform duration-300 ease-in-out lg:fixed lg:translate-x-0 border-r border-zinc-900 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                    className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-nav transition-transform duration-300 ease-in-out lg:fixed lg:translate-x-0 border-r border-border ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
                         }`}
                     onClose={() => setIsSidebarOpen(false)}
                 />
@@ -61,7 +61,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
                 {/* Mobile Overlay */}
                 {isSidebarOpen && (
                     <div
-                        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+                        className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
                         onClick={() => setIsSidebarOpen(false)}
                     />
                 )}

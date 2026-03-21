@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from '../context/AuthContext';
+import { ThemeProvider } from '../context/ThemeProvider';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { LayoutWrapper } from './components/LayoutWrapper';
@@ -30,27 +31,24 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground transition-colors duration-200`}
         suppressHydrationWarning
       >
         <AuthProvider>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
+          <ThemeProvider>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+            
+            {/* Toaster gets themed dynamically but defaults smoothly */}
+            <Toaster 
+              position="bottom-right" 
+              toastOptions={{
+                className: 'shadow-2xl font-medium bg-card border border-border text-foreground rounded-xl'
+              }}
+            />
+          </ThemeProvider>
         </AuthProvider>
-        <Toaster 
-          theme="dark" 
-          position="bottom-right" 
-          toastOptions={{
-            style: {
-              background: '#0a0a0a',
-              border: '1px solid #27272a',
-              color: '#fff',
-              borderRadius: '12px'
-            },
-            className: 'shadow-2xl font-medium'
-          }}
-        />
       </body>
     </html>
   );
