@@ -9,6 +9,7 @@ interface User {
     email: string;
     email_verified_at: string | null;
     roles: { name: string }[];
+    settings?: any;
 }
 
 interface AuthContextType {

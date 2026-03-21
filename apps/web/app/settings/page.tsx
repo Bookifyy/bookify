@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 export default function SettingsPage() {
-    const { user, token, checkAuth } = useAuth();
+    const { user, token } = useAuth();
     
     // Core User State
     const [fullName, setFullName] = useState('');
@@ -87,7 +87,6 @@ export default function SettingsPage() {
 
             if (res.ok) {
                 toast.success('Settings updated securely');
-                checkAuth(); // refresh user context if name changed
             } else {
                 toast.error('Failed to save settings');
             }
