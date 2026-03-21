@@ -5,6 +5,7 @@ import { Layers, MoreVertical, Lock, Users, Clock, Globe, BookOpen } from 'lucid
 import Link from 'next/link';
 import { CreateCollectionModal } from '../components/CreateCollectionModal';
 import { useAuth } from '../../context/AuthContext';
+import { useRouter } from 'next/navigation';
 import { getApiUrl, resolveAssetUrl } from '../lib/utils';
 import { toast } from 'sonner';
 
@@ -25,6 +26,7 @@ const MOCK_IMAGES = [
 
 export default function CollectionsPage() {
     const { token } = useAuth();
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState<'my' | 'smart'>('my');
     const [collections, setCollections] = useState<LocalCollection[]>([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -102,6 +104,7 @@ export default function CollectionsPage() {
                 setCollections([...collections, newCollection]);
                 setShowCreateModal(false);
                 toast.success("Collection created successfully!");
+                router.push('/collections/' + newCollection.id);
             } else {
                 toast.error("Failed to create collection");
             }

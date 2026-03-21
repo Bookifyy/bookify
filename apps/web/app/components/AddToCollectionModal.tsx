@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Plus, Check } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { getApiUrl } from '../lib/utils';
 import { toast } from 'sonner';
@@ -19,6 +20,7 @@ interface AddToCollectionModalProps {
 
 export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCollections }: AddToCollectionModalProps) {
     const { token } = useAuth();
+    const router = useRouter();
     const [localCollections, setLocalCollections] = useState<Collection[]>(collections);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -66,6 +68,9 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                 setLocalCollections(updated);
                 onUpdateCollections(updated);
                 toast.success(isAdded ? "Removed from collection" : "Added to collection");
+                if (!isAdded) {
+                    router.push(`/collections/${collectionId}`);
+                }
             } else {
                 toast.error("Action failed.");
             }
@@ -112,6 +117,7 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                 onUpdateCollections(updated);
                 setSearchQuery('');
                 toast.success("Collection created & book added!");
+                router.push(`/collections/${newCollection.id}`);
             } else {
                 toast.error("Failed to create collection");
             }

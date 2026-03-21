@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { BookCard } from '../components/BookCard';
 import { LibraryTabs } from '../components/LibraryTabs';
@@ -32,6 +33,7 @@ interface Collection {
 
 export default function LibraryPage() {
     const { token } = useAuth();
+    const router = useRouter();
     const [books, setBooks] = useState<LibraryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('all');
@@ -103,6 +105,7 @@ export default function LibraryPage() {
                 setCollections([...collections, newCollection]);
                 setShowCreateCollection(false);
                 toast.success("Collection created successfully!");
+                router.push('/collections/' + newCollection.id);
             } else {
                 toast.error("Failed to create collection");
             }
