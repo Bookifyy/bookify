@@ -233,6 +233,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     // Library & Progress
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index']);
     Route::get('/library', [\App\Http\Controllers\LibraryController::class, 'index']);
     Route::post('/library/add', [\App\Http\Controllers\LibraryController::class, 'add']);
     Route::post('/books/{id}/progress', [\App\Http\Controllers\LibraryController::class, 'updateProgress']);

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     Flame, 
     Target, 
@@ -8,8 +8,12 @@ import {
     TrendingUp, 
     Calendar, 
     Award,
-    BookOpen
+    BookOpen,
+    Loader2
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { getApiUrl } from '../lib/utils';
+import { toast } from 'sonner';
 import { 
     BarChart, 
     Bar, 
@@ -23,39 +27,64 @@ import {
 } from 'recharts';
 
 export default function DashboardPage() {
-    // --- MOCK DATA FROM SCREENSHOTS ---
+    const { token } = useAuth();
+    const [loading, setLoading] = useState(true);
+    const [weeklyActivity, setWeeklyActivity] = useState<any[]>([]);
+    const [studyDistribution, setStudyDistribution] = useState<any[]>([]);
+    const [booksInProgress, setBooksInProgress] = useState<any[]>([]);
+    const [stats, setStats] = useState({
+        completedBooks: 0,
+        streak: 0,
+        thisWeekHours: 0,
+        readingSpeed: 0
+    });
 
-    const weeklyActivity = [
-        { name: 'Mon', minutes: 85 },
-        { name: 'Tue', minutes: 125 },
-        { name: 'Wed', minutes: 160 },
-        { name: 'Thu', minutes: 95 },
-        { name: 'Fri', minutes: 145 },
-        { name: 'Sat', minutes: 130 },
-        { name: 'Sun', minutes: 110 }
-    ];
-
-    const studyDistribution = [
-        { name: 'Mathematics', value: 35, fill: '#4f46e5' }, // Indigo
-        { name: 'Physics', value: 25, fill: '#0ea5e9' }, // Light Blue
-        { name: 'History', value: 20, fill: '#0284c7' }, // Sky Blue
-        { name: 'Literature', value: 15, fill: '#ec4899' }, // Pink
-        { name: 'Philosophy', value: 5, fill: '#8b5cf6' } // Purple
-    ];
-
-    const booksInProgress = [
-        { title: 'Calculus: Early Transcendentals', author: 'James Stewart', progress: 67 },
-        { title: 'The Quantum World', author: 'Kenneth W. Ford', progress: 23 },
-        { title: 'Sapiens: A Brief History', author: 'Yuval Noah Harari', progress: 89 },
-        { title: 'Pride and Prejudice', author: 'Jane Austen', progress: 45 },
-        { title: 'Meditations', author: 'Marcus Aurelius', progress: 12 }
-    ];
-
+    // Mock achievements for now since there's no DB table for them yet
     const achievements = [
         { title: '10 Day Streak', subtitle: 'Achieved 3 days ago', icon: Flame, color: 'text-blue-500' },
         { title: 'Speed Reader', subtitle: 'Read 50 pages in 1 session', icon: Medal, color: 'text-zinc-400' },
         { title: 'Consistent Learner', subtitle: 'Studied every day this week', icon: Calendar, color: 'text-zinc-400' }
     ];
+
+    useEffect(() => {
+        if (!token) return;
+        
+        const fetchDashboardData = async () => {
+            try {
+                const res = await fetch(`${getApiUrl()}/api/dashboard`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setWeeklyActivity(data.weeklyActivity || []);
+                    setStudyDistribution(data.studyDistribution || []);
+                    setBooksInProgress(data.booksInProgress || []);
+                    setStats(data.stats || {
+                        completedBooks: 0, streak: 0, thisWeekHours: 0, readingSpeed: 0
+                    });
+                } else {
+                    toast.error("Failed to load dashboard data");
+                }
+            } catch (err) {
+                console.error("Dashboard hydrate error:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, [token]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-black flex flex-col items-center justify-center py-32 gap-4">
+                <Loader2 className="animate-spin text-blue-600" size={32} />
+                <p className="text-zinc-600 text-sm font-medium tracking-wide animate-pulse">SYNCING METRICS...</p>
+            </div>
+        );
+    }
 
     // --- CUSTOM TOOLTIP FOR BAR CHART ---
     const CustomTooltip = ({ active, payload, label }: any) => {
@@ -86,7 +115,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-3">
                             <Flame className="text-white w-5 h-5" />
                             <div>
-                                <h3 className="text-2xl font-bold">12</h3>
+                                <h3 className="text-2xl font-bold">{stats.streak}</h3>
                                 <p className="text-zinc-400 text-xs uppercase tracking-wider font-semibold">Day Streak</p>
                             </div>
                         </div>
@@ -98,7 +127,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-3">
                             <Target className="text-blue-600 w-5 h-5" />
                             <div>
-                                <h3 className="text-2xl font-bold">14h</h3>
+                                <h3 className="text-2xl font-bold">{stats.thisWeekHours}h</h3>
                                 <p className="text-zinc-400 text-xs uppercase tracking-wider font-semibold">This Week</p>
                             </div>
                         </div>
@@ -110,7 +139,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-3">
                             <Medal className="text-zinc-400 w-5 h-5" />
                             <div>
-                                <h3 className="text-2xl font-bold">3</h3>
+                                <h3 className="text-2xl font-bold">{stats.completedBooks}</h3>
                                 <p className="text-zinc-400 text-xs uppercase tracking-wider font-semibold">Completed</p>
                             </div>
                         </div>
@@ -122,7 +151,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-3">
                             <TrendingUp className="text-blue-600 w-5 h-5" />
                             <div>
-                                <h3 className="text-2xl font-bold">32</h3>
+                                <h3 className="text-2xl font-bold">{stats.readingSpeed}</h3>
                                 <p className="text-zinc-400 text-xs uppercase tracking-wider font-semibold">Pages/Hour</p>
                             </div>
                         </div>
@@ -227,25 +256,33 @@ export default function DashboardPage() {
                 {/* 4. BOOKS IN PROGRESS */}
                 <div className="bg-[#0f0f12] border border-zinc-800/60 rounded-xl p-6">
                     <h2 className="text-[15px] font-semibold text-zinc-300 mb-6">Books in Progress</h2>
-                    <div className="space-y-6">
-                        {booksInProgress.map((book, i) => (
-                            <div key={i} className="flex flex-col gap-2">
-                                <div className="flex justify-between items-end">
-                                    <div>
-                                        <h4 className="text-sm font-medium text-zinc-200">{book.title}</h4>
-                                        <p className="text-xs text-zinc-500 mt-0.5">{book.author}</p>
+                    {booksInProgress.length === 0 ? (
+                        <div className="py-12 flex flex-col items-center justify-center text-center">
+                            <BookOpen className="text-zinc-800 w-12 h-12 mb-3" />
+                            <p className="text-zinc-500 text-sm font-medium">No books in progress.</p>
+                            <p className="text-zinc-600 text-xs mt-1">Start reading a book to see it here!</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-6">
+                            {booksInProgress.map((book, i) => (
+                                <div key={i} className="flex flex-col gap-2">
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <h4 className="text-sm font-medium text-zinc-200 line-clamp-1">{book.title}</h4>
+                                            <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1">{book.author}</p>
+                                        </div>
+                                        <span className="text-xs font-semibold text-zinc-300 ml-4">{book.progress}%</span>
                                     </div>
-                                    <span className="text-xs font-semibold text-zinc-300">{book.progress}%</span>
+                                    <div className="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden shrink-0">
+                                        <div 
+                                            className="h-full bg-blue-600 rounded-full transition-all duration-1000 ease-out" 
+                                            style={{ width: `${book.progress}%` }} 
+                                        />
+                                    </div>
                                 </div>
-                                <div className="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden">
-                                    <div 
-                                        className="h-full bg-blue-600 rounded-full" 
-                                        style={{ width: `${book.progress}%` }} 
-                                    />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* 5. RECENT ACHIEVEMENTS & CURRENT PLAN */}
