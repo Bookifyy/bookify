@@ -278,6 +278,12 @@ export default function CollectionsPage() {
                     );
                 })()}
             </div>
+            
+            <CreateCollectionModal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                onCreate={handleCreateCollection}
+            />
         </div>
     );
 }
