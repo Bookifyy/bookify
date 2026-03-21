@@ -43,15 +43,15 @@ export function ConfirmModal({
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+                className="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
                 onClick={onClose}
             />
 
             {/* Modal */}
-            <div className="relative bg-zinc-900 border border-zinc-800 rounded-2xl p-6 w-full max-w-md shadow-2xl scale-100 animate-in fade-in zoom-in duration-200">
+            <div className="relative bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl scale-100 animate-in fade-in zoom-in duration-200">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
+                    className="absolute top-4 right-4 text-muted-foreground hover:text-white transition-colors"
                 >
                     <X size={20} />
                 </button>
@@ -63,7 +63,7 @@ export function ConfirmModal({
 
                     <div className="space-y-2">
                         <h3 className="text-xl font-bold text-white">{title}</h3>
-                        <p className="text-sm text-zinc-400 leading-relaxed">
+                        <p className="text-sm text-muted-foreground leading-relaxed">
                             {message}
                         </p>
                     </div>

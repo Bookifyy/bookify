@@ -72,7 +72,7 @@ export default function BookDetailPage() {
         }
     };
 
-    if (loading) return <div className="p-8 text-zinc-500">Loading book details...</div>;
+    if (loading) return <div className="p-8 text-muted-foreground">Loading book details...</div>;
     if (!book) return <div className="p-8 text-red-500">Book not found.</div>;
 
 
@@ -90,17 +90,17 @@ export default function BookDetailPage() {
 
         // Theme Classes Mapping
         const themeClasses = {
-            dark: 'bg-black text-white',
+            dark: 'bg-background text-foreground',
             light: 'bg-white text-black',
         };
 
         const subTextClasses = {
-            dark: 'text-zinc-400',
+            dark: 'text-muted-foreground',
             light: 'text-zinc-600',
         }
 
         const cardClasses = {
-            dark: 'bg-zinc-900/50 hover:bg-zinc-900',
+            dark: 'bg-card/50 hover:bg-card',
             light: 'bg-zinc-100 hover:bg-zinc-200',
         }
 
@@ -168,7 +168,7 @@ export default function BookDetailPage() {
 
                 {/* Stats */}
                 <div className="max-w-xl mx-auto px-4 md:px-6 mt-6">
-                    <div className={`border rounded-2xl p-5 space-y-3 ${theme === 'dark' ? 'bg-zinc-900/30 border-zinc-800' : 'bg-slate-50 border-slate-200'}`}>
+                    <div className={`border rounded-2xl p-5 space-y-3 ${theme === 'dark' ? 'bg-card/30 border-border' : 'bg-slate-50 border-slate-200'}`}>
                         <div className="flex justify-between items-center text-sm md:text-base">
                             <span className={subTextClasses[theme]}>Time spent</span>
                             <span className="font-medium">30h 47m</span>
@@ -189,7 +189,7 @@ export default function BookDetailPage() {
                 </div>
 
                 {/* Fixed Bottom Action Bar */}
-                <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-zinc-900 p-4 z-50">
+                <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-xl border-t border-border p-4 z-50">
                     <div className="max-w-xl mx-auto">
                         <button
                             onClick={() => router.push(`/books/${id}/read`)}
@@ -206,7 +206,7 @@ export default function BookDetailPage() {
 
     // --- Standard Hero Layout (Unchanged) ---
     return (
-        <div className="min-h-screen bg-black text-white">
+        <div className="min-h-screen bg-background text-white">
             {/* Hero Section */}
             <div className="relative min-h-screen md:h-[500px] w-full overflow-hidden flex flex-col">
                 <div
@@ -224,7 +224,7 @@ export default function BookDetailPage() {
                     </button>
 
                     <div className="flex flex-col md:flex-row gap-8 items-center md:items-end mb-8 md:mb-12">
-                        <div className="relative w-48 h-72 md:w-56 md:h-80 flex-shrink-0 shadow-2xl shadow-black rounded-lg overflow-hidden border border-zinc-800">
+                        <div className="relative w-48 h-72 md:w-56 md:h-80 flex-shrink-0 shadow-2xl shadow-black rounded-lg overflow-hidden border border-border">
                             <img
                                 src={resolveAssetUrl(book.cover_image)}
                                 alt={book.title}
@@ -243,7 +243,7 @@ export default function BookDetailPage() {
                                 )}
                             </div>
                             <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight">{book.title}</h1>
-                            <p className="text-xl text-zinc-400 font-medium">{book.author}</p>
+                            <p className="text-xl text-muted-foreground font-medium">{book.author}</p>
 
                             {/* Standard Actions */}
                             <div className="flex flex-col md:flex-row gap-4 pt-4 justify-center md:justify-start">
@@ -256,11 +256,11 @@ export default function BookDetailPage() {
                                 <button
                                     onClick={addToLibrary}
                                     disabled={addingToLibrary}
-                                    className="bg-zinc-900 border border-zinc-800 px-6 py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-colors disabled:opacity-50 w-full md:w-auto"
+                                    className="bg-card border border-border px-6 py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-zinc-800 transition-colors disabled:opacity-50 w-full md:w-auto"
                                 >
                                     {addingToLibrary ? 'Adding...' : <><Star size={20} /> Add to Library</>}
                                 </button>
-                                <button className="p-3 bg-zinc-900 border border-zinc-800 rounded-full hover:bg-zinc-800 transition-colors hidden md:block">
+                                <button className="p-3 bg-card border border-border rounded-full hover:bg-zinc-800 transition-colors hidden md:block">
                                     <Share2 size={20} />
                                 </button>
                             </div>
@@ -274,25 +274,25 @@ export default function BookDetailPage() {
                 <div className="lg:col-span-2 space-y-8">
                     <section className="space-y-4">
                         <h2 className="text-2xl font-bold">About this book</h2>
-                        <p className="text-zinc-400 leading-relaxed whitespace-pre-line">
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                             {book.description || "No description available for this title."}
                         </p>
                     </section>
                 </div>
 
                 <div className="space-y-8">
-                    <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl space-y-6">
+                    <div className="bg-card/50 border border-border p-6 rounded-2xl space-y-6">
                         <h3 className="font-bold text-lg">Reading Stats</h3>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1">
-                                <p className="text-xs text-zinc-500 uppercase font-bold tracking-wider">Avg. Time</p>
+                                <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Avg. Time</p>
                                 <div className="flex items-center gap-2 text-white font-medium">
                                     <Clock size={16} className="text-indigo-400" />
                                     <span>4h 20m</span>
                                 </div>
                             </div>
                             <div className="space-y-1">
-                                <p className="text-xs text-zinc-500 uppercase font-bold tracking-wider">Pages</p>
+                                <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Pages</p>
                                 <div className="flex items-center gap-2 text-white font-medium">
                                     <BookOpen size={16} className="text-blue-400" />
                                     <span>342</span>

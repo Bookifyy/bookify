@@ -99,54 +99,54 @@ export default function CreateQuizPage() {
     return (
         <div className="max-w-3xl mx-auto space-y-6">
             <div className="flex items-center gap-4">
-                <Link href="/admin/quizzes" className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors">
+                <Link href="/admin/quizzes" className="p-2 hover:bg-zinc-800 rounded-lg text-muted-foreground hover:text-white transition-colors">
                     <ArrowLeft size={20} />
                 </Link>
                 <div>
                     <h1 className="text-2xl font-bold text-white mb-1">Create New Quiz</h1>
-                    <p className="text-zinc-400 text-sm">Set up the basic information for the quiz.</p>
+                    <p className="text-muted-foreground text-sm">Set up the basic information for the quiz.</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="bg-card border border-border rounded-xl p-6 space-y-6">
 
                 {/* Title */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-300">Quiz Title <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-medium text-muted-foreground">Quiz Title <span className="text-red-500">*</span></label>
                     <input
                         type="text"
                         required
                         value={title}
                         onChange={e => setTitle(e.target.value)}
                         placeholder="e.g., Calculus - Chapter 1 Review"
-                        className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     />
                 </div>
 
                 {/* Description */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-300">Description</label>
+                    <label className="text-sm font-medium text-muted-foreground">Description</label>
                     <textarea
                         value={description}
                         onChange={e => setDescription(e.target.value)}
                         placeholder="Briefly describe what this quiz covers..."
                         rows={3}
-                        className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
                     />
                 </div>
 
                 {/* Attachment (Question Paper) */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                         <Save size={16} /> {/* Using Save icon for now, could be FileText */}
-                        Question Paper (PDF) <span className="text-zinc-500 text-xs font-normal">(Optional)</span>
+                        Question Paper (PDF) <span className="text-muted-foreground text-xs font-normal">(Optional)</span>
                     </label>
                     <div className="flex items-center gap-4">
                         <input
                             type="file"
                             accept=".pdf,.doc,.docx"
                             onChange={e => setAttachment(e.target.files ? e.target.files[0] : null)}
-                            className="block w-full text-sm text-zinc-400
+                            className="block w-full text-sm text-muted-foreground
                                 file:mr-4 file:py-2.5 file:px-4
                                 file:rounded-lg file:border-0
                                 file:text-sm file:font-semibold
@@ -155,34 +155,34 @@ export default function CreateQuizPage() {
                                 cursor-pointer"
                         />
                     </div>
-                    <p className="text-xs text-zinc-500">
+                    <p className="text-xs text-muted-foreground">
                         Upload a PDF exam paper if you don't want to create individual questions manually.
                     </p>
                 </div>
 
                 {/* Related Book */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                         <BookOpen size={16} />
                         Linked Book (Optional)
                     </label>
                     <select
                         value={bookId}
                         onChange={e => setBookId(e.target.value)}
-                        className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     >
                         <option value="">-- No specific book --</option>
                         {books.map(book => (
                             <option key={book.id} value={book.id}>{book.title}</option>
                         ))}
                     </select>
-                    <p className="text-xs text-zinc-500">Linking a book helps students find relevant quizzes in their library.</p>
+                    <p className="text-xs text-muted-foreground">Linking a book helps students find relevant quizzes in their library.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Time Limit */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+                        <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                             <Clock size={16} />
                             Time Limit (Minutes)
                         </label>
@@ -192,13 +192,13 @@ export default function CreateQuizPage() {
                             max="180"
                             value={timeLimit}
                             onChange={e => setTimeLimit(parseInt(e.target.value))}
-                            className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                            className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                         />
                     </div>
 
                     {/* Passing Score */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+                        <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                             <Award size={16} />
                             Passing Score (%)
                         </label>
@@ -209,14 +209,14 @@ export default function CreateQuizPage() {
                                 max="100"
                                 value={passingScore}
                                 onChange={e => setPassingScore(parseInt(e.target.value))}
-                                className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                             />
-                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500">%</span>
+                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="pt-4 border-t border-zinc-800 flex justify-end">
+                <div className="pt-4 border-t border-border flex justify-end">
                     <button
                         type="submit"
                         disabled={loading}
@@ -235,7 +235,7 @@ export default function CreateQuizPage() {
                         }`}>
                         {modalType === 'success' ? <CheckCircle size={32} /> : <XCircle size={32} />}
                     </div>
-                    <p className="text-zinc-300 text-lg">
+                    <p className="text-muted-foreground text-lg">
                         {modalMessage}
                     </p>
                     <div className="pt-4">

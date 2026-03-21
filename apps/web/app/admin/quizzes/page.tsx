@@ -110,14 +110,14 @@ export default function AdminQuizzesPage() {
         q.book?.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return <div className="p-8 text-zinc-500">Loading quizzes...</div>;
+    if (loading) return <div className="p-8 text-muted-foreground">Loading quizzes...</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-white mb-1">Quizzes</h1>
-                    <p className="text-zinc-400 text-sm">Manage quizzes, add questions, and track student performance.</p>
+                    <p className="text-muted-foreground text-sm">Manage quizzes, add questions, and track student performance.</p>
                 </div>
                 <Link
                     href="/admin/quizzes/create"
@@ -130,11 +130,11 @@ export default function AdminQuizzesPage() {
 
             {/* Search */}
             <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500" size={20} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
                 <input
                     type="text"
                     placeholder="Search quizzes by title or book..."
-                    className="w-full bg-zinc-900 border border-zinc-800 text-white pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                    className="w-full bg-card border border-border text-white pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -143,14 +143,14 @@ export default function AdminQuizzesPage() {
             {/* Quiz List */}
             <div className="grid gap-4">
                 {filteredQuizzes.length === 0 ? (
-                    <div className="text-center py-12 bg-zinc-900/50 rounded-xl border border-zinc-800 border-dashed">
+                    <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
                         <FileText className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
                         <h3 className="text-lg font-medium text-white mb-1">No quizzes found</h3>
-                        <p className="text-zinc-500 text-sm">Create your first quiz to get started.</p>
+                        <p className="text-muted-foreground text-sm">Create your first quiz to get started.</p>
                     </div>
                 ) : (
                     filteredQuizzes.map((quiz) => (
-                        <div key={quiz.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 hover:border-zinc-700 transition-colors flex flex-col md:flex-row gap-6 md:items-center">
+                        <div key={quiz.id} className="bg-card border border-border rounded-xl p-5 hover:border-zinc-700 transition-colors flex flex-col md:flex-row gap-6 md:items-center">
                             <div className="flex-1">
                                 <div className="flex items-start justify-between mb-2">
                                     <h3 className="text-lg font-bold text-white">{quiz.title}</h3>
@@ -161,20 +161,20 @@ export default function AdminQuizzesPage() {
                                         </span>
                                     )}
                                 </div>
-                                <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{quiz.description}</p>
+                                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{quiz.description}</p>
 
-                                <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-500">
+                                <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                                     <div className="flex items-center gap-1.5">
                                         <FileText size={14} />
-                                        <span className="text-zinc-300 font-medium">{quiz.questions_count}</span> Questions
+                                        <span className="text-muted-foreground font-medium">{quiz.questions_count}</span> Questions
                                     </div>
                                     <div className="flex items-center gap-1.5">
                                         <Clock size={14} />
-                                        <span className="text-zinc-300 font-medium">{quiz.time_limit_minutes}</span> mins
+                                        <span className="text-muted-foreground font-medium">{quiz.time_limit_minutes}</span> mins
                                     </div>
                                     <div className="flex items-center gap-1.5">
                                         <Award size={14} />
-                                        Pass: <span className="text-zinc-300 font-medium">{quiz.passing_score}%</span>
+                                        Pass: <span className="text-muted-foreground font-medium">{quiz.passing_score}%</span>
                                     </div>
                                     <div className="flex items-center gap-1.5 ml-auto md:ml-0">
                                         <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500"></span>
@@ -183,7 +183,7 @@ export default function AdminQuizzesPage() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 border-t md:border-t-0 md:border-l border-zinc-800 pt-4 md:pt-0 md:pl-6">
+                            <div className="flex items-center gap-3 border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-6">
                                 <Link
                                     href={`/admin/quizzes/${quiz.id}`}
                                     className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
@@ -193,7 +193,7 @@ export default function AdminQuizzesPage() {
                                 </Link>
                                 <button
                                     onClick={() => confirmDelete(quiz.id)}
-                                    className="p-2 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                    className="p-2 text-muted-foreground hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
                                     title="Delete Quiz"
                                 >
                                     <Trash2 size={18} />
@@ -214,7 +214,7 @@ export default function AdminQuizzesPage() {
                             modalType === 'error' ? <XCircle size={32} /> :
                                 <AlertTriangle size={32} />}
                     </div>
-                    <p className="text-zinc-300 text-lg">
+                    <p className="text-muted-foreground text-lg">
                         {modalMessage}
                     </p>
                     <div className="pt-4 flex gap-3">

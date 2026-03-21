@@ -54,10 +54,10 @@ export function InvitationModal({ isOpen, onClose, notificationId, groupId, grou
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-sm shadow-2xl p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+            <div className="bg-card border border-border rounded-2xl w-full max-w-sm shadow-2xl p-6">
                 <h2 className="text-xl font-bold text-white mb-2">Group Invitation</h2>
-                <p className="text-zinc-400 mb-6">
+                <p className="text-muted-foreground mb-6">
                     <span className="text-white font-semibold">{invitedBy}</span> invited you to join <span className="text-indigo-400 font-semibold">{groupName}</span>.
                 </p>
 

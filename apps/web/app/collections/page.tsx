@@ -115,9 +115,9 @@ export default function CollectionsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-black text-zinc-300 pb-20">
+        <div className="min-h-screen bg-background text-muted-foreground pb-20">
             {/* Header Area */}
-            <div className="border-b border-zinc-900 bg-black pt-6 pb-4 px-8 sticky top-0 z-20">
+            <div className="border-b border-border bg-background pt-6 pb-4 px-8 sticky top-0 z-20">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-blue-600/10 flex items-center justify-center border border-blue-500/20">
@@ -125,7 +125,7 @@ export default function CollectionsPage() {
                         </div>
                         <div>
                             <h1 className="text-xl font-medium text-white tracking-wide">Collections</h1>
-                            <p className="text-sm text-zinc-400 mt-0.5">Curated playlists and smart collections</p>
+                            <p className="text-sm text-muted-foreground mt-0.5">Curated playlists and smart collections</p>
                         </div>
                     </div>
                     {/* Create Collection Button */}
@@ -141,13 +141,13 @@ export default function CollectionsPage() {
 
             <div className="max-w-7xl mx-auto px-8 mt-6">
                 {/* Tabs */}
-                <div className="p-1.5 bg-zinc-900 rounded-full flex items-center mb-8 border border-zinc-800">
+                <div className="p-1.5 bg-card rounded-full flex items-center mb-8 border border-border">
                     <button
                         onClick={() => setActiveTab('my')}
                         className={`flex-1 py-3 text-sm font-medium rounded-full transition-all ${
                             activeTab === 'my'
                                 ? 'bg-[#18181b] text-white shadow-sm'
-                                : 'text-zinc-500 hover:text-zinc-300'
+                                : 'text-muted-foreground hover:text-muted-foreground'
                         }`}
                     >
                         My Collections
@@ -157,7 +157,7 @@ export default function CollectionsPage() {
                         className={`flex-1 py-3 text-sm font-medium rounded-full transition-all ${
                             activeTab === 'smart'
                                 ? 'bg-[#18181b] text-white shadow-sm'
-                                : 'text-zinc-500 hover:text-zinc-300'
+                                : 'text-muted-foreground hover:text-muted-foreground'
                         }`}
                     >
                         Smart Collections
@@ -177,10 +177,10 @@ export default function CollectionsPage() {
                                         <Link
                                             key={collection.id}
                                             href={`/collections/${collection.id}`}
-                                            className="bg-[#0a0a0a] border border-zinc-800 rounded-2xl overflow-hidden group hover:border-zinc-700 transition-colors flex flex-col block"
+                                            className="bg-[#0a0a0a] border border-border rounded-2xl overflow-hidden group hover:border-zinc-700 transition-colors flex flex-col block"
                                         >
                                             {/* Image Layout */}
-                                            <div className="relative h-56 bg-zinc-900 border-b border-zinc-800 overflow-hidden">
+                                            <div className="relative h-56 bg-card border-b border-border overflow-hidden">
                                                 {images.length === 1 && (
                                                     <div className="relative w-full h-full">
                                                         <img src={images[0]} alt={collection.name} className="w-full h-full object-cover" />
@@ -188,14 +188,14 @@ export default function CollectionsPage() {
                                                     </div>
                                                 )}
                                                 {images.length === 2 && (
-                                                    <div className="grid grid-cols-2 h-full gap-0.5 bg-zinc-950">
+                                                    <div className="grid grid-cols-2 h-full gap-0.5 bg-background">
                                                         <img src={images[0]} alt={collection.name} className="w-full h-full object-cover" />
                                                         <img src={images[1]} alt={collection.name} className="w-full h-full object-cover" />
                                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                                                     </div>
                                                 )}
                                                 {images.length >= 3 && (
-                                                    <div className="grid grid-cols-2 h-full gap-0.5 bg-zinc-950">
+                                                    <div className="grid grid-cols-2 h-full gap-0.5 bg-background">
                                                         <div className="h-full">
                                                             <img src={images[0]} alt={collection.name} className="w-full h-full object-cover" />
                                                         </div>
@@ -208,7 +208,7 @@ export default function CollectionsPage() {
                                                 )}
 
                                                 {/* Item Count Badge */}
-                                                <div className="absolute bottom-3 left-4 bg-black/80 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide">
+                                                <div className="absolute bottom-3 left-4 bg-background/80 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide">
                                                     {collection.bookIds.length} items
                                                 </div>
                                             </div>
@@ -219,11 +219,11 @@ export default function CollectionsPage() {
                                                     <h3 className="font-serif text-lg font-medium text-white line-clamp-1 leading-snug">
                                                         {collection.name}
                                                     </h3>
-                                                    <button className="text-zinc-500 hover:text-white transition-colors p-1 -mr-1">
+                                                    <button className="text-muted-foreground hover:text-white transition-colors p-1 -mr-1">
                                                         <MoreVertical size={16} />
                                                     </button>
                                                 </div>
-                                                <p className="text-sm text-zinc-400 mb-5 line-clamp-2 leading-relaxed">
+                                                <p className="text-sm text-muted-foreground mb-5 line-clamp-2 leading-relaxed">
                                                     Your personalized collection
                                                 </p>
 
@@ -236,16 +236,16 @@ export default function CollectionsPage() {
                                                 </div>
 
                                                 {/* Footer */}
-                                                <div className="flex items-center justify-between mt-6 pt-4 border-t border-zinc-800/60">
+                                                <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/60">
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold text-black bg-zinc-300">
                                                             Y
                                                         </div>
-                                                        <span className="text-xs text-zinc-400">
-                                                            by <span className="text-zinc-300 font-medium">You</span>
+                                                        <span className="text-xs text-muted-foreground">
+                                                            by <span className="text-muted-foreground font-medium">You</span>
                                                         </span>
                                                     </div>
-                                                    <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
+                                                    <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
                                                         <Clock size={12} />
                                                         <span>Updated</span>
                                                     </div>
@@ -259,22 +259,22 @@ export default function CollectionsPage() {
                     }
 
                     return activeTab === 'my' ? (
-                        <div className="py-20 flex flex-col items-center justify-center text-center border border-dashed border-zinc-800 rounded-3xl">
-                            <div className="bg-zinc-900 p-4 rounded-full mb-4">
+                        <div className="py-20 flex flex-col items-center justify-center text-center border border-dashed border-border rounded-3xl">
+                            <div className="bg-card p-4 rounded-full mb-4">
                                 <BookOpen size={32} className="text-zinc-700" />
                             </div>
                             <h3 className="text-lg font-medium text-white mb-2 font-serif">No collections yet</h3>
-                            <p className="text-zinc-500 text-sm max-w-md">
+                            <p className="text-muted-foreground text-sm max-w-md">
                                 You haven't created any collections yet. Go to your Library to create your first collection and organize your books!
                             </p>
                         </div>
                     ) : (
-                        <div className="py-20 flex flex-col items-center justify-center text-center border border-dashed border-zinc-800 rounded-3xl">
-                            <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mb-4 border border-zinc-800">
-                                <Layers className="text-zinc-500" size={32} />
+                        <div className="py-20 flex flex-col items-center justify-center text-center border border-dashed border-border rounded-3xl">
+                            <div className="w-16 h-16 bg-card rounded-2xl flex items-center justify-center mb-4 border border-border">
+                                <Layers className="text-muted-foreground" size={32} />
                             </div>
                             <h3 className="text-lg font-medium text-white mb-2 font-serif">Smart Collections</h3>
-                            <p className="text-zinc-500 text-sm max-w-md">
+                            <p className="text-muted-foreground text-sm max-w-md">
                                 Smart collections automatically organize your books based on tags, reading status, and authors. You haven't created any yet!
                             </p>
                         </div>

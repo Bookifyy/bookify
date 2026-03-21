@@ -123,12 +123,12 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <div className="bg-[#0a0a0a] border border-zinc-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm">
+            <div className="bg-[#0a0a0a] border border-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl relative">
                 <div className="p-6">
                     <div className="mb-6">
                         <h2 className="text-xl font-bold text-white mb-1">Share Collection</h2>
-                        <p className="text-sm text-zinc-400">Share &quot;{collectionName}&quot; with others</p>
+                        <p className="text-sm text-muted-foreground">Share &quot;{collectionName}&quot; with others</p>
                     </div>
 
                     <div className="space-y-6">
@@ -143,13 +143,13 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         placeholder="Search by name or email..."
-                                        className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-lg px-4 py-2.5 pr-10 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:border-[#0ea5e9]"
+                                        className="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 pr-10 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:border-[#0ea5e9]"
                                         autoFocus
                                     />
                                     {searchTerm && (
                                         <button 
                                             onClick={() => setSearchTerm('')}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground transition-colors"
                                         >
                                             <X size={16} />
                                         </button>
@@ -157,9 +157,9 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                     
                                     {/* Dropdown Suggestions */}
                                     {searchTerm && (
-                                        <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden z-10 shadow-xl max-h-[300px] overflow-y-auto">
+                                        <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-lg overflow-hidden z-10 shadow-xl max-h-[300px] overflow-y-auto">
                                             {isSearching ? (
-                                                <div className="p-4 flex items-center justify-center text-zinc-500">
+                                                <div className="p-4 flex items-center justify-center text-muted-foreground">
                                                     <Loader2 size={16} className="animate-spin" />
                                                 </div>
                                             ) : (
@@ -176,19 +176,19 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                                                 </div>
                                                                 <div>
                                                                     <p className="text-sm font-medium text-white">{user.name}</p>
-                                                                    <p className="text-xs text-zinc-400">{user.email}</p>
+                                                                    <p className="text-xs text-muted-foreground">{user.email}</p>
                                                                 </div>
                                                             </button>
                                                         ))
                                                     ) : (
-                                                        !isEmailFormat && <div className="p-4 text-sm text-zinc-500 text-center">No users found</div>
+                                                        !isEmailFormat && <div className="p-4 text-sm text-muted-foreground text-center">No users found</div>
                                                     )}
                                                     
                                                     {/* Email Invite Option */}
                                                     {isEmailFormat && (
                                                         <button 
                                                             onClick={handleInviteEmail}
-                                                            className="w-full flex items-center gap-3 p-3 hover:bg-zinc-800/50 transition-colors border-t border-zinc-800"
+                                                            className="w-full flex items-center gap-3 p-3 hover:bg-zinc-800/50 transition-colors border-t border-border"
                                                         >
                                                             <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">
                                                                 <Send size={14} />
@@ -207,7 +207,7 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                 <select 
                                     value={role}
                                     onChange={(e) => setRole(e.target.value)}
-                                    className="bg-[#0a0a0a] border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-[#0ea5e9]"
+                                    className="bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-[#0ea5e9]"
                                 >
                                     <option value="Viewer">Viewer</option>
                                     <option value="Editor">Editor</option>
@@ -215,16 +215,16 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                 </select>
                             </div>
 
-                            <ul className="text-xs text-zinc-500 space-y-1.5 mt-3 pl-1">
-                                <li><span className="font-medium text-zinc-300">Viewer:</span> Can view collection and items</li>
-                                <li><span className="font-medium text-zinc-300">Editor:</span> Can add, remove, and organize items</li>
-                                <li><span className="font-medium text-zinc-300">Owner:</span> Full control including deletion</li>
+                            <ul className="text-xs text-muted-foreground space-y-1.5 mt-3 pl-1">
+                                <li><span className="font-medium text-muted-foreground">Viewer:</span> Can view collection and items</li>
+                                <li><span className="font-medium text-muted-foreground">Editor:</span> Can add, remove, and organize items</li>
+                                <li><span className="font-medium text-muted-foreground">Owner:</span> Full control including deletion</li>
                             </ul>
                         </div>
 
                         {/* Allowed Users List */}
                         {invitedUsers.length > 0 && (
-                            <div className="pt-6 border-t border-zinc-900">
+                            <div className="pt-6 border-t border-border">
                                 <h4 className="text-sm font-medium text-white mb-3">People with access</h4>
                                 <div className="space-y-3">
                                     {invitedUsers.map(user => (
@@ -235,10 +235,10 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                                 </div>
                                                 <div>
                                                     <p className="text-sm font-medium text-white">{user.name}</p>
-                                                    <p className="text-xs text-zinc-500">{user.email}</p>
+                                                    <p className="text-xs text-muted-foreground">{user.email}</p>
                                                 </div>
                                             </div>
-                                            <span className="text-xs font-medium text-zinc-400">{user.role}</span>
+                                            <span className="text-xs font-medium text-muted-foreground">{user.role}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -248,11 +248,11 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-zinc-800 flex justify-end gap-3 bg-[#0a0a0a]">
+                <div className="p-4 border-t border-border flex justify-end gap-3 bg-[#0a0a0a]">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-5 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:text-white border border-transparent hover:border-zinc-800 transition-colors"
+                        className="px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-white border border-transparent hover:border-border transition-colors"
                     >
                         Cancel
                     </button>

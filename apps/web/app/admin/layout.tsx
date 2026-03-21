@@ -45,7 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }
     }, [user, loading, router]);
 
-    if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-zinc-500">Loading admin panel...</div>;
+    if (loading) return <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">Loading admin panel...</div>;
     if (!user || !user.roles?.some(r => r.name === 'Admin')) return null;
 
     const navigation = [
@@ -82,27 +82,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     ];
 
     return (
-        <div className="min-h-screen bg-black text-zinc-100 flex">
+        <div className="min-h-screen bg-background text-zinc-100 flex">
             {/* Mobile Sidebar Overlay */}
             {isSidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/80 z-40 lg:hidden backdrop-blur-sm"
+                    className="fixed inset-0 bg-background/80 z-40 lg:hidden backdrop-blur-sm"
                     onClick={() => setIsSidebarOpen(false)}
                 />
             )}
 
             {/* Sidebar */}
             <aside className={`
-                fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-zinc-900 border-r border-zinc-800 
+                fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-card border-r border-border 
                 transform transition-transform duration-200 ease-in-out
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
             `}>
-                <div className="p-6 border-b border-zinc-800 flex items-center justify-between">
+                <div className="p-6 border-b border-border flex items-center justify-between">
                     <div className="flex items-center gap-2 font-serif font-bold text-xl tracking-tighter text-white">
                         <span className="w-8 h-8 bg-white text-black rounded-lg flex items-center justify-center font-sans text-lg">B</span>
                         <span>Bookify Admin</span>
                     </div>
-                    <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-zinc-400">
+                    <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-muted-foreground">
                         <X size={24} />
                     </button>
                 </div>
@@ -110,7 +110,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <nav className="flex-1 overflow-y-auto p-4 space-y-8 custom-scrollbar">
                     {navigation.map((section) => (
                         <div key={section.category}>
-                            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 px-2">
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 px-2">
                                 {section.category}
                             </h3>
                             <div className="space-y-1">
@@ -125,7 +125,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                                 flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors
                                                 ${isActive
                                                     ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)]'
-                                                    : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}
+                                                    : 'text-muted-foreground hover:text-white hover:bg-zinc-800'}
                                             `}
                                         >
                                             <item.icon size={18} />
@@ -138,20 +138,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     ))}
                 </nav>
 
-                <div className="p-4 border-t border-zinc-800">
-                    <div className="bg-zinc-950 rounded-xl p-4 mb-2 border border-zinc-800">
+                <div className="p-4 border-t border-border">
+                    <div className="bg-background rounded-xl p-4 mb-2 border border-border">
                         <div className="flex items-center gap-3 mb-3">
                             <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center font-bold text-xs">
                                 {user?.name?.charAt(0) || 'A'}
                             </div>
                             <div className="overflow-hidden">
                                 <p className="text-sm font-medium text-white truncate">{user?.name}</p>
-                                <p className="text-xs text-zinc-500 truncate">Administrator</p>
+                                <p className="text-xs text-muted-foreground truncate">Administrator</p>
                             </div>
                         </div>
                         <Link
                             href="/"
-                            className="w-full flex items-center justify-center gap-2 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 py-2 rounded-lg transition-colors mb-1"
+                            className="w-full flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground hover:text-white hover:bg-zinc-800 py-2 rounded-lg transition-colors mb-1"
                         >
                             <LogOut size={14} className="rotate-180" />
                             Back to App
@@ -170,8 +170,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Main Content */}
             <main className="flex-1 min-w-0">
                 {/* Mobile Header */}
-                <header className="lg:hidden h-16 border-b border-zinc-800 flex items-center px-4 bg-zinc-900 sticky top-0 z-30">
-                    <button onClick={() => setIsSidebarOpen(true)} className="text-zinc-400">
+                <header className="lg:hidden h-16 border-b border-border flex items-center px-4 bg-card sticky top-0 z-30">
+                    <button onClick={() => setIsSidebarOpen(true)} className="text-muted-foreground">
                         <Menu size={24} />
                     </button>
                     <span className="ml-4 font-bold text-white">Admin Panel</span>

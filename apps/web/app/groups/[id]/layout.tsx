@@ -50,7 +50,7 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
         }
     };
 
-    if (loading) return <div className="p-8 text-zinc-500">Loading group...</div>;
+    if (loading) return <div className="p-8 text-muted-foreground">Loading group...</div>;
     if (!group) return <div className="p-8 text-red-500">Group not found</div>;
 
     const tabs = [
@@ -63,10 +63,10 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
     return (
         <div className="flex flex-col h-full">
             {/* Group Header */}
-            <div className="border-b border-zinc-800 p-6 flex items-center justify-between">
+            <div className="border-b border-border p-6 flex items-center justify-between">
                 <div>
                     <div className="flex items-center gap-3 mb-1">
-                        <Link href="/groups" className="lg:hidden text-zinc-400 hover:text-white">
+                        <Link href="/groups" className="lg:hidden text-muted-foreground hover:text-white">
                             <ArrowLeft size={20} />
                         </Link>
                         <h1 className="text-2xl font-bold text-white">{group.name}</h1>
@@ -77,7 +77,7 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
                             {group.privacy === 'invite_only' ? 'Private' : 'Public'}
                         </span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-zinc-400">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Users size={14} />
                         <span>{group.members_count} members</span>
                         {group.owner_id === user?.id && (
@@ -87,7 +87,7 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <button className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
+                    <button className="p-2 text-muted-foreground hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
                         <MoreVertical size={20} />
                     </button>
                     {/* Invite Button could go here too */}
@@ -95,7 +95,7 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-zinc-800 px-6">
+            <div className="flex border-b border-border px-6">
                 {tabs.map(tab => {
                     const isActive = pathname?.includes(tab.href);
                     return (
@@ -106,7 +106,7 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
                                 flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors
                                 ${isActive
                                     ? 'border-indigo-500 text-white'
-                                    : 'border-transparent text-zinc-500 hover:text-zinc-300 hover:border-zinc-700'
+                                    : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-zinc-700'
                                 }
                             `}
                         >
@@ -118,7 +118,7 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
             </div>
 
             {/* Tab Content */}
-            <div className="flex-1 overflow-y-auto bg-black p-6">
+            <div className="flex-1 overflow-y-auto bg-background p-6">
                 {children}
             </div>
         </div>

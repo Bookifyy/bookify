@@ -111,7 +111,7 @@ export default function GroupChatPage() {
                 className="flex-1 overflow-y-auto space-y-4 pb-20"
             >
                 {messages.length === 0 ? (
-                    <div className="text-center py-10 text-zinc-500">
+                    <div className="text-center py-10 text-muted-foreground">
                         <p>No messages yet. Start the conversation!</p>
                     </div>
                 ) : (
@@ -122,13 +122,13 @@ export default function GroupChatPage() {
                         return (
                             <div key={msg.id} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : ''}`}>
                                 {/* Avatar */}
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${isMe ? 'bg-indigo-600 text-white' : 'bg-zinc-800 text-zinc-400'} ${showAvatar ? 'opacity-100' : 'opacity-0'}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${isMe ? 'bg-indigo-600 text-white' : 'bg-zinc-800 text-muted-foreground'} ${showAvatar ? 'opacity-100' : 'opacity-0'}`}>
                                     {msg.user.name.charAt(0).toUpperCase()}
                                 </div>
 
                                 <div className={`max-w-[70%] space-y-1 ${isMe ? 'items-end' : 'items-start'} flex flex-col`}>
                                     {showAvatar && !isMe && (
-                                        <span className="text-xs text-zinc-500 ml-1">{msg.user.name}</span>
+                                        <span className="text-xs text-muted-foreground ml-1">{msg.user.name}</span>
                                     )}
                                     <div className={`p-3 rounded-2xl text-sm ${isMe ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-zinc-800 text-zinc-200 rounded-tl-none'}`}>
                                         {msg.content}
@@ -145,13 +145,13 @@ export default function GroupChatPage() {
             </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSend} className="sticky bottom-0 bg-black pt-4 border-t border-zinc-800 flex gap-2">
+            <form onSubmit={handleSend} className="sticky bottom-0 bg-background pt-4 border-t border-border flex gap-2">
                 <input
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Type a message..."
-                    className="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors"
                 />
                 <button
                     type="submit"

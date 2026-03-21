@@ -32,7 +32,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
             <div className="flex min-h-screen items-center justify-center bg-background">
                 <div className="flex flex-col items-center gap-4">
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
-                    <p className="text-zinc-500 text-sm font-medium animate-pulse">Loading Bookify...</p>
+                    <p className="text-muted-foreground text-sm font-medium animate-pulse">Loading Bookify...</p>
                 </div>
             </div>
         );

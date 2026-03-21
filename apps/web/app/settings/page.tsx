@@ -9,6 +9,39 @@ import {
 } from 'lucide-react';
 import { ThemeProvider, useTheme } from '../../context/ThemeProvider';
 
+// --- STABLE UI COMPONENTS ---
+const SectionHeader = ({ icon: Icon, title, description }: any) => (
+    <div className="mb-6">
+        <div className="flex items-center gap-2 text-blue-500 mb-1">
+            <Icon size={18} />
+            <h2 className="text-[15px] font-semibold text-foreground">{title}</h2>
+        </div>
+        <p className="text-[13px] text-muted-foreground">{description}</p>
+    </div>
+);
+
+const Card = ({ children, isDanger = false }: any) => (
+    <div className={`bg-card text-foreground border ${isDanger ? 'border-red-900/50' : 'border-border'} rounded-xl p-6 shadow-sm`}>
+        {children}
+    </div>
+);
+
+const ToggleRow = ({ label, description, checked, onToggle }: any) => (
+    <div className="flex items-center justify-between py-3">
+        <div>
+            <p className="text-[14px] font-medium text-foreground">{label}</p>
+            {description && <p className="text-[12px] text-muted-foreground mt-0.5">{description}</p>}
+        </div>
+        <button 
+            type="button"
+            onClick={onToggle}
+            className={`w-9 h-5 rounded-full relative transition-colors duration-200 ${checked ? 'bg-blue-600' : 'bg-muted-foreground/50'}`}
+        >
+            <div className={`w-3.5 h-3.5 bg-white rounded-full absolute top-[3px] transition-transform duration-200 ${checked ? 'translate-x-[20px]' : 'translate-x-[3px]'}`} />
+        </button>
+    </div>
+);
+
 export default function SettingsPage() {
     const { user, token, logout } = useAuth();
     const { theme: activeTheme, setTheme: setActiveTheme } = useTheme();
@@ -17,9 +50,6 @@ export default function SettingsPage() {
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [university, setUniversity] = useState('UC Berkeley');
-    
-    // Editing State
-    const [editingAccount, setEditingAccount] = useState(false);
 
     // Dynamic Settings State
     const [theme, setTheme] = useState('dark');
@@ -98,7 +128,6 @@ export default function SettingsPage() {
 
             if (res.ok) {
                 toast.success('Settings securely updated 🚀');
-                setEditingAccount(false);
                 if (theme !== activeTheme) {
                     setActiveTheme(theme as 'dark'|'light');
                 }
@@ -113,49 +142,58 @@ export default function SettingsPage() {
         }
     };
 
-    const SectionHeader = ({ icon: Icon, title, description }: any) => (
-        <div className="mb-6">
-            <div className="flex items-center gap-2 text-blue-500 mb-1">
-                <Icon size={18} />
-                <h2 className="text-[15px] font-semibold text-foreground">{title}</h2>
-            </div>
-            <p className="text-[13px] text-muted-foreground">{description}</p>
-        </div>
-    );
-
-    const Card = ({ children, isDanger = false }: any) => (
-        <div className={`bg-card text-foreground border ${isDanger ? 'border-red-900/50' : 'border-border'} rounded-xl p-6 shadow-sm`}>
-            {children}
-        </div>
-    );
-
-    const ToggleRow = ({ label, description, checked, onToggle }: any) => (
-        <div className="flex items-center justify-between py-3">
-            <div>
-                <p className="text-[14px] font-medium text-foreground">{label}</p>
-                {description && <p className="text-[12px] text-muted-foreground mt-0.5">{description}</p>}
-            </div>
-            <button 
-                type="button"
-                onClick={onToggle}
-                className={`w-9 h-5 rounded-full relative transition-colors duration-200 ${checked ? 'bg-blue-600' : 'bg-muted-foreground/50'}`}
-            >
-                <div className={`w-3.5 h-3.5 bg-white rounded-full absolute top-[3px] transition-transform duration-200 ${checked ? 'translate-x-[20px]' : 'translate-x-[3px]'}`} />
-            </button>
-        </div>
-    );
-
     // --- SECURITY ACTIONS ---
     const handleDownloadData = () => {
         if (!user) return;
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(user, null, 2));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "bookify_user_export.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-        toast.success('Data export complete 📦');
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            toast.error('Popup blocked. Please allow popups to download data.');
+            return;
+        }
+        
+        const html = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Bookify Data Export - ${user.name}</title>
+                <style>
+                    body { font-family: system-ui, sans-serif; padding: 40px; color: #333; line-height: 1.6; max-w: 800px; margin: 0 auto; }
+                    h1 { color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+                    .section { margin-top: 30px; background: #f9fafb; padding: 25px; border-radius: 8px; border: 1px solid #e5e7eb; }
+                    .item { margin-bottom: 12px; font-size: 15px; }
+                    .label { font-weight: 600; color: #4b5563; display: inline-block; width: 140px; }
+                </style>
+            </head>
+            <body>
+                <h1>Bookify Account Data Export</h1>
+                
+                <div class="section">
+                    <h2>Profile Information</h2>
+                    <div class="item"><span class="label">Name:</span> ${user.name}</div>
+                    <div class="item"><span class="label">Email:</span> ${user.email}</div>
+                    <div class="item"><span class="label">Exported On:</span> ${new Date().toLocaleDateString()}</div>
+                </div>
+
+                <div class="section">
+                    <h2>System Preferences</h2>
+                    <div class="item"><span class="label">Theme:</span> ${user.settings?.theme || 'dark'}</div>
+                    <div class="item"><span class="label">Language:</span> ${user.settings?.language || 'english'}</div>
+                    <div class="item"><span class="label">Font Size:</span> ${user.settings?.readerFontSize || 'medium'}</div>
+                    <div class="item"><span class="label">Public Profile:</span> ${user.settings?.public_profile === false ? 'No' : 'Yes'}</div>
+                </div>
+                
+                <p style="margin-top: 50px; text-align: center; color: #6b7280; font-size: 13px;">
+                    Generated securely from Bookify System Servers.
+                </p>
+                <script>
+                    window.onload = function() { window.print(); window.close(); }
+                </script>
+            </body>
+            </html>
+        `;
+        printWindow.document.write(html);
+        printWindow.document.close();
+        toast.success('Generated Data PDF 📦');
     };
 
     const handlePasswordUpdate = async (e: React.FormEvent) => {
@@ -214,68 +252,61 @@ export default function SettingsPage() {
         );
     }
 
-    return (
-        <div className="min-h-screen bg-background text-foreground p-8 pb-32">
-            <div className="max-w-3xl mx-auto space-y-8 mt-4">
-                
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-foreground mb-2">Settings</h1>
-                    <p className="text-muted-foreground text-sm">Manage your account and preferences</p>
-                </div>
+    const getTranslatedTitle = () => {
+        if (language === 'spanish') return 'Configuración';
+        if (language === 'french') return 'Paramètres';
+        if (language === 'german') return 'Einstellungen';
+        if (language === 'japanese') return '設定';
+        if (language === 'chinese') return '设置';
+        return 'Settings';
+    };
 
-                <form onSubmit={saveSettings} className="space-y-8">
+    return (
+        <div className="min-h-screen bg-background text-foreground p-8 pb-32 max-w-[800px] mx-auto space-y-8 font-sans transition-colors duration-200">
+            <div className="flex items-center justify-between pb-6 border-b border-border">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground">{getTranslatedTitle()}</h1>
+                    <p className="text-muted-foreground mt-2">Manage your account preferences and application behaviors.</p>
+                </div>
+            </div>
+
+            <form onSubmit={saveSettings} className="space-y-8">
                     {/* 1. ACCOUNT SECTION */}
                     <Card>
-                        <div className="flex items-center justify-between mb-6">
-                            <SectionHeader icon={User} title="Account" description="Manage your account information" />
-                            {!editingAccount && (
-                                <button type="button" onClick={() => setEditingAccount(true)} className="text-blue-500 hover:text-blue-400 p-2 rounded-lg hover:bg-blue-500/10 transition-colors flex items-center gap-2 text-sm font-medium">
-                                    <Edit2 size={16} /> Edit
-                                </button>
-                            )}
-                        </div>
+                        <SectionHeader icon={User} title="Account" description="Manage your account information" />
                         
-                        <div className="space-y-4">
+                        <div className="space-y-4 pt-2">
                             <div>
                                 <label className="block text-[13px] font-medium text-muted-foreground mb-1.5">Full Name</label>
-                                {editingAccount ? (
-                                    <input 
-                                        type="text" 
-                                        value={fullName} 
-                                        onChange={(e) => setFullName(e.target.value)}
-                                        className="w-full bg-background border border-border rounded-lg px-4 py-2 text-[14px] text-foreground focus:outline-none focus:border-blue-500 transition-colors"
-                                    />
-                                ) : (
-                                    <div className="w-full bg-background border border-transparent rounded-lg px-4 py-2 text-[14px] text-foreground">{fullName}</div>
-                                )}
+                                <input 
+                                    type="text" 
+                                    value={fullName} 
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    className="w-full bg-background border border-border rounded-lg px-4 py-3 text-[14px] text-foreground focus:outline-none focus:border-blue-500 transition-colors shadow-sm"
+                                    placeholder="Enter your name"
+                                />
                             </div>
                             
                             <div>
                                 <label className="block text-[13px] font-medium text-muted-foreground mb-1.5">Email</label>
-                                {editingAccount ? (
-                                    <input 
-                                        type="email" 
-                                        value={email} 
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full bg-background border border-border rounded-lg px-4 py-2 text-[14px] text-foreground focus:outline-none focus:border-blue-500 transition-colors"
-                                    />
-                                ) : (
-                                    <div className="w-full bg-background border border-transparent rounded-lg px-4 py-2 text-[14px] text-foreground">{email}</div>
-                                )}
+                                <input 
+                                    type="email" 
+                                    value={email} 
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full bg-background border border-border rounded-lg px-4 py-3 text-[14px] text-foreground focus:outline-none focus:border-blue-500 transition-colors shadow-sm"
+                                    placeholder="Enter your email"
+                                />
                             </div>
 
                             <div>
                                 <label className="block text-[13px] font-medium text-muted-foreground mb-1.5">University</label>
-                                {editingAccount ? (
-                                    <input 
-                                        type="text" 
-                                        value={university}
-                                        onChange={(e) => setUniversity(e.target.value)}
-                                        className="w-full bg-background border border-border rounded-lg px-4 py-2 text-[14px] text-foreground focus:outline-none focus:border-blue-500 transition-colors"
-                                    />
-                                ) : (
-                                    <div className="w-full bg-background border border-transparent rounded-lg px-4 py-2 text-[14px] text-foreground">{university}</div>
-                                )}
+                                <input 
+                                    type="text" 
+                                    value={university}
+                                    onChange={(e) => setUniversity(e.target.value)}
+                                    className="w-full bg-background border border-border rounded-lg px-4 py-3 text-[14px] text-foreground focus:outline-none focus:border-blue-500 transition-colors shadow-sm"
+                                    placeholder="Enter your university"
+                                />
                             </div>
 
                             <div className="pt-4 flex items-center justify-between border-t border-border mt-6">
@@ -457,11 +488,10 @@ export default function SettingsPage() {
                         </button>
                     </div>
                 </form>
-            </div>
 
             {/* PASSWORD MODAL */}
             {isPasswordModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/50 backdrop-blur-sm">
                     <form onSubmit={handlePasswordUpdate} className="bg-card border border-border rounded-xl w-full max-w-md shadow-2xl p-6 relative">
                         <button type="button" onClick={() => setPasswordModalOpen(false)} className="absolute right-4 top-4 text-muted-foreground hover:text-foreground">✕</button>
                         <div className="flex items-center gap-3 mb-6">
@@ -494,7 +524,7 @@ export default function SettingsPage() {
 
             {/* DELETE ACCOUNT MODAL */}
             {isDeleteModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/50 backdrop-blur-sm">
                     <div className="bg-card border border-red-900/50 rounded-xl w-full max-w-md shadow-2xl p-6">
                         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-900/20 text-red-500 mb-4 mx-auto">
                             <AlertTriangle size={24} />

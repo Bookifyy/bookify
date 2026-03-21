@@ -270,12 +270,12 @@ export default function QuizTakingPage() {
                     </h1>
 
                     {isPending ? (
-                        <p className="text-zinc-400 max-w-md mx-auto">
+                        <p className="text-muted-foreground max-w-md mx-auto">
                             Your submission has been received. Your instructor will grade your file submission and results will be available shortly.
                         </p>
                     ) : (
                         <>
-                            <p className="text-zinc-400">You scored</p>
+                            <p className="text-muted-foreground">You scored</p>
                             <div className="text-6xl font-black text-white mt-2 mb-2">{submittedData.score}%</div>
                         </>
                     )}
@@ -296,7 +296,7 @@ export default function QuizTakingPage() {
             <div className="max-w-2xl mx-auto p-8 text-center space-y-8 min-h-[80vh] flex flex-col items-center justify-center">
                 <div className="space-y-4">
                     <h1 className="text-4xl font-bold text-white">{quiz.title}</h1>
-                    <div className="flex items-center justify-center gap-6 text-zinc-400">
+                    <div className="flex items-center justify-center gap-6 text-muted-foreground">
                         <div className="flex items-center gap-2">
                             <Clock size={20} />
                             <span>{quiz.time_limit_minutes} Minutes</span>
@@ -304,9 +304,9 @@ export default function QuizTakingPage() {
                     </div>
                 </div>
 
-                <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 max-w-lg mx-auto text-left space-y-4">
+                <div className="bg-card/50 p-6 rounded-2xl border border-border max-w-lg mx-auto text-left space-y-4">
                     <h3 className="font-bold text-white">Instructions:</h3>
-                    <ul className="list-disc list-inside text-zinc-400 space-y-2 text-sm">
+                    <ul className="list-disc list-inside text-muted-foreground space-y-2 text-sm">
                         <li>This is a timed quiz. The timer starts immediately when you click Start.</li>
                         <li>You cannot pause the timer once it starts.</li>
                         <li>Answers are automatically submitted when time runs out.</li>
@@ -325,7 +325,7 @@ export default function QuizTakingPage() {
                     Start Quiz Now
                 </button>
 
-                <Link href="/quizzes" className="text-zinc-500 hover:text-zinc-300 text-sm">
+                <Link href="/quizzes" className="text-muted-foreground hover:text-muted-foreground text-sm">
                     Cancel and go back
                 </Link>
             </div>
@@ -350,10 +350,10 @@ export default function QuizTakingPage() {
                             </div>
                         </div>
                     ) : (
-                        <p className="text-zinc-300">
+                        <p className="text-muted-foreground">
                             Are you sure you want to finish and submit your quiz?
                             {quiz.questions && quiz.questions.length > 0 && (
-                                <span className="block mt-2 text-sm text-zinc-400">
+                                <span className="block mt-2 text-sm text-muted-foreground">
                                     You have answered {Object.keys(answers).length} of {quiz.questions.length} questions.
                                 </span>
                             )}
@@ -389,7 +389,7 @@ export default function QuizTakingPage() {
                     <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
                         <AlertTriangle size={32} className="text-red-500" />
                     </div>
-                    <p className="text-zinc-300 text-lg">
+                    <p className="text-muted-foreground text-lg">
                         {modalErrorMessage}
                     </p>
                     <div className="pt-4">
@@ -404,7 +404,7 @@ export default function QuizTakingPage() {
             </Modal>
 
             {/* Header / Timer */}
-            <div className="sticky top-4 z-40 bg-black/80 backdrop-blur-md border border-zinc-800 rounded-xl p-4 flex items-center justify-between shadow-2xl">
+            <div className="sticky top-4 z-40 bg-background/80 backdrop-blur-md border border-border rounded-xl p-4 flex items-center justify-between shadow-2xl">
                 <div className="font-bold text-white truncate max-w-[200px]">{quiz.title}</div>
                 <div className={`flex items-center gap-2 font-mono text-xl font-bold ${timeLeft && timeLeft < 60 ? 'text-red-500 animate-pulse' : 'text-indigo-400'}`}>
                     <Clock size={24} />
@@ -414,10 +414,10 @@ export default function QuizTakingPage() {
 
             {/* Question Paper Download */}
             {quiz.attachment_path && (
-                <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl flex items-center justify-between flex-wrap gap-4">
+                <div className="bg-card border border-border p-6 rounded-2xl flex items-center justify-between flex-wrap gap-4">
                     <div>
                         <h3 className="text-lg text-white font-medium mb-1">Question Paper</h3>
-                        <p className="text-zinc-400 text-sm">Download the attached file to view questions/instructions.</p>
+                        <p className="text-muted-foreground text-sm">Download the attached file to view questions/instructions.</p>
                     </div>
                     <a
                         href={`${getApiUrl()}/storage/${quiz.attachment_path}`}
@@ -435,14 +435,14 @@ export default function QuizTakingPage() {
             {quiz.questions && quiz.questions.length > 0 ? (
                 <div className="space-y-8">
                     {quiz.questions.map((q, index) => (
-                        <div key={q.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+                        <div key={q.id} className="bg-card border border-border p-6 rounded-2xl">
                             <div className="flex items-start gap-4 mb-6">
-                                <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 text-sm flex-shrink-0">
+                                <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-muted-foreground text-sm flex-shrink-0">
                                     {index + 1}
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="text-lg text-white font-medium leading-relaxed">{q.question_text}</h3>
-                                    <span className="text-xs text-zinc-500 font-semibold mt-1 block">{q.points} Points</span>
+                                    <span className="text-xs text-muted-foreground font-semibold mt-1 block">{q.points} Points</span>
                                 </div>
                             </div>
 
@@ -455,7 +455,7 @@ export default function QuizTakingPage() {
                                                 flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all
                                                 ${answers[q.id] === opt
                                                     ? 'bg-indigo-600/10 border-indigo-500 text-white'
-                                                    : 'bg-black border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-700'}
+                                                    : 'bg-background border-border text-muted-foreground hover:bg-zinc-800 hover:border-zinc-700'}
                                             `}
                                         >
                                             <div className={`
@@ -483,7 +483,7 @@ export default function QuizTakingPage() {
                                                 flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all
                                                 ${answers[q.id] === val
                                                     ? 'bg-indigo-600/10 border-indigo-500 text-white'
-                                                    : 'bg-black border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-700'}
+                                                    : 'bg-background border-border text-muted-foreground hover:bg-zinc-800 hover:border-zinc-700'}
                                             `}
                                         >
                                             <div className={`
@@ -509,8 +509,8 @@ export default function QuizTakingPage() {
                     ))}
                 </div>
             ) : (
-                <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl text-center">
-                    <p className="text-zinc-400">No interactive questions in this quiz. Please refer to the Question Paper above.</p>
+                <div className="bg-card border border-border p-8 rounded-2xl text-center">
+                    <p className="text-muted-foreground">No interactive questions in this quiz. Please refer to the Question Paper above.</p>
                 </div>
             )}
 
@@ -520,14 +520,14 @@ export default function QuizTakingPage() {
                 So hide this if (!quiz.attachment_path && quiz.questions.length > 0).
             */}
             {(!quiz.questions || quiz.questions.length === 0 || quiz.attachment_path) && (
-                <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+                <div className="bg-card border border-border p-6 rounded-2xl">
                     <div className="mb-4">
                         <h3 className="text-lg text-white font-medium mb-1 flex items-center gap-2">
                             <Upload size={20} />
                             Upload Answer Sheet
                             {quiz.attachment_path && <span className="text-xs text-red-500 bg-red-500/10 px-2 py-0.5 rounded ml-2">REQUIRED</span>}
                         </h3>
-                        <p className="text-zinc-400 text-sm">
+                        <p className="text-muted-foreground text-sm">
                             {quiz.attachment_path
                                 ? "You strictly need to upload your answer sheet (PDF/Image) to submit."
                                 : "Attach your work in a PDF, Word, or Image file."}
@@ -537,7 +537,7 @@ export default function QuizTakingPage() {
                         type="file"
                         accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                         onChange={e => setAttachment(e.target.files ? e.target.files[0] : null)}
-                        className="block w-full text-sm text-zinc-400
+                        className="block w-full text-sm text-muted-foreground
                             file:mr-4 file:py-2.5 file:px-4
                             file:rounded-lg file:border-0
                             file:text-sm file:font-semibold
@@ -549,7 +549,7 @@ export default function QuizTakingPage() {
             )}
 
             {/* Footer Actions */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-zinc-950/80 backdrop-blur-xl border-t border-zinc-800 z-50 flex justify-center">
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-xl border-t border-border z-50 flex justify-center">
                 <button
                     onClick={handleTriggerSubmit}
                     disabled={submitting}

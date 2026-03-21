@@ -34,26 +34,26 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <div className="bg-[#0a0a0a] border border-zinc-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm">
+            <div className="bg-[#0a0a0a] border border-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl relative">
                 <form onSubmit={handleSubmit}>
                     <div className="p-6">
                         <div className="mb-6">
                             <h2 className="text-xl font-bold text-white mb-1">Create New Collection</h2>
-                            <p className="text-sm text-zinc-400">Organize your books into a curated collection</p>
+                            <p className="text-sm text-muted-foreground">Organize your books into a curated collection</p>
                         </div>
 
                         <div className="space-y-5">
                             {/* Name */}
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-white">Collection Name <span className="text-zinc-500">*</span></label>
+                                <label className="text-sm font-medium text-white">Collection Name <span className="text-muted-foreground">*</span></label>
                                 <input
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="e.g., Spring 2024 Reading"
                                     className={`w-full bg-[#0a0a0a] border rounded-lg px-4 py-2.5 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:ring-1 ${
-                                        name ? 'border-[#0ea5e9] ring-[#0ea5e9]' : 'border-zinc-800 focus:border-[#0ea5e9] focus:ring-[#0ea5e9]'
+                                        name ? 'border-[#0ea5e9] ring-[#0ea5e9]' : 'border-border focus:border-[#0ea5e9] focus:ring-[#0ea5e9]'
                                     }`}
                                     autoFocus
                                     required
@@ -68,7 +68,7 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="What's this collection about?"
-                                    className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-lg px-4 py-2.5 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:border-zinc-700"
+                                    className="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:border-zinc-700"
                                 />
                             </div>
 
@@ -89,7 +89,7 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                                                 type="button"
                                                 onClick={() => setVisibility(type)}
                                                 className={`w-full flex items-center gap-4 p-3.5 rounded-xl border transition-all text-left ${
-                                                    isSelected ? 'border-zinc-700 bg-zinc-900/30' : 'border-zinc-800/60 hover:border-zinc-700'
+                                                    isSelected ? 'border-zinc-700 bg-card/30' : 'border-border/60 hover:border-zinc-700'
                                                 }`}
                                             >
                                                 <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
@@ -99,7 +99,7 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                                                 </div>
                                                 <div>
                                                     <span className="text-sm font-medium text-white mr-2">{type}</span>
-                                                    <span className="text-sm text-zinc-400">{descriptions[type]}</span>
+                                                    <span className="text-sm text-muted-foreground">{descriptions[type]}</span>
                                                 </div>
                                             </button>
                                         );
@@ -108,10 +108,10 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                             </div>
 
                             {/* Smart Collection Toggle */}
-                            <div className={`flex items-center justify-between p-4 rounded-xl border transition-all ${isSmart ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-zinc-800/60'}`}>
+                            <div className={`flex items-center justify-between p-4 rounded-xl border transition-all ${isSmart ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-border/60'}`}>
                                 <div>
                                     <h4 className="text-sm font-medium text-white">Smart Collection</h4>
-                                    <p className="text-xs text-zinc-400 mt-0.5">Auto-update based on rules</p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">Auto-update based on rules</p>
                                 </div>
                                 <button
                                     type="button"
@@ -131,11 +131,11 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                     </div>
 
                     {/* Footer */}
-                    <div className="p-4 border-t border-zinc-800 flex justify-end gap-3 bg-[#0a0a0a]">
+                    <div className="p-4 border-t border-border flex justify-end gap-3 bg-[#0a0a0a]">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-5 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:text-white border border-transparent hover:border-zinc-800 transition-colors"
+                            className="px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-white border border-transparent hover:border-border transition-colors"
                         >
                             Cancel
                         </button>

@@ -90,23 +90,23 @@ export function InviteMemberModal({ isOpen, onClose, groupId }: { isOpen: boolea
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
-                <div className="flex items-center justify-between p-6 border-b border-zinc-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+            <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+                <div className="flex items-center justify-between p-6 border-b border-border">
                     <h2 className="text-xl font-bold text-white">Invite Members</h2>
-                    <button onClick={onClose} className="text-zinc-400 hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-muted-foreground hover:text-white transition-colors">
                         <X size={24} />
                     </button>
                 </div>
 
-                <div className="p-4 border-b border-zinc-800 bg-black">
+                <div className="p-4 border-b border-border bg-background">
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => handleSearch(e.target.value)}
-                            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-indigo-500"
                             placeholder="Search contacts..."
                         />
                     </div>
@@ -127,12 +127,12 @@ export function InviteMemberModal({ isOpen, onClose, groupId }: { isOpen: boolea
                                         onClick={() => toggleUser(user.id)}
                                         className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all ${isSelected ? 'bg-indigo-600/10 border border-indigo-500/50' : 'hover:bg-zinc-800 border border-transparent'}`}
                                     >
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${isSelected ? 'bg-indigo-600 text-white' : 'bg-zinc-800 text-zinc-400'}`}>
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${isSelected ? 'bg-indigo-600 text-white' : 'bg-zinc-800 text-muted-foreground'}`}>
                                             {user.name.charAt(0)}
                                         </div>
                                         <div className="flex-1 text-left">
                                             <div className={`font-medium ${isSelected ? 'text-indigo-400' : 'text-white'}`}>{user.name}</div>
-                                            <div className="text-xs text-zinc-500">{user.email}</div>
+                                            <div className="text-xs text-muted-foreground">{user.email}</div>
                                         </div>
                                         <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-600'}`}>
                                             {isSelected && <Check size={14} />}
@@ -142,17 +142,17 @@ export function InviteMemberModal({ isOpen, onClose, groupId }: { isOpen: boolea
                             })}
                         </div>
                     ) : search ? (
-                        <div className="text-center p-8 text-zinc-500">
+                        <div className="text-center p-8 text-muted-foreground">
                             No users found.
                         </div>
                     ) : (
-                        <div className="text-center p-8 text-zinc-500">
+                        <div className="text-center p-8 text-muted-foreground">
                             Type to search for users...
                         </div>
                     )}
                 </div>
 
-                <div className="p-4 border-t border-zinc-800 bg-black">
+                <div className="p-4 border-t border-border bg-background">
                     {error && <div className="text-red-500 text-sm mb-3 text-center">{error}</div>}
                     {success && <div className="text-green-500 text-sm mb-3 text-center">{success}</div>}
 

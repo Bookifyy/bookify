@@ -176,7 +176,7 @@ export function NotificationBell() {
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative p-2 text-zinc-400 hover:text-white transition-colors"
+                className="relative p-2 text-muted-foreground hover:text-foreground transition-colors"
                 title="Notifications"
             >
                 <Bell size={20} />
@@ -191,9 +191,9 @@ export function NotificationBell() {
                         className="fixed inset-0 z-40"
                         onClick={() => setIsOpen(false)}
                     />
-                    <div className="absolute right-0 mt-2 w-80 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden">
-                        <div className="p-3 border-b border-zinc-800 flex justify-between items-center">
-                            <h3 className="font-semibold text-white text-sm">Notifications</h3>
+                    <div className="absolute right-0 mt-2 w-80 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden">
+                        <div className="p-3 border-b border-border flex justify-between items-center">
+                            <h3 className="font-semibold text-foreground text-sm">Notifications</h3>
                             <div className="flex gap-2">
                                 {unreadCount > 0 && (
                                     <button
@@ -206,7 +206,7 @@ export function NotificationBell() {
                                 {notifications.length > 0 && (
                                     <button
                                         onClick={clearAll}
-                                        className="text-[10px] text-zinc-400 hover:text-white"
+                                        className="text-[10px] text-muted-foreground hover:text-foreground"
                                     >
                                         Clear All
                                     </button>
@@ -215,7 +215,7 @@ export function NotificationBell() {
                         </div>
                         <div className="max-h-96 overflow-y-auto">
                             {notifications.length === 0 ? (
-                                <div className="p-4 text-center text-zinc-500 text-xs">
+                                <div className="p-4 text-center text-muted-foreground text-xs">
                                     No notifications
                                 </div>
                             ) : (
@@ -237,7 +237,7 @@ export function NotificationBell() {
                                                 }
                                             }}
                                             className={`
-                                                block p-3 hover:bg-zinc-800/50 transition-colors border-b border-zinc-800/50 last:border-0
+                                                block p-3 hover:bg-muted transition-colors border-b border-border last:border-0
                                                 ${!n.read_at ? 'bg-indigo-500/5' : ''}
                                             `}
                                         >
@@ -246,15 +246,15 @@ export function NotificationBell() {
                                                     style={{ opacity: !n.read_at ? 1 : 0 }}
                                                 />
                                                 <div>
-                                                    <p className="text-xs text-zinc-300">
-                                                        <span className="font-bold text-white">{user}</span> {text}
+                                                    <p className="text-xs text-muted-foreground">
+                                                        <span className="font-bold text-foreground">{user}</span> {text}
                                                     </p>
                                                     {subtext && (
-                                                        <p className="text-[10px] text-zinc-500 mt-1 truncate max-w-[200px]">
+                                                        <p className="text-[10px] text-muted-foreground mt-1 truncate max-w-[200px]">
                                                             &quot;{subtext}&quot;
                                                         </p>
                                                     )}
-                                                    <p className="text-[10px] text-zinc-600 mt-1">
+                                                    <p className="text-[10px] text-muted-foreground mt-1">
                                                         {new Date(n.created_at).toLocaleDateString()}
                                                     </p>
                                                 </div>

@@ -63,14 +63,14 @@ export default function GroupBooksPage() {
 
             <div className="space-y-4">
                 {books.length === 0 ? (
-                    <div className="text-center py-12 bg-zinc-900/50 rounded-xl border border-zinc-800 border-dashed">
+                    <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
                         <BookOpen className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
                         <h3 className="text-lg font-medium text-white mb-1">No books yet</h3>
-                        <p className="text-zinc-500 text-sm">Add a book to start reading together.</p>
+                        <p className="text-muted-foreground text-sm">Add a book to start reading together.</p>
                     </div>
                 ) : (
                     books.map(book => (
-                        <div key={book.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex gap-4">
+                        <div key={book.id} className="bg-card border border-border rounded-xl p-4 flex gap-4">
                             {/* Cover */}
                             <div className="w-16 h-24 bg-zinc-800 rounded-lg flex-shrink-0 overflow-hidden relative">
                                 {book.cover_image ? (
@@ -90,12 +90,12 @@ export default function GroupBooksPage() {
                             {/* Details */}
                             <div className="flex-1 min-w-0">
                                 <h3 className="text-lg font-bold text-white truncate">{book.title}</h3>
-                                <p className="text-zinc-400 text-sm mb-3">{book.author}</p>
+                                <p className="text-muted-foreground text-sm mb-3">{book.author}</p>
 
                                 {/* Progress Bar (Mocked for now as per plan, assuming user progress) */}
                                 <div className="space-y-1">
                                     <div className="flex justify-between text-xs">
-                                        <span className="text-zinc-500">Your Progress</span>
+                                        <span className="text-muted-foreground">Your Progress</span>
                                         <span className="text-indigo-400 font-bold">0%</span>
                                     </div>
                                     <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">

@@ -130,12 +130,12 @@ export default function AdminGradingPage() {
         <div className="max-w-5xl mx-auto space-y-6 pb-20">
             {/* Header */}
             <div className="flex items-center gap-4">
-                <Link href="/admin/submissions" className="p-2 bg-zinc-900 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors">
+                <Link href="/admin/submissions" className="p-2 bg-card hover:bg-zinc-800 rounded-lg text-muted-foreground hover:text-white transition-colors">
                     <ArrowLeft size={20} />
                 </Link>
                 <div>
                     <h1 className="text-2xl font-bold text-white">Grading Submission #{attempt.id}</h1>
-                    <p className="text-zinc-400 text-sm">Review student work and assign a grade.</p>
+                    <p className="text-muted-foreground text-sm">Review student work and assign a grade.</p>
                 </div>
             </div>
 
@@ -145,38 +145,38 @@ export default function AdminGradingPage() {
                 <div className="lg:col-span-2 space-y-6">
 
                     {/* Student & Quiz Info */}
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
+                    <div className="bg-card border border-border rounded-xl p-6 space-y-4">
                         <div className="flex gap-4 items-start">
                             <div className="w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-500">
                                 <User size={24} />
                             </div>
                             <div>
                                 <h3 className="text-lg font-bold text-white">{attempt.user.name}</h3>
-                                <p className="text-zinc-400 text-sm">{attempt.user.email}</p>
+                                <p className="text-muted-foreground text-sm">{attempt.user.email}</p>
                             </div>
                         </div>
                         <div className="h-px bg-zinc-800 my-4" />
                         <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                                <span className="block text-zinc-500 mb-1">Quiz Title</span>
+                                <span className="block text-muted-foreground mb-1">Quiz Title</span>
                                 <span className="text-white font-medium flex items-center gap-2">
                                     <FileText size={14} /> {attempt.quiz.title}
                                 </span>
                             </div>
                             <div>
-                                <span className="block text-zinc-500 mb-1">Book</span>
+                                <span className="block text-muted-foreground mb-1">Book</span>
                                 <span className="text-white font-medium flex items-center gap-2">
                                     <BookOpen size={14} /> {attempt.quiz.book?.title || 'General Quiz'}
                                 </span>
                             </div>
                             <div>
-                                <span className="block text-zinc-500 mb-1">Submitted At</span>
+                                <span className="block text-muted-foreground mb-1">Submitted At</span>
                                 <span className="text-white font-medium flex items-center gap-2">
                                     <Calendar size={14} /> {new Date(attempt.completed_at).toLocaleString()}
                                 </span>
                             </div>
                             <div>
-                                <span className="block text-zinc-500 mb-1">Status</span>
+                                <span className="block text-muted-foreground mb-1">Status</span>
                                 <span className={`
                                     inline-flex items-center px-2 py-0.5 rounded text-xs font-bold border
                                     ${attempt.status === 'completed'
@@ -190,23 +190,23 @@ export default function AdminGradingPage() {
                     </div>
 
                     {/* Attachment Viewer */}
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+                    <div className="bg-card border border-border rounded-xl p-6">
                         <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                             <FileText size={20} className="text-indigo-400" />
                             Submitted Answer Sheet
                         </h3>
 
                         {attempt.attachment_path ? (
-                            <div className="bg-black border border-zinc-800 rounded-lg p-4 flex items-center justify-between">
+                            <div className="bg-background border border-border rounded-lg p-4 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-zinc-800 rounded flex items-center justify-center text-zinc-400">
+                                    <div className="w-10 h-10 bg-zinc-800 rounded flex items-center justify-center text-muted-foreground">
                                         <FileText size={20} />
                                     </div>
                                     <div>
                                         <p className="text-sm font-medium text-white break-all">
                                             {attempt.attachment_path.split('/').pop()}
                                         </p>
-                                        <p className="text-xs text-zinc-500">Document/Image</p>
+                                        <p className="text-xs text-muted-foreground">Document/Image</p>
                                     </div>
                                 </div>
                                 <a
@@ -220,7 +220,7 @@ export default function AdminGradingPage() {
                                 </a>
                             </div>
                         ) : (
-                            <div className="text-center py-8 text-zinc-500 border-2 border-dashed border-zinc-800 rounded-lg">
+                            <div className="text-center py-8 text-muted-foreground border-2 border-dashed border-border rounded-lg">
                                 No file attached for this submission.
                             </div>
                         )}
@@ -228,25 +228,25 @@ export default function AdminGradingPage() {
 
                     {/* Question Responses (if any) */}
                     {attempt.quiz.questions.length > 0 && (
-                        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-6">
+                        <div className="bg-card border border-border rounded-xl p-6 space-y-6">
                             <h3 className="text-lg font-bold text-white mb-4">Question Responses</h3>
                             {attempt.quiz.questions.map((q, index) => {
                                 const answer = attempt.answers.find(a => a.question_id === q.id);
                                 return (
-                                    <div key={q.id} className="border-b border-zinc-800 pb-4 last:border-0 last:pb-0">
+                                    <div key={q.id} className="border-b border-border pb-4 last:border-0 last:pb-0">
                                         <p className="font-medium text-zinc-200 mb-2">
-                                            <span className="text-zinc-500 mr-2">{index + 1}.</span>
+                                            <span className="text-muted-foreground mr-2">{index + 1}.</span>
                                             {q.question_text}
-                                            <span className="text-xs text-zinc-500 ml-2">({q.points} pts)</span>
+                                            <span className="text-xs text-muted-foreground ml-2">({q.points} pts)</span>
                                         </p>
                                         <div className="flex items-center gap-2 text-sm ml-6">
-                                            <span className="text-zinc-500">Student Answer:</span>
+                                            <span className="text-muted-foreground">Student Answer:</span>
                                             <span className={`font-mono ${answer?.user_answer ? 'text-white' : 'text-zinc-600 italic'}`}>
                                                 {answer?.user_answer || 'No Answer'}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2 text-sm ml-6 mt-1">
-                                            <span className="text-zinc-500">Correct Answer:</span>
+                                            <span className="text-muted-foreground">Correct Answer:</span>
                                             <span className="font-mono text-green-400">
                                                 {q.correct_answer}
                                             </span>
@@ -260,12 +260,12 @@ export default function AdminGradingPage() {
 
                 {/* Right Column: Grading Action */}
                 <div className="lg:col-span-1">
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 sticky top-6">
+                    <div className="bg-card border border-border rounded-xl p-6 sticky top-6">
                         <h3 className="text-xl font-bold text-white mb-4">Grading</h3>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                                <label className="block text-sm font-medium text-muted-foreground mb-2">
                                     Final Score (0-100)
                                 </label>
                                 <div className="relative">
@@ -275,10 +275,10 @@ export default function AdminGradingPage() {
                                         max="100"
                                         value={grade}
                                         onChange={e => setGrade(e.target.value)}
-                                        className="w-full bg-black border border-zinc-700 text-white p-3 rounded-lg text-2xl font-bold text-center focus:outline-none focus:border-indigo-500"
+                                        className="w-full bg-background border border-zinc-700 text-white p-3 rounded-lg text-2xl font-bold text-center focus:outline-none focus:border-indigo-500"
                                         placeholder="0"
                                     />
-                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">%</span>
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">%</span>
                                 </div>
                             </div>
 
@@ -291,7 +291,7 @@ export default function AdminGradingPage() {
                                 {submitting ? 'Saving...' : 'Submit Grade'}
                             </button>
 
-                            <p className="text-xs text-zinc-500 text-center mt-4">
+                            <p className="text-xs text-muted-foreground text-center mt-4">
                                 This will mark the quiz as "Graded" and the student will see this score immediately.
                             </p>
                         </div>
@@ -309,7 +309,7 @@ export default function AdminGradingPage() {
                         }`}>
                         {modalType === 'success' ? <CheckCircle size={32} /> : <XCircle size={32} />}
                     </div>
-                    <p className="text-zinc-300 text-lg">
+                    <p className="text-muted-foreground text-lg">
                         {modalMessage}
                     </p>
                     <div className="pt-4">

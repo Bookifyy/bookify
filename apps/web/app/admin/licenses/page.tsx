@@ -24,16 +24,16 @@ export default function LicensesPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">License Management</h1>
-                    <p className="text-zinc-400 text-sm">Manage access keys for institutions and premium users.</p>
+                    <p className="text-muted-foreground text-sm">Manage access keys for institutions and premium users.</p>
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-3">
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                         <input
                             type="text"
                             placeholder="Search licenses..."
-                            className="bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
+                            className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -47,17 +47,17 @@ export default function LicensesPage() {
                 </div>
             </div>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-xl">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-zinc-950/50 border-b border-zinc-800">
+                        <thead className="bg-background/50 border-b border-border">
                             <tr>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">License Key</th>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Organization / Owner</th>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Type</th>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Usage</th>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Expiry</th>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider text-right">Status</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">License Key</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">Organization / Owner</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">Type</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">Usage</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">Expiry</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-800">
@@ -65,7 +65,7 @@ export default function LicensesPage() {
                                 <tr key={license.id} className="group hover:bg-zinc-800/30 transition-colors">
                                     <td className="p-4">
                                         <div className="flex items-center gap-2">
-                                            <div className="p-1.5 bg-zinc-800 rounded text-zinc-400">
+                                            <div className="p-1.5 bg-zinc-800 rounded text-muted-foreground">
                                                 <Key size={14} />
                                             </div>
                                             <span className="font-mono text-sm text-white">{license.key}</span>
@@ -74,7 +74,7 @@ export default function LicensesPage() {
                                             </button>
                                         </div>
                                     </td>
-                                    <td className="p-4 text-sm font-medium text-zinc-300">{license.organization}</td>
+                                    <td className="p-4 text-sm font-medium text-muted-foreground">{license.organization}</td>
                                     <td className="p-4">
                                         <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${license.type === 'Institutional'
                                                 ? 'bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20'
@@ -83,10 +83,10 @@ export default function LicensesPage() {
                                             {license.type}
                                         </span>
                                     </td>
-                                    <td className="p-4 text-sm text-zinc-400">
+                                    <td className="p-4 text-sm text-muted-foreground">
                                         {license.seats}
                                     </td>
-                                    <td className="p-4 text-sm text-zinc-400">
+                                    <td className="p-4 text-sm text-muted-foreground">
                                         {license.expiry}
                                     </td>
                                     <td className="p-4 text-right">

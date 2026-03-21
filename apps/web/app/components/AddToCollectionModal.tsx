@@ -128,24 +128,24 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <div className="bg-[#121212] border border-zinc-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm">
+            <div className="bg-[#121212] border border-border rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl">
                 {/* Header */}
-                <div className="p-5 border-b border-zinc-800 flex items-center justify-between">
+                <div className="p-5 border-b border-border flex items-center justify-between">
                     <h3 className="font-semibold text-white">Add to Collection</h3>
-                    <button onClick={onClose} className="text-zinc-400 hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-muted-foreground hover:text-white transition-colors">
                         <X size={20} />
                     </button>
                 </div>
 
                 {/* Input Area */}
-                <div className="p-5 border-b border-zinc-800/50">
+                <div className="p-5 border-b border-border/50">
                     <input
                         type="text"
                         placeholder="Search or create collection..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-[#1f1f1f] border-none rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all placeholder:text-zinc-500"
+                        className="w-full bg-[#1f1f1f] border-none rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all placeholder:text-muted-foreground"
                     />
                 </div>
 
@@ -160,7 +160,7 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                                     onClick={() => toggleBookInCollection(collection.id)}
                                     className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${isAdded
                                             ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-200'
-                                            : 'bg-zinc-800/30 border-zinc-800/50 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-700'
+                                            : 'bg-zinc-800/30 border-border/50 text-muted-foreground hover:bg-zinc-800 hover:border-zinc-700'
                                         }`}
                                 >
                                     <span className="font-medium">{collection.name}</span>
@@ -170,7 +170,7 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                         })
                     ) : (
                         <div className="text-center py-2">
-                            <p className="text-zinc-500 text-sm mb-3">No collections match &quot;{searchQuery}&quot;</p>
+                            <p className="text-muted-foreground text-sm mb-3">No collections match &quot;{searchQuery}&quot;</p>
                             {searchQuery.trim() && (
                                 <button 
                                     onClick={handleCreateNew}
@@ -184,10 +184,10 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                 </div>
 
                 {/* Footer Buttons */}
-                <div className="p-5 bg-[#0a0a0a] border-t border-zinc-800 flex gap-3">
+                <div className="p-5 bg-[#0a0a0a] border-t border-border flex gap-3">
                     <button 
                         onClick={onClose} 
-                        className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium py-2.5 rounded-xl transition-colors"
+                        className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-muted-foreground font-medium py-2.5 rounded-xl transition-colors"
                     >
                         Cancel
                     </button>

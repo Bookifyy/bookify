@@ -45,11 +45,11 @@ export function RemoveMemberModal({ isOpen, onClose, groupId, userId, userName, 
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-sm shadow-2xl p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+            <div className="bg-card border border-border rounded-2xl w-full max-w-sm shadow-2xl p-6 relative">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-zinc-400 hover:text-white transition-colors"
+                    className="absolute top-4 right-4 text-muted-foreground hover:text-white transition-colors"
                 >
                     <X size={20} />
                 </button>
@@ -60,7 +60,7 @@ export function RemoveMemberModal({ isOpen, onClose, groupId, userId, userName, 
                     </div>
 
                     <h2 className="text-xl font-bold text-white mb-2">Remove Member?</h2>
-                    <p className="text-zinc-400 mb-6">
+                    <p className="text-muted-foreground mb-6">
                         Are you sure you want to remove <span className="text-white font-semibold">{userName}</span> from the group? This action cannot be undone.
                     </p>
 

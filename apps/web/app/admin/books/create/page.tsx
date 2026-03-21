@@ -103,11 +103,11 @@ export default function AdminBookCreatePage() {
         <div className="p-8 max-w-4xl mx-auto space-y-8">
             <div className="flex items-center justify-between">
                 <div>
-                    <button onClick={() => router.back()} className="flex items-center gap-2 text-zinc-500 hover:text-white mb-2 transition-colors text-sm">
+                    <button onClick={() => router.back()} className="flex items-center gap-2 text-muted-foreground hover:text-white mb-2 transition-colors text-sm">
                         <ArrowLeft size={16} /> Back
                     </button>
                     <h1 className="text-2xl font-bold text-white tracking-tight">Upload New Book</h1>
-                    <p className="text-zinc-500 text-sm">Add a new book to the platform library.</p>
+                    <p className="text-muted-foreground text-sm">Add a new book to the platform library.</p>
                 </div>
             </div>
 
@@ -125,11 +125,11 @@ export default function AdminBookCreatePage() {
                         {/* Left Column: Metadata */}
                         <div className="space-y-4">
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Book Title</label>
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Book Title</label>
                                 <input
                                     required
                                     type="text"
-                                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                    className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                                     value={formData.title}
                                     onChange={e => setFormData({ ...formData, title: e.target.value })}
                                 />
@@ -137,20 +137,20 @@ export default function AdminBookCreatePage() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
-                                    <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Author</label>
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author</label>
                                     <input
                                         required
                                         type="text"
-                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                        className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                                         value={formData.author}
                                         onChange={e => setFormData({ ...formData, author: e.target.value })}
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Subject</label>
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Subject</label>
                                     <select
                                         required
-                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                        className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                                         value={formData.subject_id}
                                         onChange={e => setFormData({ ...formData, subject_id: e.target.value })}
                                     >
@@ -166,15 +166,15 @@ export default function AdminBookCreatePage() {
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Description</label>
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Description</label>
                                 <textarea
-                                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all h-32"
+                                    className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all h-32"
                                     value={formData.description}
                                     onChange={e => setFormData({ ...formData, description: e.target.value })}
                                 />
                             </div>
 
-                            <div className="flex items-center gap-3 bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl">
+                            <div className="flex items-center gap-3 bg-card/50 border border-border p-4 rounded-xl">
                                 <input
                                     type="checkbox"
                                     id="is_premium"
@@ -189,7 +189,7 @@ export default function AdminBookCreatePage() {
                         {/* Right Column: Files */}
                         <div className="space-y-6">
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Book File (PDF/EPUB)</label>
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Book File (PDF/EPUB)</label>
                                 <div className="relative group">
                                     <input
                                         required
@@ -198,9 +198,9 @@ export default function AdminBookCreatePage() {
                                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                         onChange={e => setFiles({ ...files, book_file: e.target.files?.[0] || null })}
                                     />
-                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-zinc-800 rounded-xl p-8 bg-zinc-900 transition-colors group-hover:bg-zinc-800 group-hover:border-indigo-500/50">
-                                        <Upload size={24} className="text-zinc-500 mb-2 group-hover:text-indigo-400" />
-                                        <span className="text-sm font-medium text-zinc-400">
+                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-8 bg-card transition-colors group-hover:bg-zinc-800 group-hover:border-indigo-500/50">
+                                        <Upload size={24} className="text-muted-foreground mb-2 group-hover:text-indigo-400" />
+                                        <span className="text-sm font-medium text-muted-foreground">
                                             {files.book_file ? files.book_file.name : 'Select PDF or EPUB'}
                                         </span>
                                     </div>
@@ -208,7 +208,7 @@ export default function AdminBookCreatePage() {
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Cover Image</label>
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Cover Image</label>
                                 <div className="relative group">
                                     <input
                                         type="file"
@@ -216,9 +216,9 @@ export default function AdminBookCreatePage() {
                                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                         onChange={e => setFiles({ ...files, cover_image: e.target.files?.[0] || null })}
                                     />
-                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-zinc-800 rounded-xl p-8 bg-zinc-900 transition-colors group-hover:bg-zinc-800 group-hover:border-indigo-500/50">
-                                        <BookIcon size={24} className="text-zinc-500 mb-2 group-hover:text-indigo-400" />
-                                        <span className="text-sm font-medium text-zinc-400">
+                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-8 bg-card transition-colors group-hover:bg-zinc-800 group-hover:border-indigo-500/50">
+                                        <BookIcon size={24} className="text-muted-foreground mb-2 group-hover:text-indigo-400" />
+                                        <span className="text-sm font-medium text-muted-foreground">
                                             {files.cover_image ? files.cover_image.name : 'Select Cover Image'}
                                         </span>
                                     </div>

@@ -74,24 +74,24 @@ export default function AdminSubmissionsPage() {
             </div>
 
             {/* Filters */}
-            <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="bg-card border border-border p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:w-96">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                     <input
                         type="text"
                         placeholder="Search student, quiz, or book..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-black border border-zinc-700 text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:border-indigo-500"
+                        className="w-full bg-background border border-zinc-700 text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:border-indigo-500"
                     />
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Filter size={18} className="text-zinc-500" />
+                    <Filter size={18} className="text-muted-foreground" />
                     <select
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
-                        className="bg-black border border-zinc-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-indigo-500"
+                        className="bg-background border border-zinc-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-indigo-500"
                     >
                         <option value="all">All Statuses</option>
                         <option value="pending_review">Pending Review</option>
@@ -101,9 +101,9 @@ export default function AdminSubmissionsPage() {
             </div>
 
             {/* Table */}
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
                 <table className="w-full text-left">
-                    <thead className="bg-zinc-950 text-zinc-400 text-xs uppercase tracking-wider">
+                    <thead className="bg-background text-muted-foreground text-xs uppercase tracking-wider">
                         <tr>
                             <th className="px-6 py-4 font-medium">Student</th>
                             <th className="px-6 py-4 font-medium">Quiz Info</th>
@@ -115,7 +115,7 @@ export default function AdminSubmissionsPage() {
                     <tbody className="divide-y divide-zinc-800">
                         {filteredAttempts.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="px-6 py-8 text-center text-zinc-500">
+                                <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
                                     No submissions found matching your filters.
                                 </td>
                             </tr>
@@ -124,7 +124,7 @@ export default function AdminSubmissionsPage() {
                                 <tr key={attempt.id} className="hover:bg-zinc-800/50 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="font-medium text-white">{attempt.user.name}</div>
-                                        <div className="text-xs text-zinc-500">{attempt.user.email}</div>
+                                        <div className="text-xs text-muted-foreground">{attempt.user.email}</div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="text-white">{attempt.quiz.title}</div>
@@ -134,7 +134,7 @@ export default function AdminSubmissionsPage() {
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-6 py-4 text-zinc-400 text-sm">
+                                    <td className="px-6 py-4 text-muted-foreground text-sm">
                                         {new Date(attempt.completed_at).toLocaleDateString()}
                                         <div className="text-xs opacity-60">
                                             {new Date(attempt.completed_at).toLocaleTimeString()}

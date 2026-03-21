@@ -43,13 +43,13 @@ export default function OnboardingPage() {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white flex flex-col relative overflow-hidden">
+        <div className="min-h-screen bg-background text-white flex flex-col relative overflow-hidden">
             {/* Top Bar */}
             <div className="flex justify-between items-center p-6 z-10">
                 <h1 className="text-xl font-serif tracking-tight">Bookify</h1>
                 <button
                     onClick={handleSkip}
-                    className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                    className="text-sm font-medium text-muted-foreground hover:text-white transition-colors"
                 >
                     Skip
                 </button>
@@ -86,7 +86,7 @@ export default function OnboardingPage() {
                     <h2 className="text-2xl font-serif font-medium tracking-tight">
                         {slides[currentSlide].title}
                     </h2>
-                    <p className="text-zinc-400 text-sm leading-relaxed px-4">
+                    <p className="text-muted-foreground text-sm leading-relaxed px-4">
                         {slides[currentSlide].description}
                     </p>
                 </div>

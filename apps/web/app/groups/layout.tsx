@@ -72,10 +72,10 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                 Desktop: Always visible
             */}
             <div className={`
-                w-full lg:w-80 border-r border-zinc-800 bg-black flex-col flex-shrink-0
+                w-full lg:w-80 border-r border-border bg-background flex-col flex-shrink-0
                 ${isGroupSelected ? 'hidden lg:flex' : 'flex'}
             `}>
-                <div className="p-4 border-b border-zinc-800">
+                <div className="p-4 border-b border-border">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-bold text-white">Groups</h2>
                         <button
@@ -87,13 +87,13 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                     </div>
 
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                         <input
                             type="text"
                             placeholder="Search groups..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                         />
                     </div>
                 </div>
@@ -104,7 +104,7 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                             <Loader2 className="animate-spin text-indigo-500" />
                         </div>
                     ) : filteredGroups.length === 0 ? (
-                        <div className="text-center p-4 text-zinc-500 text-sm">
+                        <div className="text-center p-4 text-muted-foreground text-sm">
                             No groups found.
                         </div>
                     ) : (
@@ -117,8 +117,8 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                                     className={`
                                         block p-3 rounded-lg transition-colors border
                                         ${isActive
-                                            ? 'bg-zinc-900 border-indigo-500/50'
-                                            : 'border-transparent hover:bg-zinc-900'
+                                            ? 'bg-card border-indigo-500/50'
+                                            : 'border-transparent hover:bg-card'
                                         }
                                     `}
                                 >
@@ -131,11 +131,11 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between items-start">
-                                                <h3 className={`font-medium truncate ${isActive ? 'text-white' : 'text-zinc-300'}`}>
+                                                <h3 className={`font-medium truncate ${isActive ? 'text-white' : 'text-muted-foreground'}`}>
                                                     {group.name}
                                                 </h3>
                                             </div>
-                                            <div className="flex items-center gap-3 text-xs text-zinc-500 mt-1">
+                                            <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
                                                 <span className="flex items-center gap-1">
                                                     <Users size={12} /> {group.members_count || 0}
                                                 </span>
@@ -153,7 +153,7 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
 
             {/* Main Content Area */}
             <div className={`
-                flex-1 flex-col bg-black overflow-hidden relative
+                flex-1 flex-col bg-background overflow-hidden relative
                 ${!isGroupSelected ? 'hidden lg:flex' : 'flex'}
             `}>
                 {children}

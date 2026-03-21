@@ -95,15 +95,15 @@ export default function AdminUsersPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">User Management</h1>
-                    <p className="text-zinc-400 text-sm">Manage user access, roles, and status.</p>
+                    <p className="text-muted-foreground text-sm">Manage user access, roles, and status.</p>
                 </div>
 
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                     <input
                         type="text"
                         placeholder="Search users..."
-                        className="bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
+                        className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -112,23 +112,23 @@ export default function AdminUsersPage() {
 
             {error && <div className="p-4 bg-red-500/10 text-red-500 rounded-xl text-sm border border-red-500/20">{error}</div>}
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-xl">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-zinc-950/50 border-b border-zinc-800">
+                        <thead className="bg-background/50 border-b border-border">
                             <tr>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">User</th>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Role</th>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Status</th>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Joined</th>
-                                <th className="p-4 text-xs font-bold text-zinc-500 uppercase tracking-wider text-right">Actions</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">User</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">Role</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">Status</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">Joined</th>
+                                <th className="p-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-800">
                             {loading ? (
-                                <tr><td colSpan={5} className="p-8 text-center text-zinc-500">Loading users...</td></tr>
+                                <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">Loading users...</td></tr>
                             ) : filteredUsers.length === 0 ? (
-                                <tr><td colSpan={5} className="p-8 text-center text-zinc-500">No users found.</td></tr>
+                                <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">No users found.</td></tr>
                             ) : (
                                 filteredUsers.map(user => (
                                     <tr key={user.id} className="group hover:bg-zinc-800/30 transition-colors">
@@ -139,7 +139,7 @@ export default function AdminUsersPage() {
                                                 </div>
                                                 <div>
                                                     <p className="font-medium text-white text-sm">{user.name}</p>
-                                                    <p className="text-xs text-zinc-500">{user.email}</p>
+                                                    <p className="text-xs text-muted-foreground">{user.email}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -158,17 +158,17 @@ export default function AdminUsersPage() {
                                                 <CheckCircle size={12} /> Active
                                             </span>
                                         </td>
-                                        <td className="p-4 text-sm text-zinc-400">
+                                        <td className="p-4 text-sm text-muted-foreground">
                                             {new Date(user.created_at).toLocaleDateString()}
                                         </td>
                                         <td className="p-4 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors" title="Edit">
+                                                <button className="p-2 hover:bg-zinc-800 rounded-lg text-muted-foreground hover:text-white transition-colors" title="Edit">
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => confirmBan(user)}
-                                                    className="p-2 hover:bg-red-500/10 rounded-lg text-zinc-400 hover:text-red-500 transition-colors"
+                                                    className="p-2 hover:bg-red-500/10 rounded-lg text-muted-foreground hover:text-red-500 transition-colors"
                                                     title="Ban User"
                                                 >
                                                     <Ban size={16} />

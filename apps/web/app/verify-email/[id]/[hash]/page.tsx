@@ -54,14 +54,14 @@ export default function VerifyEmailHandler({ params }: { params: Promise<{ id: s
     }, [id, hash, token, router]);
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-black">
+        <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-background">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-center">
+                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border text-center">
 
                     {status === 'loading' && (
                         <div className="flex flex-col items-center">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
-                            <p className="text-zinc-600 dark:text-zinc-400">{message}</p>
+                            <p className="text-zinc-600 dark:text-muted-foreground">{message}</p>
                         </div>
                     )}
 
@@ -73,7 +73,7 @@ export default function VerifyEmailHandler({ params }: { params: Promise<{ id: s
                                 </svg>
                             </div>
                             <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">Success!</h2>
-                            <p className="text-zinc-600 dark:text-zinc-400">{message}</p>
+                            <p className="text-zinc-600 dark:text-muted-foreground">{message}</p>
                         </div>
                     )}
 
@@ -85,7 +85,7 @@ export default function VerifyEmailHandler({ params }: { params: Promise<{ id: s
                                 </svg>
                             </div>
                             <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">Verification Failed</h2>
-                            <p className="text-zinc-600 dark:text-zinc-400 mb-6">{message}</p>
+                            <p className="text-zinc-600 dark:text-muted-foreground mb-6">{message}</p>
                             <Link
                                 href="/verify-email"
                                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

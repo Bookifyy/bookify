@@ -42,28 +42,28 @@ export default function VerifyEmailPage() {
 
     if (!user) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-                <p className="text-zinc-500">Please <Link href="/login" className="text-indigo-600 underline">login</Link> to view this page.</p>
+            <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-background">
+                <p className="text-muted-foreground">Please <Link href="/login" className="text-indigo-600 underline">login</Link> to view this page.</p>
             </div>
         );
     }
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-black">
+        <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-background">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
                     Verify your email
                 </h2>
-                <p className="mt-2 text-center text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="mt-2 text-center text-sm text-zinc-600 dark:text-muted-foreground">
                     Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you?
                 </p>
-                <p className="mt-2 text-center text-xs font-medium text-zinc-500">
+                <p className="mt-2 text-center text-xs font-medium text-muted-foreground">
                     Sent to: <span className="text-zinc-900 dark:text-zinc-100">{user.email}</span>
                 </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border">
 
                     {status && (
                         <div className="mb-6 rounded-md bg-green-50 p-4 dark:bg-green-900/20">
@@ -92,13 +92,13 @@ export default function VerifyEmailPage() {
 
                         <button
                             onClick={() => window.location.reload()}
-                            className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                            className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-muted-foreground dark:hover:text-zinc-200"
                         >
                             Already verified? Refresh page
                         </button>
                     </div>
 
-                    <div className="mt-6 pt-6 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                    <div className="mt-6 pt-6 border-t border-zinc-100 dark:border-border flex items-center justify-between">
                         <Link
                             href="/"
                             className="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"

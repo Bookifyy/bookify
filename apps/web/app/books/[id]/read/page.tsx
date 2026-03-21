@@ -428,9 +428,9 @@ export default function ReaderPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center gap-4 text-white">
+            <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 text-white">
                 <Loader2 className="animate-spin text-indigo-500" size={48} />
-                <p className="text-zinc-400 font-medium tracking-tight">Opening your book...</p>
+                <p className="text-muted-foreground font-medium tracking-tight">Opening your book...</p>
             </div>
         );
     }
@@ -440,39 +440,39 @@ export default function ReaderPage() {
     const pdfUrl = resolveAssetUrl(book.file_path);
 
     return (
-        <div className="h-screen bg-zinc-950 text-white flex flex-col overflow-hidden">
+        <div className="h-screen bg-background text-white flex flex-col overflow-hidden">
             {/* Reader Header */}
-            <header className="h-16 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-md px-6 flex items-center justify-between z-20">
+            <header className="h-16 border-b border-border bg-card/50 backdrop-blur-md px-6 flex items-center justify-between z-20">
                 <div className="flex items-center gap-4">
                     <button
                         onClick={() => router.back()}
-                        className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400 hover:text-white"
+                        className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-muted-foreground hover:text-white"
                     >
                         <ArrowLeft size={20} />
                     </button>
                     <div>
                         <h1 className="text-sm font-bold tracking-tight truncate max-w-[200px] md:max-w-md">{book.title}</h1>
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Reader Mode</p>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Reader Mode</p>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                     <div className="flex items-center bg-zinc-800 rounded-lg p-1">
-                        <button onClick={() => setScale(s => Math.max(0.5, s - 0.1))} className="p-1.5 hover:bg-zinc-700 rounded transition-colors text-zinc-400"><ZoomOut size={16} /></button>
-                        <span className="text-[10px] font-bold w-12 text-center text-zinc-300">{Math.round(scale * 100)}%</span>
-                        <button onClick={() => setScale(s => Math.min(2, s + 0.1))} className="p-1.5 hover:bg-zinc-700 rounded transition-colors text-zinc-400"><ZoomIn size={16} /></button>
+                        <button onClick={() => setScale(s => Math.max(0.5, s - 0.1))} className="p-1.5 hover:bg-zinc-700 rounded transition-colors text-muted-foreground"><ZoomOut size={16} /></button>
+                        <span className="text-[10px] font-bold w-12 text-center text-muted-foreground">{Math.round(scale * 100)}%</span>
+                        <button onClick={() => setScale(s => Math.min(2, s + 0.1))} className="p-1.5 hover:bg-zinc-700 rounded transition-colors text-muted-foreground"><ZoomIn size={16} /></button>
                     </div>
-                    <button onClick={toggleFullscreen} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400">
+                    <button onClick={toggleFullscreen} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-muted-foreground">
                         {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
                     </button>
-                    <button onClick={() => setActiveModal('toc')} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-zinc-400" title="Table of Contents">
+                    <button onClick={() => setActiveModal('toc')} className="p-2 hover:bg-zinc-800 rounded-lg transition-colors text-muted-foreground" title="Table of Contents">
                         <List size={20} />
                     </button>
                 </div>
             </header>
 
             {/* Reader Canvas */}
-            <main className="flex-1 overflow-auto bg-zinc-900 flex justify-center p-4 md:p-8 custom-scrollbar relative select-text overscroll-x-none touch-pan-y">
+            <main className="flex-1 overflow-auto bg-card flex justify-center p-4 md:p-8 custom-scrollbar relative select-text overscroll-x-none touch-pan-y">
                 <div ref={containerRef} className="w-full max-w-4xl mx-auto flex justify-center">
                     <Document
                         file={pdfBlob}
@@ -482,15 +482,15 @@ export default function ReaderPage() {
                             setError(`PDF Engine Error: ${err.message}. Please try a hard refresh (Ctrl+F5).`);
                         }}
                         loading={
-                            <div className="w-[600px] aspect-[1/1.4] bg-zinc-800 animate-pulse flex flex-col items-center justify-center text-zinc-500 gap-4">
+                            <div className="w-[600px] aspect-[1/1.4] bg-zinc-800 animate-pulse flex flex-col items-center justify-center text-muted-foreground gap-4">
                                 <Loader2 className="animate-spin text-zinc-600" size={32} />
                                 <span className="text-sm font-medium">Rendering PDF...</span>
                             </div>
                         }
                         error={
-                            <div className="w-[600px] aspect-[1/1.4] flex flex-col items-center justify-center text-red-500 p-8 text-center bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl">
+                            <div className="w-[600px] aspect-[1/1.4] flex flex-col items-center justify-center text-red-500 p-8 text-center bg-card border border-border rounded-lg shadow-2xl">
                                 <p className="font-bold mb-4 text-lg">Unable to load PDF</p>
-                                <p className="text-sm text-zinc-400 mb-6">{error || 'This could be due to a server error or an invalid file. Please try re-uploading the book.'}</p>
+                                <p className="text-sm text-muted-foreground mb-6">{error || 'This could be due to a server error or an invalid file. Please try re-uploading the book.'}</p>
                                 <button
                                     onClick={handleRetry}
                                     className="px-6 py-2 bg-indigo-600 text-white rounded-full font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/20"
@@ -578,7 +578,7 @@ export default function ReaderPage() {
             </main>
 
             {/* Navigation Footer */}
-            <footer className="h-16 border-t border-zinc-800 bg-zinc-900/80 backdrop-blur-md px-6 flex items-center justify-center gap-8 z-20 mb-20">
+            <footer className="h-16 border-t border-border bg-card/80 backdrop-blur-md px-6 flex items-center justify-center gap-8 z-20 mb-20">
                 <button
                     disabled={pageNumber <= 1}
                     onClick={() => setPageNumber(p => Math.max(1, p - 1))}
@@ -610,31 +610,31 @@ export default function ReaderPage() {
 
             {/* TOC Sidebar / Drawer */}
             {activeModal === 'toc' && (
-                <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setActiveModal('none')}>
+                <div className="fixed inset-0 z-[60] bg-background/50 backdrop-blur-sm" onClick={() => setActiveModal('none')}>
                     <div
-                        className="absolute top-0 bottom-0 right-0 w-[85vw] md:w-[400px] bg-zinc-900 border-l border-zinc-800 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300"
+                        className="absolute top-0 bottom-0 right-0 w-[85vw] md:w-[400px] bg-card border-l border-border shadow-2xl flex flex-col animate-in slide-in-from-right duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/95 backdrop-blur shrink-0">
+                        <div className="p-4 border-b border-border flex justify-between items-center bg-card/95 backdrop-blur shrink-0">
                             <div>
                                 <h3 className="font-bold text-white text-lg">Contents</h3>
-                                <p className="text-xs text-zinc-500">{outline && outline.length > 0 ? `${outline.length} Chapters` : 'No embedded chapters'}</p>
+                                <p className="text-xs text-muted-foreground">{outline && outline.length > 0 ? `${outline.length} Chapters` : 'No embedded chapters'}</p>
                             </div>
-                            <button onClick={() => setActiveModal('none')} className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-zinc-400 hover:text-white">
+                            <button onClick={() => setActiveModal('none')} className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-muted-foreground hover:text-white">
                                 <X size={20} />
                             </button>
                         </div>
 
                         {/* Jump to Page Input */}
-                        <div className="p-4 border-b border-zinc-800 bg-zinc-900/50 shrink-0">
-                            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 block">Jump to Page</label>
+                        <div className="p-4 border-b border-border bg-card/50 shrink-0">
+                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Jump to Page</label>
                             <div className="flex gap-2">
                                 <input
                                     type="number"
                                     min={1}
                                     max={numPages || 1}
                                     placeholder={`1-${numPages || '?'}`}
-                                    className="flex-1 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-600 outline-none"
+                                    className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-white focus:border-blue-600 outline-none"
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') {
                                             const val = parseInt(e.currentTarget.value);
@@ -687,7 +687,7 @@ export default function ReaderPage() {
                                                             }
                                                         }
                                                     }}
-                                                    className="w-full text-left py-3 px-3 rounded-lg hover:bg-zinc-800/50 text-sm text-zinc-300 hover:text-white transition-colors truncate border-b border-zinc-800/50 last:border-0"
+                                                    className="w-full text-left py-3 px-3 rounded-lg hover:bg-zinc-800/50 text-sm text-muted-foreground hover:text-white transition-colors truncate border-b border-border/50 last:border-0"
                                                     style={{ paddingLeft: `${12 + (level * 16)}px` }}
                                                 >
                                                     {tocItem.title}
@@ -695,7 +695,7 @@ export default function ReaderPage() {
                                                 {tocItem.items && tocItem.items.length > 0 && (
                                                     <div className="mt-1">
                                                         {tocItem.items.map((subItem: any, subIdx: number) =>
-                                                            <div key={subIdx} className="pl-4 border-l border-zinc-800 ml-3">
+                                                            <div key={subIdx} className="pl-4 border-l border-border ml-3">
                                                                 <button
                                                                     onClick={async () => {
                                                                         if (pdfDocument && subItem.dest) {
@@ -711,7 +711,7 @@ export default function ReaderPage() {
                                                                             } catch (e) { }
                                                                         }
                                                                     }}
-                                                                    className="w-full text-left py-2 px-2 text-xs text-zinc-400 hover:text-white hover:bg-zinc-800/30 rounded"
+                                                                    className="w-full text-left py-2 px-2 text-xs text-muted-foreground hover:text-white hover:bg-zinc-800/30 rounded"
                                                                 >
                                                                     {subItem.title}
                                                                 </button>
@@ -725,10 +725,10 @@ export default function ReaderPage() {
                                     })}
                                 </ul>
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-40 text-zinc-500 gap-3 border border-dashed border-zinc-800 rounded-xl mt-4">
+                                <div className="flex flex-col items-center justify-center h-40 text-muted-foreground gap-3 border border-dashed border-border rounded-xl mt-4">
                                     <List size={32} className="opacity-20" />
                                     <div className="text-center">
-                                        <p className="text-sm font-medium text-zinc-400">No chapters found</p>
+                                        <p className="text-sm font-medium text-muted-foreground">No chapters found</p>
                                         <p className="text-xs mt-1 max-w-[200px]">This PDF doesn't contain a table of contents. Use the page jump above to navigate.</p>
                                     </div>
                                 </div>
@@ -740,12 +740,12 @@ export default function ReaderPage() {
 
             {/* Modals Overlay (exclude TOC as it has its own sidebar) */}
             {activeModal !== 'none' && activeModal !== 'toc' && (
-                <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setActiveModal('none')}>
+                <div className="fixed inset-0 z-[60] bg-background/50 backdrop-blur-sm" onClick={() => setActiveModal('none')}>
                     <div
                         className="absolute bottom-0 left-0 right-0 p-4 animate-in slide-in-from-bottom-10 fade-in duration-200 lg:top-1/2 lg:bottom-auto lg:left-1/2 lg:right-auto lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-[400px]"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl max-h-[80vh] flex flex-col">
+                        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-2xl max-h-[80vh] flex flex-col">
 
                             {/* Theme Modal */}
                             {activeModal === 'theme' && (
@@ -753,7 +753,7 @@ export default function ReaderPage() {
                                     <h3 className="text-white text-sm font-bold mb-4">Reading Theme</h3>
                                     <div className="grid grid-cols-2 gap-4">
                                         <button onClick={() => setTheme('light')} className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'light' ? 'bg-white border-white text-black' : 'bg-white text-black border-transparent opacity-80'}`}>Light</button>
-                                        <button onClick={() => setTheme('dark')} className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'dark' ? 'bg-zinc-900 border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'bg-zinc-900 border-zinc-700 text-zinc-400'}`}>Dark</button>
+                                        <button onClick={() => setTheme('dark')} className={`h-12 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2 ${theme === 'dark' ? 'bg-card border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'bg-card border-zinc-700 text-muted-foreground'}`}>Dark</button>
                                     </div>
                                 </div>
                             )}
@@ -765,7 +765,7 @@ export default function ReaderPage() {
 
                                     <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <div className="flex justify-between text-xs text-zinc-400 font-medium">
+                                            <div className="flex justify-between text-xs text-muted-foreground font-medium">
                                                 <span>Zoom Level</span>
                                                 <span>{Math.round(scale * 100)}%</span>
                                             </div>
@@ -787,17 +787,17 @@ export default function ReaderPage() {
                             {activeModal === 'search' && (
                                 <div className="p-4 h-full flex flex-col">
                                     <div className="relative shrink-0">
-                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                                         <input
                                             type="text"
                                             placeholder="Search in book..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                                            className="w-full bg-black border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-base md:text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-600"
+                                            className="w-full bg-background border border-border rounded-xl py-3 pl-10 pr-4 text-base md:text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-600"
                                             autoFocus
                                         />
-                                        {isSearching && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 animate-spin" size={16} />}
+                                        {isSearching && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground animate-spin" size={16} />}
                                     </div>
 
                                     <div className="mt-4 flex-1 overflow-y-auto custom-scrollbar space-y-2">
@@ -809,12 +809,12 @@ export default function ReaderPage() {
                                                         setPageNumber(result.page);
                                                         setActiveModal('none');
                                                     }}
-                                                    className="w-full text-left p-3 rounded-lg bg-zinc-900/50 hover:bg-zinc-800 border border-zinc-800 transition-colors group"
+                                                    className="w-full text-left p-3 rounded-lg bg-card/50 hover:bg-zinc-800 border border-border transition-colors group"
                                                 >
                                                     <div className="flex justify-between items-center mb-1">
-                                                        <span className="text-[10px] uppercase font-bold text-zinc-500">Page {result.page}</span>
+                                                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Page {result.page}</span>
                                                     </div>
-                                                    <p className="text-xs text-zinc-300 line-clamp-2">
+                                                    <p className="text-xs text-muted-foreground line-clamp-2">
                                                         <span dangerouslySetInnerHTML={{
                                                             __html: result.match_text.replace(new RegExp(searchQuery, 'gi'), match => `<span class="text-blue-400 font-bold bg-blue-400/10">${match}</span>`)
                                                         }} />
@@ -823,7 +823,7 @@ export default function ReaderPage() {
                                             ))
                                         ) : (
                                             !isSearching && searchQuery && (
-                                                <div className="text-center py-8 text-zinc-500 text-xs">
+                                                <div className="text-center py-8 text-muted-foreground text-xs">
                                                     No results found for "{searchQuery}"
                                                 </div>
                                             )
@@ -835,17 +835,17 @@ export default function ReaderPage() {
                             {/* Bookmarks Modal */}
                             {activeModal === 'bookmark' && (
                                 <div className="flex flex-col h-full">
-                                    <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
+                                    <div className="p-4 border-b border-border flex justify-between items-center">
                                         <h3 className="font-bold text-white">Bookmarks</h3>
-                                        <span className="text-xs text-zinc-500">{bookmarks.length} saved</span>
+                                        <span className="text-xs text-muted-foreground">{bookmarks.length} saved</span>
                                     </div>
 
-                                    <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
+                                    <div className="p-4 border-b border-border bg-card/50">
                                         <div className="flex gap-2">
                                             <input
                                                 type="text"
                                                 placeholder="Bookmark title..."
-                                                className="flex-1 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors"
+                                                className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors"
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         const val = e.currentTarget.value;
@@ -873,13 +873,13 @@ export default function ReaderPage() {
 
                                     <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
                                         {bookmarks.length === 0 ? (
-                                            <div className="text-center py-8 text-zinc-500 text-xs">No bookmarks yet.</div>
+                                            <div className="text-center py-8 text-muted-foreground text-xs">No bookmarks yet.</div>
                                         ) : (
                                             bookmarks.map(bm => (
-                                                <div key={bm.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg flex items-center justify-between group">
+                                                <div key={bm.id} className="bg-background/50 border border-border p-3 rounded-lg flex items-center justify-between group">
                                                     <div>
                                                         <p className="text-sm font-medium text-white">{bm.title}</p>
-                                                        <p className="text-[10px] text-zinc-500">Page {bm.page_number} • {new Date(bm.created_at).toLocaleDateString()}</p>
+                                                        <p className="text-[10px] text-muted-foreground">Page {bm.page_number} • {new Date(bm.created_at).toLocaleDateString()}</p>
                                                     </div>
                                                     <button
                                                         onClick={() => deleteFeature('bookmarks', bm.id)}
@@ -897,16 +897,16 @@ export default function ReaderPage() {
                             {/* Notes Modal */}
                             {activeModal === 'note' && (
                                 <div className="flex flex-col h-full">
-                                    <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
+                                    <div className="p-4 border-b border-border flex justify-between items-center">
                                         <h3 className="font-bold text-white">Notes</h3>
-                                        <span className="text-xs text-zinc-500">{notes.length} saved</span>
+                                        <span className="text-xs text-muted-foreground">{notes.length} saved</span>
                                     </div>
 
-                                    <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
+                                    <div className="p-4 border-b border-border bg-card/50">
                                         <div className="space-y-2">
                                             <textarea
                                                 placeholder="Write a note..."
-                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors resize-none h-40"
+                                                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors resize-none h-40"
                                             />
                                             <button
                                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-2 text-xs font-bold transition-colors"
@@ -925,13 +925,13 @@ export default function ReaderPage() {
 
                                     <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
                                         {notes.length === 0 ? (
-                                            <div className="text-center py-8 text-zinc-500 text-xs">No notes yet.</div>
+                                            <div className="text-center py-8 text-muted-foreground text-xs">No notes yet.</div>
                                         ) : (
                                             notes.map(note => (
-                                                <div key={note.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg flex flex-col gap-2 group">
-                                                    <p className="text-xs text-zinc-300 leading-relaxed">{note.content}</p>
-                                                    <div className="flex justify-between items-center pt-2 border-t border-zinc-800/50">
-                                                        <p className="text-[10px] text-zinc-500">Page {note.page_number} • {new Date(note.created_at).toLocaleDateString()}</p>
+                                                <div key={note.id} className="bg-background/50 border border-border p-3 rounded-lg flex flex-col gap-2 group">
+                                                    <p className="text-xs text-muted-foreground leading-relaxed">{note.content}</p>
+                                                    <div className="flex justify-between items-center pt-2 border-t border-border/50">
+                                                        <p className="text-[10px] text-muted-foreground">Page {note.page_number} • {new Date(note.created_at).toLocaleDateString()}</p>
                                                         <button
                                                             onClick={() => deleteFeature('notes', note.id)}
                                                             className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
@@ -949,21 +949,21 @@ export default function ReaderPage() {
                             {/* Highlights List Modal */}
                             {activeModal === 'highlight' && (
                                 <div className="flex flex-col h-full">
-                                    <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
+                                    <div className="p-4 border-b border-border flex justify-between items-center">
                                         <h3 className="font-bold text-white">Highlights</h3>
-                                        <span className="text-xs text-zinc-500">{highlights.length} saved</span>
+                                        <span className="text-xs text-muted-foreground">{highlights.length} saved</span>
                                     </div>
 
                                     <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
                                         {highlights.length === 0 ? (
-                                            <div className="text-center py-8 text-zinc-500 text-xs">No highlights yet. Select text to add one.</div>
+                                            <div className="text-center py-8 text-muted-foreground text-xs">No highlights yet. Select text to add one.</div>
                                         ) : (
                                             highlights.map(hl => (
-                                                <div key={hl.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg group">
+                                                <div key={hl.id} className="bg-background/50 border border-border p-3 rounded-lg group">
                                                     {hl.title && <p className="text-xs font-bold text-white mb-1">{hl.title}</p>}
-                                                    <p className={`text-xs text-zinc-300 italic pl-2 border-l-2 ${hl.color === 'yellow' ? 'border-yellow-500' : 'border-blue-500'} mb-2`}>"{hl.text_content}"</p>
+                                                    <p className={`text-xs text-muted-foreground italic pl-2 border-l-2 ${hl.color === 'yellow' ? 'border-yellow-500' : 'border-blue-500'} mb-2`}>"{hl.text_content}"</p>
                                                     <div className="flex justify-between items-center">
-                                                        <p className="text-[10px] text-zinc-500">Page {hl.page_number}</p>
+                                                        <p className="text-[10px] text-muted-foreground">Page {hl.page_number}</p>
                                                         <button
                                                             onClick={() => deleteFeature('highlights', hl.id)}
                                                             className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 text-[10px]"
@@ -981,23 +981,23 @@ export default function ReaderPage() {
                             {/* Flashcards Modal */}
                             {activeModal === 'flashcard' && (
                                 <div className="flex flex-col h-full">
-                                    <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
+                                    <div className="p-4 border-b border-border flex justify-between items-center">
                                         <h3 className="font-bold text-white">Flashcards</h3>
-                                        <span className="text-xs text-zinc-500">{flashcards.length} cards</span>
+                                        <span className="text-xs text-muted-foreground">{flashcards.length} cards</span>
                                     </div>
 
-                                    <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
+                                    <div className="p-4 border-b border-border bg-card/50">
                                         <div className="space-y-2">
                                             <input
                                                 type="text"
                                                 placeholder="Front (Question)"
-                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors"
+                                                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors"
                                                 id="fc-front"
                                             />
                                             <input
                                                 type="text"
                                                 placeholder="Back (Answer)"
-                                                className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors"
+                                                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none transition-colors"
                                                 id="fc-back"
                                             />
                                             <button
@@ -1020,17 +1020,17 @@ export default function ReaderPage() {
 
                                     <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
                                         {flashcards.length === 0 ? (
-                                            <div className="text-center py-8 text-zinc-500 text-xs">No cards created.</div>
+                                            <div className="text-center py-8 text-muted-foreground text-xs">No cards created.</div>
                                         ) : (
                                             flashcards.map(fc => (
-                                                <div key={fc.id} className="bg-black/50 border border-zinc-800 p-3 rounded-lg group">
+                                                <div key={fc.id} className="bg-background/50 border border-border p-3 rounded-lg group">
                                                     <div className="mb-2">
-                                                        <p className="text-[10px] text-zinc-500 uppercase font-bold">Front</p>
+                                                        <p className="text-[10px] text-muted-foreground uppercase font-bold">Front</p>
                                                         <p className="text-xs text-white">{fc.front_content}</p>
                                                     </div>
                                                     <div className="mb-2">
-                                                        <p className="text-[10px] text-zinc-500 uppercase font-bold">Back</p>
-                                                        <p className="text-xs text-zinc-300">{fc.back_content}</p>
+                                                        <p className="text-[10px] text-muted-foreground uppercase font-bold">Back</p>
+                                                        <p className="text-xs text-muted-foreground">{fc.back_content}</p>
                                                     </div>
                                                     <div className="flex justify-end">
                                                         <button
@@ -1052,12 +1052,12 @@ export default function ReaderPage() {
                                 <div className="p-6 space-y-4">
                                     <h3 className="text-white text-sm font-bold">Save Highlight</h3>
                                     <div className="bg-zinc-800/50 p-3 rounded-lg border border-zinc-700">
-                                        <p className="text-xs text-zinc-300 italic line-clamp-4">"{selectedText}"</p>
+                                        <p className="text-xs text-muted-foreground italic line-clamp-4">"{selectedText}"</p>
                                     </div>
                                     <input
                                         type="text"
                                         placeholder="Add a title (optional)"
-                                        className="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none"
+                                        className="w-full bg-background border border-border rounded-lg px-3 py-2 text-base md:text-sm text-white focus:border-blue-600 outline-none"
                                         id="hl-title"
                                         autoFocus
                                     />
@@ -1097,7 +1097,7 @@ export default function ReaderPage() {
             {highlightPopup && (
                 <div
                     id="highlight-popup"
-                    className="fixed z-[70] bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl p-2 flex gap-2 animate-in fade-in zoom-in duration-200"
+                    className="fixed z-[70] bg-card border border-zinc-700 rounded-lg shadow-xl p-2 flex gap-2 animate-in fade-in zoom-in duration-200"
                     style={{
                         left: highlightPopup.x,
                         top: highlightPopup.y - 50,
@@ -1119,15 +1119,15 @@ export default function ReaderPage() {
             )}
 
             {/* Bottom Toolbar & Action */}
-            <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-zinc-900 pb-2 pt-2 z-50">
+            <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-xl border-t border-border pb-2 pt-2 z-50">
                 <div className="max-w-xl mx-auto flex items-center justify-between px-6">
 
                     {/* Font Settings */}
                     <button
                         onClick={() => setActiveModal(activeModal === 'typography' ? 'none' : 'typography')}
-                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'typography' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'typography' ? 'text-blue-500' : 'text-muted-foreground hover:text-white'}`}
                     >
-                        <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-zinc-800 border border-border transition-colors">
                             <Type size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Font</span>
@@ -1136,9 +1136,9 @@ export default function ReaderPage() {
                     {/* Search */}
                     <button
                         onClick={() => setActiveModal(activeModal === 'search' ? 'none' : 'search')}
-                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'search' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'search' ? 'text-blue-500' : 'text-muted-foreground hover:text-white'}`}
                     >
-                        <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-zinc-800 border border-border transition-colors">
                             <Search size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Search</span>
@@ -1146,9 +1146,9 @@ export default function ReaderPage() {
                     {/* Highlight */}
                     <button
                         onClick={() => setActiveModal(activeModal === 'highlight' ? 'none' : 'highlight')}
-                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'highlight' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'highlight' ? 'text-blue-500' : 'text-muted-foreground hover:text-white'}`}
                     >
-                        <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-zinc-800 border border-border transition-colors">
                             <Type size={18} className="rotate-90" />
                         </div>
                         <span className="text-[10px] font-medium">Highlight</span>
@@ -1160,9 +1160,9 @@ export default function ReaderPage() {
                     {/* Note */}
                     <button
                         onClick={() => setActiveModal(activeModal === 'note' ? 'none' : 'note')}
-                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'note' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'note' ? 'text-blue-500' : 'text-muted-foreground hover:text-white'}`}
                     >
-                        <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-zinc-800 border border-border transition-colors">
                             <BookOpen size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Note</span>
@@ -1171,9 +1171,9 @@ export default function ReaderPage() {
                     {/* Bookmark */}
                     <button
                         onClick={() => setActiveModal(activeModal === 'bookmark' ? 'none' : 'bookmark')}
-                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'bookmark' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'bookmark' ? 'text-blue-500' : 'text-muted-foreground hover:text-white'}`}
                     >
-                        <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-zinc-800 border border-border transition-colors">
                             <Bookmark size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Bookmark</span>
@@ -1182,9 +1182,9 @@ export default function ReaderPage() {
                     {/* Flashcards */}
                     <button
                         onClick={() => setActiveModal(activeModal === 'flashcard' ? 'none' : 'flashcard')}
-                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'flashcard' ? 'text-blue-500' : 'text-zinc-400 hover:text-white'}`}
+                        className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'flashcard' ? 'text-blue-500' : 'text-muted-foreground hover:text-white'}`}
                     >
-                        <div className="p-2 rounded-xl bg-zinc-900 group-hover:bg-zinc-800 border border-zinc-800 transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-zinc-800 border border-border transition-colors">
                             <Star size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Flashcard</span>

@@ -9,11 +9,11 @@ export default function GroupsPage() {
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-            <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mb-6">
+            <div className="w-16 h-16 bg-card rounded-2xl flex items-center justify-center mb-6">
                 <Users size={32} className="text-zinc-600" />
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">No group selected</h1>
-            <p className="text-zinc-400 mb-8 max-w-sm">
+            <p className="text-muted-foreground mb-8 max-w-sm">
                 Choose a group from the left to see its books and chat, or create a new community.
             </p>
             <button

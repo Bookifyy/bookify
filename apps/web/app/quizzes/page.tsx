@@ -70,19 +70,19 @@ export default function StudentQuizzesPage() {
         <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto">
             <div>
                 <h1 className="text-3xl font-bold text-white mb-2">Quizzes</h1>
-                <p className="text-zinc-400">Practice comprehension with quick quizzes generated from your books and notes.</p>
+                <p className="text-muted-foreground">Practice comprehension with quick quizzes generated from your books and notes.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {quizzes.length === 0 ? (
-                    <div className="col-span-full text-center py-20 bg-zinc-900/50 rounded-2xl border border-zinc-800 border-dashed">
+                    <div className="col-span-full text-center py-20 bg-card/50 rounded-2xl border border-border border-dashed">
                         <Award className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
                         <h3 className="text-xl font-bold text-white mb-2">No Quizzes Available Yet</h3>
-                        <p className="text-zinc-500">Check back later for new quizzes added by your instructor.</p>
+                        <p className="text-muted-foreground">Check back later for new quizzes added by your instructor.</p>
                     </div>
                 ) : (
                     quizzes.map((quiz) => (
-                        <div key={quiz.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-700 transition-all group">
+                        <div key={quiz.id} className="bg-card border border-border rounded-2xl overflow-hidden hover:border-zinc-700 transition-all group">
                             <div className="p-6">
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="space-y-1">
@@ -109,24 +109,24 @@ export default function StudentQuizzesPage() {
                                             </div>
                                         )
                                     ) : (
-                                        <div className="bg-zinc-800 text-zinc-400 px-3 py-1 rounded-full text-xs font-bold">
+                                        <div className="bg-zinc-800 text-muted-foreground px-3 py-1 rounded-full text-xs font-bold">
                                             Not Started
                                         </div>
                                     )}
                                 </div>
 
-                                <p className="text-zinc-400 text-sm mb-6 line-clamp-2 h-10">{quiz.description}</p>
+                                <p className="text-muted-foreground text-sm mb-6 line-clamp-2 h-10">{quiz.description}</p>
 
-                                <div className="flex items-center gap-4 text-xs font-medium text-zinc-500 mb-6">
-                                    <div className="flex items-center gap-1.5 bg-zinc-950 px-2.5 py-1.5 rounded-md">
+                                <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground mb-6">
+                                    <div className="flex items-center gap-1.5 bg-background px-2.5 py-1.5 rounded-md">
                                         <Clock size={14} />
                                         {quiz.time_limit_minutes} mins
                                     </div>
-                                    <div className="flex items-center gap-1.5 bg-zinc-950 px-2.5 py-1.5 rounded-md">
+                                    <div className="flex items-center gap-1.5 bg-background px-2.5 py-1.5 rounded-md">
                                         <Award size={14} />
                                         Pass: {quiz.passing_score}%
                                     </div>
-                                    <div className="flex items-center gap-1.5 bg-zinc-950 px-2.5 py-1.5 rounded-md">
+                                    <div className="flex items-center gap-1.5 bg-background px-2.5 py-1.5 rounded-md">
                                         <CheckCircle size={14} />
                                         {quiz.questions_count} Questions
                                     </div>

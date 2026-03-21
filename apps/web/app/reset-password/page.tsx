@@ -84,7 +84,7 @@ function ResetPasswordForm() {
             )}
 
             <div>
-                <label htmlFor="email" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                <label htmlFor="email" className="block text-sm font-medium text-zinc-700 dark:text-muted-foreground">
                     Email address
                 </label>
                 <div className="mt-1">
@@ -95,13 +95,13 @@ function ResetPasswordForm() {
                         required
                         readOnly
                         value={email}
-                        className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 bg-zinc-100 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 sm:text-sm"
+                        className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 bg-zinc-100 dark:bg-zinc-800 dark:border-zinc-700 dark:text-muted-foreground sm:text-sm"
                     />
                 </div>
             </div>
 
             <div>
-                <label htmlFor="password" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                <label htmlFor="password" className="block text-sm font-medium text-zinc-700 dark:text-muted-foreground">
                     New Password
                 </label>
                 <div className="mt-1">
@@ -118,7 +118,7 @@ function ResetPasswordForm() {
             </div>
 
             <div>
-                <label htmlFor="password_confirmation" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                <label htmlFor="password_confirmation" className="block text-sm font-medium text-zinc-700 dark:text-muted-foreground">
                     Confirm New Password
                 </label>
                 <div className="mt-1">
@@ -149,19 +149,19 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-black">
+        <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-background">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
                     Reset Password
                 </h2>
-                <p className="mt-2 text-center text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="mt-2 text-center text-sm text-zinc-600 dark:text-muted-foreground">
                     Please enters your new password below.
                 </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
-                    <Suspense fallback={<p className="text-center text-zinc-500">Loading form...</p>}>
+                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border">
+                    <Suspense fallback={<p className="text-center text-muted-foreground">Loading form...</p>}>
                         <ResetPasswordForm />
                     </Suspense>
 

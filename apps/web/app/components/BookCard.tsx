@@ -27,7 +27,7 @@ export function BookCard({ id, title, author, coverImage, progress, isDownloaded
             className={`block group cursor-pointer transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             onClick={onClick}
         >
-            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-zinc-900 shadow-lg mb-3">
+            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-card shadow-lg mb-3">
                 <img
                     src={resolveAssetUrl(coverImage)}
                     alt={title}
@@ -57,7 +57,7 @@ export function BookCard({ id, title, author, coverImage, progress, isDownloaded
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
-                        <span className="text-[10px] font-medium text-zinc-500 tabular-nums">{progress}%</span>
+                        <span className="text-[10px] font-medium text-muted-foreground tabular-nums">{progress}%</span>
                     </div>
                 )}
             </div>

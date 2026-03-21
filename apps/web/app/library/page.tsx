@@ -174,16 +174,16 @@ export default function LibraryPage() {
     }, [books, searchQuery, activeTab, sortBy, viewingCollectionId, collections]);
 
     return (
-        <div className="min-h-screen bg-black text-zinc-300">
+        <div className="min-h-screen bg-background text-muted-foreground">
             {/* Top Bar - sticky under main header */}
-            <div className="sticky top-16 z-20 bg-black border-b border-zinc-900 px-6 py-3 space-y-2">
+            <div className="sticky top-16 z-20 bg-background border-b border-border px-6 py-3 space-y-2">
 
                 {/* Row 1: Title and Controls */}
                 <div className="flex items-center justify-between">
                     <div>
                         {viewingCollectionId ? (
                             <div className="flex items-center gap-2">
-                                <button onClick={() => setViewingCollectionId(null)} className="text-zinc-400 hover:text-white transition-colors">
+                                <button onClick={() => setViewingCollectionId(null)} className="text-muted-foreground hover:text-white transition-colors">
                                     <ArrowLeft size={18} />
                                 </button>
                                 <h1 className="text-base font-medium text-white tracking-wide font-serif">
@@ -197,10 +197,10 @@ export default function LibraryPage() {
 
                     {!viewingCollectionId && (
                         <div className="flex items-center gap-1">
-                            <button className="p-1.5 text-zinc-400 hover:text-white bg-zinc-900 rounded-md transition-colors">
+                            <button className="p-1.5 text-muted-foreground hover:text-white bg-card rounded-md transition-colors">
                                 <Grid size={14} />
                             </button>
-                            <button className="p-1.5 text-zinc-500 hover:text-white hover:bg-zinc-900 rounded-md transition-colors">
+                            <button className="p-1.5 text-muted-foreground hover:text-white hover:bg-card rounded-md transition-colors">
                                 <ListIcon size={14} />
                             </button>
                         </div>
@@ -211,7 +211,7 @@ export default function LibraryPage() {
                 {!viewingCollectionId && (
                     <div className="flex flex-col gap-4 mt-4 pt-0">
                         <div className="flex items-center gap-3">
-                            <span className="text-[14px] text-zinc-500 font-medium">Sort by:</span>
+                            <span className="text-[14px] text-muted-foreground font-medium">Sort by:</span>
                             <div className="flex items-center gap-2">
                                 {(['recent', 'title', 'author', 'progress'] as const).map((type) => (
                                     <button
@@ -219,7 +219,7 @@ export default function LibraryPage() {
                                         onClick={() => setSortBy(type as 'recent' | 'title' | 'author' | 'progress')}
                                         className={`px-4 py-1.5 rounded-lg text-[13px] font-medium transition-all border ${sortBy === type
                                             ? 'bg-blue-600 border-blue-600 text-white'
-                                            : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
+                                            : 'bg-card border-border text-muted-foreground hover:text-white hover:border-zinc-700'
                                             }`}
                                     >
                                         {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -269,7 +269,7 @@ export default function LibraryPage() {
                                             {collections.length > 0 && (
                                                 <button
                                                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedBookForCollection(item.book.id); }}
-                                                    className="absolute top-3 right-3 bg-black/60 hover:bg-blue-600 text-white p-3 rounded-full backdrop-blur-md max-md:opacity-100 opacity-0 md:group-hover:opacity-100 transition-all z-20 shadow-xl"
+                                                    className="absolute top-3 right-3 bg-background/60 hover:bg-blue-600 text-white p-3 rounded-full backdrop-blur-md max-md:opacity-100 opacity-0 md:group-hover:opacity-100 transition-all z-20 shadow-xl"
                                                     title="Add to Collection"
                                                 >
                                                     <Plus size={20} />
@@ -279,12 +279,12 @@ export default function LibraryPage() {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center py-32 text-center border border-dashed border-zinc-900 rounded-3xl bg-zinc-950/50">
-                                    <div className="bg-zinc-900 p-4 rounded-full mb-4">
+                                <div className="flex flex-col items-center justify-center py-32 text-center border border-dashed border-border rounded-3xl bg-background/50">
+                                    <div className="bg-card p-4 rounded-full mb-4">
                                         <LibraryIcon size={32} className="text-zinc-700" />
                                     </div>
                                     <h3 className="text-lg font-medium text-white mb-1">No books found</h3>
-                                    <p className="text-zinc-500 text-sm">
+                                    <p className="text-muted-foreground text-sm">
                                         {viewingCollectionId ? "This collection is empty." : "Your library is waiting for its first story."}
                                     </p>
                                 </div>
@@ -295,7 +295,7 @@ export default function LibraryPage() {
                                 {/* Create New Collection "Dropzone" */}
                                 <button
                                     onClick={() => setShowCreateCollection(true)}
-                                    className="w-full h-32 border border-dashed border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/20 rounded-2xl flex flex-col items-center justify-center gap-2 text-zinc-500 hover:text-zinc-300 transition-all group"
+                                    className="w-full h-32 border border-dashed border-border hover:border-zinc-700 hover:bg-card/20 rounded-2xl flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-muted-foreground transition-all group"
                                 >
                                     <Plus size={24} className="group-hover:scale-110 transition-transform" />
                                     <span className="font-medium">Create New Collection</span>
@@ -313,7 +313,7 @@ export default function LibraryPage() {
                                             <div
                                                 key={collection.id}
                                                 onClick={() => setViewingCollectionId(collection.id)}
-                                                className="group relative bg-zinc-900/20 hover:bg-zinc-900/40 border border-zinc-800/60 hover:border-zinc-700 transition-all p-5 rounded-xl cursor-pointer flex items-center justify-between"
+                                                className="group relative bg-card/20 hover:bg-card/40 border border-border/60 hover:border-zinc-700 transition-all p-5 rounded-xl cursor-pointer flex items-center justify-between"
                                             >
                                                 <div className="flex items-center gap-4">
                                                     {/* Mock Avatar Stack */}
@@ -326,7 +326,7 @@ export default function LibraryPage() {
                                                     </div>
                                                     <div>
                                                         <h3 className="text-base font-semibold text-white font-serif">{collection.name}</h3>
-                                                        <p className="text-xs text-zinc-500 font-medium">{collection.bookIds.length} books</p>
+                                                        <p className="text-xs text-muted-foreground font-medium">{collection.bookIds.length} books</p>
                                                     </div>
                                                 </div>
 

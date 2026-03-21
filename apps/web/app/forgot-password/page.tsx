@@ -41,18 +41,18 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-black">
+        <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-background">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
                     Forgot your password?
                 </h2>
-                <p className="mt-2 text-center text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="mt-2 text-center text-sm text-zinc-600 dark:text-muted-foreground">
                     No problem. Just let us know your email address and we will email you a password reset link.
                 </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         {status && (
                             <div className="rounded-md bg-green-50 p-4 dark:bg-green-900/20">
@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
                         )}
 
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                            <label htmlFor="email" className="block text-sm font-medium text-zinc-700 dark:text-muted-foreground">
                                 Email address
                             </label>
                             <div className="mt-1">

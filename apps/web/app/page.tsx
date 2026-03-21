@@ -112,19 +112,19 @@ export default function Home() {
     <div className="p-8 pb-16 space-y-12 max-w-[1400px] mx-auto">
       {/* Welcome Section */}
       <section className="space-y-1">
-        <div className="flex items-center gap-2 text-xs font-medium text-zinc-500">
+        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
           <Zap size={14} className="text-yellow-500 fill-yellow-500" />
           <span>12 day streak</span>
         </div>
         <h1 className="text-3xl font-bold text-white tracking-tight">{greeting}, {user?.name || 'Reader'}</h1>
-        <p className="text-sm text-zinc-500">Keep your streak going</p>
+        <p className="text-sm text-muted-foreground">Keep your streak going</p>
       </section>
 
       {/* Recommended Section (Real Data) */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">Recommended for You</h2>
-          <Link href="/library" className="text-xs font-medium text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
+          <Link href="/library" className="text-xs font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1">
             See all <ChevronRight size={14} />
           </Link>
         </div>
@@ -159,7 +159,7 @@ export default function Home() {
             })}
           </div>
         ) : (
-          <div className="bg-zinc-900/30 rounded-xl py-12 text-center text-zinc-500 border border-zinc-800/50 border-dashed">
+          <div className="bg-card/30 rounded-xl py-12 text-center text-muted-foreground border border-border/50 border-dashed">
             Visit the Admin Panel to upload your first book!
           </div>
         )}
@@ -170,7 +170,7 @@ export default function Home() {
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-white">Because you studied {recommendedSubject.name}</h2>
-            <Link href="#" className="text-xs font-medium text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
+            <Link href="#" className="text-xs font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1">
               See all <ChevronRight size={14} />
             </Link>
           </div>
@@ -200,7 +200,7 @@ export default function Home() {
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-white">Editors' Picks</h2>
-            <Link href="#" className="text-xs font-medium text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
+            <Link href="#" className="text-xs font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1">
               See all <ChevronRight size={14} />
             </Link>
           </div>
@@ -260,7 +260,7 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <div className="bg-zinc-900/30 rounded-xl py-12 text-center text-zinc-500 border border-zinc-800/50 border-dashed">
+          <div className="bg-card/30 rounded-xl py-12 text-center text-muted-foreground border border-border/50 border-dashed">
             <p className="mb-4">You haven't started reading any books yet.</p>
             <Link
               href="/library"
@@ -279,10 +279,10 @@ export default function Home() {
         title="Already Started"
       >
         <div className="space-y-6">
-          <p className="text-zinc-300">
+          <p className="text-muted-foreground">
             You have already started reading <span className="font-bold text-white">{modalBook?.title}</span>.
           </p>
-          <p className="text-zinc-400 text-sm">
+          <p className="text-muted-foreground text-sm">
             Check your Library or the Continue Reading section to pick up exactly where you left off.
           </p>
           <div className="flex gap-3 pt-2">
