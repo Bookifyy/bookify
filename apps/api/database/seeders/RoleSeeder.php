@@ -36,8 +36,8 @@ class RoleSeeder extends Seeder
         $adminRole = Role::firstOrCreate(['name' => 'Admin']);
         $adminRole->givePermissionTo(Permission::all());
 
-        // Create or find the Admin user and assign the role
-        $admin = \App\Models\User::firstOrCreate(
+        // Create or update the Admin user and assign the role
+        $admin = \App\Models\User::updateOrCreate(
             ['email' => 'predit@gmail.com'],
             [
                 'name' => 'PreDit Admin',
