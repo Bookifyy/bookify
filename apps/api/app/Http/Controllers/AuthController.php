@@ -19,7 +19,7 @@ class AuthController extends Controller
 
         $user = User::create([
             'name' => $fields['name'],
-            'email' => $fields['email'],
+            'email' => strtolower(trim($fields['email'])),
             'password' => bcrypt($fields['password'])
         ]);
 
@@ -41,8 +41,14 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        // Check email
-        $user = User::where('email', $fields['email'])->first();
+        // Check email (forcing lowercase for SQLite compatibility)
+        $email = strtolower(trim($fields['email']));
+        $user = User::where('email', $email)->first();
+        
+        \Illuminate\Support\Facades\Log::info('Login attempt for '.$email.':', [
+            'found' => $user !== null,
+            'password_is_hashed' => $user ? str_starts_with((string)$user->password, '$2y$') : false,
+        ]);
 
         // Check password
         if (!$user || !Hash::check($fields['password'], $user->password)) {
