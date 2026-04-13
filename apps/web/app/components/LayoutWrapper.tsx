@@ -6,7 +6,7 @@ import { Header } from './Header';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, ReactNode } from 'react';
 
-const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password', '/onboarding'];
+const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password', '/onboarding', '/plans'];
 
 export function LayoutWrapper({ children }: { children: ReactNode }) {
     const { user, loading } = useAuth();

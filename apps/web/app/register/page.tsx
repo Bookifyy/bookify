@@ -50,8 +50,17 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-background">
-            <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="flex min-h-screen flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-background relative">
+            <div className="absolute top-6 left-6 sm:top-8 sm:left-8">
+                <Link href="/onboarding" className="flex items-center text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors">
+                    <svg className="mr-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Main
+                </Link>
+            </div>
+
+            <div className="w-full sm:mx-auto sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
                     Create your account
                 </h2>
