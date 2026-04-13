@@ -1,7 +1,8 @@
 'use client';
 
-import { Search, Menu, User, Settings } from 'lucide-react';
+import { Search, Menu, User, Settings, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeProvider';
 import Link from 'next/link';
 
 import { NotificationBell } from './NotificationBell';
@@ -12,6 +13,11 @@ interface HeaderProps {
 
 export function Header({ onMenuClick }: HeaderProps) {
     const { user } = useAuth();
+    const { theme, setTheme } = useTheme();
+
+    const toggleTheme = () => {
+        setTheme(theme === 'dark' ? 'light' : 'dark');
+    };
 
     return (
         <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-border bg-nav px-4 lg:px-8 transition-colors duration-200">
@@ -55,6 +61,13 @@ export function Header({ onMenuClick }: HeaderProps) {
             {/* Actions */}
             {/* Actions */}
             <div className="flex items-center gap-2 sm:gap-4 text-muted-foreground">
+                <button
+                    onClick={toggleTheme}
+                    className="p-2 hover:text-white transition-colors rounded-full"
+                    aria-label="Toggle Dark Mode"
+                >
+                    {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                </button>
                 <NotificationBell />
                 <Link href="/settings" className="hover:text-white transition-colors p-2">
                     <span className="hidden sm:inline text-xs font-medium uppercase tracking-wider">Settings</span>
