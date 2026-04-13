@@ -1,0 +1,14 @@
+Starting Laravel development server: http://127.0.0.1:8000
+[Sun Apr 12 16:32:54 2026] PHP 8.4.11 Development Server (http://127.0.0.1:8000) started
+[Sun Apr 12 16:33:26 2026] 127.0.0.1:38368 Accepted
+[Sun Apr 12 16:33:26 2026] PHP Deprecated:  Facade\FlareClient\Flare::register(): Implicitly marking parameter $apiSecret as nullable is deprecated, the explicit nullable type must be used instead in /home/mbokani-pr/bookify/apps/api/vendor/facade/flare-client-php/src/Flare.php on line 65
+[Sun Apr 12 16:33:26 2026] PHP Deprecated:  Facade\FlareClient\Flare::register(): Implicitly marking parameter $contextDetector as nullable is deprecated, the explicit nullable type must be used instead in /home/mbokani-pr/bookify/apps/api/vendor/facade/flare-client-php/src/Flare.php on line 65
+[Sun Apr 12 16:33:26 2026] PHP Deprecated:  Facade\FlareClient\Flare::register(): Implicitly marking parameter $container as nullable is deprecated, the explicit nullable type must be used instead in /home/mbokani-pr/bookify/apps/api/vendor/facade/flare-client-php/src/Flare.php on line 65
+[Sun Apr 12 16:33:26 2026] PHP Deprecated:  Facade\FlareClient\Flare::__construct(): Implicitly marking parameter $contextDetector as nullable is deprecated, the explicit nullable type must be used instead in /home/mbokani-pr/bookify/apps/api/vendor/facade/flare-client-php/src/Flare.php on line 104
+[Sun Apr 12 16:33:26 2026] PHP Deprecated:  Facade\FlareClient\Flare::__construct(): Implicitly marking parameter $container as nullable is deprecated, the explicit nullable type must be used instead in /home/mbokani-pr/bookify/apps/api/vendor/facade/flare-client-php/src/Flare.php on line 104
+[Sun Apr 12 16:33:26 2026] PHP Deprecated:  Facade\FlareClient\Flare::report(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in /home/mbokani-pr/bookify/apps/api/vendor/facade/flare-client-php/src/Flare.php on line 201
+[Sun Apr 12 16:33:26 2026] PHP Deprecated:  Facade\FlareClient\Flare::reportMessage(): Implicitly marking parameter $callback as nullable is deprecated, the explicit nullable type must be used instead in /home/mbokani-pr/bookify/apps/api/vendor/facade/flare-client-php/src/Flare.php on line 235
+[Sun Apr 12 16:33:26 2026] PHP Deprecated:  Facade\Ignition\DumpRecorder\MultiDumpHandler::addHandler(): Implicitly marking parameter $callable as nullable is deprecated, the explicit nullable type must be used instead in /home/mbokani-pr/bookify/apps/api/vendor/facade/ignition/src/DumpRecorder/MultiDumpHandler.php on line 17
+[Sun Apr 12 16:33:26 2026] 127.0.0.1:38368 Closing
+[Sun Apr 12 16:37:12 2026] 127.0.0.1:39856 Accepted
+[Sun Apr 12 16:37:12 2026] 127.0.0.1:39856 Closing
