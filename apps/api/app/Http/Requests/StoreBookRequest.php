@@ -58,6 +58,13 @@ class StoreBookRequest extends FormRequest
             'author_linkedin' => 'nullable|string|max:255',
             'rating' => 'nullable|numeric|min:0|max:5',
             'review_count' => 'nullable|integer|min:0',
+            'file_size' => 'nullable|string|max:50',
+            'screen_reader' => 'nullable|string|max:50',
+            'enhanced_typesetting' => 'nullable|string|max:50',
+            'x_ray' => 'nullable|string|max:50',
+            'word_wise' => 'nullable|string|max:50',
+            'page_flip' => 'nullable|string|max:50',
+            'accessibility_conformance' => 'nullable|string',
         ];
     }
 }

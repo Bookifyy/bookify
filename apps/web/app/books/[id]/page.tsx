@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
-import { Play, Star, ArrowLeft, ChevronDown, BookOpen, Clock, Heart, Headphones } from 'lucide-react';
+import { Play, Star, ArrowLeft, ChevronDown, BookOpen, Clock, Heart, Headphones, X } from 'lucide-react';
 import { resolveAssetUrl, getApiUrl } from '../../lib/utils';
 import Link from 'next/link';
 
@@ -30,6 +30,13 @@ interface Book {
     rating?: number;
     review_count?: number;
     isbn?: string;
+    file_size?: string;
+    screen_reader?: string;
+    enhanced_typesetting?: string;
+    x_ray?: string;
+    word_wise?: string;
+    page_flip?: string;
+    accessibility_conformance?: string;
     progress?: {
         current_page: number;
         total_pages: number;
@@ -45,6 +52,7 @@ export default function BookDetailPage() {
     const [loading, setLoading] = useState(true);
     const [addingToLibrary, setAddingToLibrary] = useState(false);
     const [expandedDesc, setExpandedDesc] = useState(false);
+    const [showAccessibility, setShowAccessibility] = useState(false);
 
     useEffect(() => {
         const apiUrl = getApiUrl();
@@ -123,7 +131,7 @@ export default function BookDetailPage() {
 
                     {/* Action Buttons underneath cover */}
                     <div className="grid grid-cols-2 gap-2 w-full">
-                        <button className="flex flex-col items-center justify-center border border-border rounded-md py-2 hover:bg-muted transition-colors">
+                        <button onClick={() => router.push(`/books/${id}/read`)} className="flex flex-col items-center justify-center border border-border rounded-md py-2 hover:bg-muted transition-colors">
                             <BookOpen size={16} className="mb-1 text-muted-foreground" />
                             <span className="text-xs font-semibold">Read sample</span>
                         </button>
@@ -160,7 +168,10 @@ export default function BookDetailPage() {
                                 {book.author_bio}
                             </p>
                         )}
-                        <button className="w-full py-1.5 border border-border rounded-full text-xs font-semibold hover:bg-muted transition-colors">
+                        <button 
+                            onClick={() => book.author_linkedin ? window.open(book.author_linkedin, '_blank') : null}
+                            className="w-full py-1.5 border border-border rounded-full text-xs font-semibold hover:bg-muted transition-colors"
+                        >
                             Follow
                         </button>
                     </div>
@@ -232,17 +243,67 @@ export default function BookDetailPage() {
                         <ul className="text-sm space-y-2 text-foreground/90">
                             <li><span className="font-bold pr-1">ASIN :</span> {book.isbn ? `B0${book.isbn.substring(0,8).toUpperCase()}` : 'B0DK2YSB8M'}</li>
                             <li><span className="font-bold pr-1">Publisher :</span> {book.publisher || 'Independent'}</li>
-                            <li><span className="font-bold pr-1">Accessibility :</span> <span className="text-indigo-400 hover:underline cursor-pointer">{book.accessibility || 'Learn more'}</span></li>
+                            <li>
+                                <span className="font-bold pr-1">Accessibility :</span> 
+                                <span onClick={() => setShowAccessibility(!showAccessibility)} className="text-indigo-400 hover:underline cursor-pointer select-none">
+                                    {book.accessibility || 'Learn more'} <ChevronDown className={`inline ml-1 w-3 h-3 text-muted-foreground transition-transform ${showAccessibility ? 'rotate-180' : ''}`} />
+                                </span>
+                                {showAccessibility && (
+                                    <div className="mt-4 mb-4 border border-border rounded-lg bg-card p-5 shadow-lg relative">
+                                        <button onClick={() => setShowAccessibility(false)} className="absolute top-3 right-3 text-muted-foreground hover:text-white"><X size={16} /></button>
+                                        <h3 className="font-bold text-sm mb-4 pr-6">Accessibility features for this Bookify book (as provided by the publisher)</h3>
+                                        
+                                        <div className="space-y-4 text-xs">
+                                            <div className="border-b border-border pb-3">
+                                                <h4 className="font-bold text-sm">Visual adjustments</h4>
+                                                <p className="mt-1">Appearance can be modified.</p>
+                                                <ul className="list-disc pl-5 mt-1 text-muted-foreground">
+                                                    <li>The text of this Bookify book can be adjusted (e.g. size, font, color, margins, spacing, alignment).</li>
+                                                </ul>
+                                            </div>
+                                            <div className="border-b border-border pb-3">
+                                                <h4 className="font-bold text-sm">Nonvisual reading</h4>
+                                                <p className="mt-1">Readable in read aloud and Braille.</p>
+                                                <ul className="list-disc pl-5 mt-1 text-muted-foreground">
+                                                    <li>The text of this book is accessible to screen readers.</li>
+                                                </ul>
+                                            </div>
+                                            <div className="border-b border-border pb-3">
+                                                <h4 className="font-bold text-sm">Hazards</h4>
+                                                <p className="mt-1">This book contains no hazards.</p>
+                                            </div>
+                                            {book.accessibility_conformance && (
+                                                <div className="border-b border-border pb-3">
+                                                    <h4 className="font-bold text-sm">Conformance</h4>
+                                                    <p className="mt-1">This publication contains a conformance claim that it meets the following standards:</p>
+                                                    <ul className="list-disc pl-5 mt-1 text-muted-foreground">
+                                                        {book.accessibility_conformance.split(',').map((c, i) => <li key={i}>{c.trim()}</li>)}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                            <div>
+                                                <h4 className="font-bold text-sm">Navigation</h4>
+                                                <p className="mt-1">This book contains:</p>
+                                                <ul className="list-disc pl-5 mt-1 text-muted-foreground">
+                                                    <li>A table of contents</li>
+                                                    <li>Real page numbers</li>
+                                                    <li>Heading markup</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </li>
                             <li><span className="font-bold pr-1">Publication date :</span> {book.publication_date ? new Date(book.publication_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A'}</li>
                             <li><span className="font-bold pr-1">Language :</span> {book.language || 'English'}</li>
-                            <li><span className="font-bold pr-1">File size :</span> 2.5 MB</li>
-                            <li><span className="font-bold pr-1">Screen Reader :</span> Supported</li>
-                            <li><span className="font-bold pr-1">Enhanced typesetting :</span> <span className="text-indigo-400 hover:underline cursor-pointer">Enabled</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
-                            <li><span className="font-bold pr-1">X-Ray :</span> Not Enabled</li>
-                            <li><span className="font-bold pr-1">Word Wise :</span> <span className="text-indigo-400 hover:underline cursor-pointer">Enabled</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
+                            <li><span className="font-bold pr-1">File size :</span> {book.file_size || '2.5 MB'}</li>
+                            <li><span className="font-bold pr-1">Screen Reader :</span> {book.screen_reader || 'Supported'}</li>
+                            <li><span className="font-bold pr-1">Enhanced typesetting :</span> <span className="text-indigo-400 hover:underline cursor-pointer">{book.enhanced_typesetting || 'Enabled'}</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
+                            <li><span className="font-bold pr-1">X-Ray :</span> {book.x_ray || 'Not Enabled'}</li>
+                            <li><span className="font-bold pr-1">Word Wise :</span> <span className="text-indigo-400 hover:underline cursor-pointer">{book.word_wise || 'Enabled'}</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
                             <li><span className="font-bold pr-1">Print length :</span> <span className="text-indigo-400 hover:underline cursor-pointer">{book.print_length || 'Unknown'} pages</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
                             <li><span className="font-bold pr-1">ISBN-13 :</span> {book.isbn || '000-0000000000'}</li>
-                            <li><span className="font-bold pr-1">Page Flip :</span> <span className="text-indigo-400 hover:underline cursor-pointer">Enabled</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
+                            <li><span className="font-bold pr-1">Page Flip :</span> <span className="text-indigo-400 hover:underline cursor-pointer">{book.page_flip || 'Enabled'}</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
                             <li className="flex items-center gap-1 pt-2">
                                 <span className="font-bold">Customer reviews:</span> 
                                 <span className="text-yellow-500 flex items-center mx-1">
@@ -254,6 +315,47 @@ export default function BookDetailPage() {
                                 <span className="text-indigo-400 hover:underline cursor-pointer ml-1">({book.review_count?.toLocaleString() || '0'})</span>
                             </li>
                         </ul>
+                    </div>
+
+                    {/* About the Author Block */}
+                    <div className="mt-10 border-t border-border pt-8">
+                        <h2 className="font-bold text-xl mb-4">About the author</h2>
+                        <p className="text-sm text-foreground/80 mb-6">Follow authors to get new release updates, plus improved recommendations.</p>
+                        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                            <div className="flex flex-col items-center max-w-[120px] text-center shrink-0">
+                                <div className="w-24 h-24 rounded-full overflow-hidden mb-3 bg-indigo-500/10 border border-border">
+                                    {book.author_image ? (
+                                        <img src={resolveAssetUrl(book.author_image)} alt={book.author} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center font-bold text-4xl text-indigo-500">{book.author[0]}</div>
+                                    )}
+                                </div>
+                                <button onClick={() => book.author_linkedin ? window.open(book.author_linkedin, '_blank') : null} className="w-full py-1.5 border border-border rounded-full text-xs font-semibold hover:bg-muted transition-colors">
+                                    Follow
+                                </button>
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-lg text-indigo-400 cursor-pointer hover:underline" onClick={() => book.author_linkedin ? window.open(book.author_linkedin, '_blank') : null}>{book.author}</h3>
+                                <p className="text-sm mt-3 text-foreground/90">
+                                    {book.author_bio || "Discover more of the author's books, see similar authors, read book recommendations and more."}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Rate Feedback */}
+                        <div className="mt-12 flex flex-col items-center justify-center border-t border-border pt-8 relative">
+                            <button className="absolute top-8 right-2 text-muted-foreground hover:text-white"><X size={16} /></button>
+                            <h4 className="font-bold text-sm mb-6">Rate today's book shopping experience</h4>
+                            <div className="flex items-center gap-2 md:gap-4 lg:gap-8 min-w-[280px] justify-between">
+                                {['Very poor', 'Poor', 'Neutral', 'Good', 'Great'].map((label, idx) => (
+                                    <div key={label} className="relative flex flex-col items-center w-12">
+                                        {idx > 0 && <div className="absolute top-2.5 -left-12 w-12 h-[1px] bg-border z-0"></div>}
+                                        <button className="relative z-10 w-5 h-5 rounded-full border-2 border-border bg-background hover:border-indigo-500 transition-colors mb-2"></button>
+                                        <span className="text-[10px] text-muted-foreground font-medium text-center absolute -bottom-4 whitespace-nowrap">{label}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -33,6 +33,13 @@ export default function AdminBookCreatePage() {
         author_linkedin: '',
         rating: 4.5,
         review_count: 0,
+        file_size: '',
+        screen_reader: 'Supported',
+        enhanced_typesetting: 'Enabled',
+        x_ray: 'Not Enabled',
+        word_wise: 'Enabled',
+        page_flip: 'Enabled',
+        accessibility_conformance: '',
     });
 
     const [files, setFiles] = useState<{ book_file: File | null; cover_image: File | null; author_image: File | null }>({
@@ -230,6 +237,43 @@ export default function AdminBookCreatePage() {
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Accessibility</label>
                                     <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.accessibility} onChange={e => setFormData({ ...formData, accessibility: e.target.value })} />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">File Size</label>
+                                    <input type="text" placeholder="e.g. 2.5 MB" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.file_size} onChange={e => setFormData({ ...formData, file_size: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Accessibility Conformance</label>
+                                    <input type="text" placeholder="e.g. EPUB Accessibility 1.1, WCAG 2.2 AA" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.accessibility_conformance} onChange={e => setFormData({ ...formData, accessibility_conformance: e.target.value })} />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Screen Reader</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.screen_reader} onChange={e => setFormData({ ...formData, screen_reader: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Enhanced Typesetting</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.enhanced_typesetting} onChange={e => setFormData({ ...formData, enhanced_typesetting: e.target.value })} />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-2">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">X-Ray</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.x_ray} onChange={e => setFormData({ ...formData, x_ray: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Word Wise</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.word_wise} onChange={e => setFormData({ ...formData, word_wise: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Page Flip</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.page_flip} onChange={e => setFormData({ ...formData, page_flip: e.target.value })} />
                                 </div>
                             </div>
 
