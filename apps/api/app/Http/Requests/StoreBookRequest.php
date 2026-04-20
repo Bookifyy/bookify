@@ -46,6 +46,15 @@ class StoreBookRequest extends FormRequest
             'is_premium' => 'nullable|boolean',
             'book_file' => 'required|file|mimes:pdf,epub|max:20480', // 20MB limit
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB limit
+            'edition' => 'nullable|string|max:255',
+            'format' => 'nullable|string|max:255',
+            'print_length' => 'nullable|integer|min:1',
+            'publication_date' => 'nullable|date',
+            'accessibility' => 'nullable|string|max:255',
+            'price' => 'nullable|numeric|min:0',
+            'author_bio' => 'nullable|string',
+            'author_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB limit
+            'author_license' => 'nullable|string|max:255',
         ];
     }
 }

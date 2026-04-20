@@ -19,7 +19,16 @@ class Book extends Model
         'language',
         'publisher',
         'subject_id',
-        'is_premium'
+        'is_premium',
+        'edition',
+        'format',
+        'print_length',
+        'publication_date',
+        'accessibility',
+        'price',
+        'author_bio',
+        'author_image',
+        'author_license'
     ];
 
     public function subject()

@@ -19,14 +19,23 @@ export default function AdminBookCreatePage() {
         subject_id: '',
         description: '',
         isbn: '',
-        language: 'en',
+        language: 'English',
         publisher: '',
         is_premium: false,
+        edition: '',
+        format: 'Kindle Edition',
+        print_length: '',
+        publication_date: '',
+        accessibility: 'Learn More',
+        price: '',
+        author_bio: '',
+        author_license: '',
     });
 
-    const [files, setFiles] = useState<{ book_file: File | null; cover_image: File | null }>({
+    const [files, setFiles] = useState<{ book_file: File | null; cover_image: File | null; author_image: File | null }>({
         book_file: null,
         cover_image: null,
+        author_image: null,
     });
 
     useEffect(() => {
@@ -57,6 +66,7 @@ export default function AdminBookCreatePage() {
         });
         if (files.book_file) data.append('book_file', files.book_file);
         if (files.cover_image) data.append('cover_image', files.cover_image);
+        if (files.author_image) data.append('author_image', files.author_image);
 
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -165,6 +175,50 @@ export default function AdminBookCreatePage() {
                                 </div>
                             </div>
 
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Format</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.format} onChange={e => setFormData({ ...formData, format: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Edition</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.edition} onChange={e => setFormData({ ...formData, edition: e.target.value })} />
+                                </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Price (EUR)</label>
+                                    <input type="number" step="0.01" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Print Length (Pages)</label>
+                                    <input type="number" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.print_length} onChange={e => setFormData({ ...formData, print_length: e.target.value })} />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Language</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.language} onChange={e => setFormData({ ...formData, language: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Publisher</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.publisher} onChange={e => setFormData({ ...formData, publisher: e.target.value })} />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Publication Date</label>
+                                    <input type="date" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.publication_date} onChange={e => setFormData({ ...formData, publication_date: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Accessibility</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.accessibility} onChange={e => setFormData({ ...formData, accessibility: e.target.value })} />
+                                </div>
+                            </div>
+
                             <div className="space-y-1">
                                 <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Description</label>
                                 <textarea
@@ -188,6 +242,40 @@ export default function AdminBookCreatePage() {
 
                         {/* Right Column: Files */}
                         <div className="space-y-6">
+                            <div className="p-4 bg-card/30 border border-border rounded-xl space-y-4">
+                                <h3 className="text-sm font-bold text-white mb-2">Author Details</h3>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author Biography</label>
+                                    <textarea
+                                        className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all h-24"
+                                        value={formData.author_bio}
+                                        onChange={e => setFormData({ ...formData, author_bio: e.target.value })}
+                                    />
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author License</label>
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.author_license} onChange={e => setFormData({ ...formData, author_license: e.target.value })} />
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author Profile Image</label>
+                                    <div className="relative group">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                            onChange={e => setFiles({ ...files, author_image: e.target.files?.[0] || null })}
+                                        />
+                                        <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-4 bg-card transition-colors group-hover:bg-zinc-800 group-hover:border-indigo-500/50">
+                                            <span className="text-xs font-medium text-muted-foreground">
+                                                {files.author_image ? files.author_image.name : 'Select Author Image'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="space-y-1">
                                 <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Book File (PDF/EPUB)</label>
                                 <div className="relative group">

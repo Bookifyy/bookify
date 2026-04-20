@@ -60,6 +60,12 @@ class BookController extends Controller
                 $validated['cover_image'] = Storage::url($coverPath);
             }
 
+            // Handle Author Image
+            if ($request->hasFile('author_image')) {
+                $authorImgPath = $request->file('author_image')->store('authors', 'public');
+                $validated['author_image'] = Storage::url($authorImgPath);
+            }
+
             // Ensure is_premium is a boolean (handles string "true"/"false" from FormData)
             if (isset($validated['is_premium'])) {
                 $validated['is_premium'] = filter_var($validated['is_premium'], FILTER_VALIDATE_BOOLEAN);

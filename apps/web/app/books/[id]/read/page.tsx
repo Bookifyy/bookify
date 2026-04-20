@@ -16,6 +16,9 @@ interface Book {
     id: number;
     title: string;
     file_path: string;
+    author?: string;
+    format?: string;
+    print_length?: number;
     progress?: {
         current_page: number;
         total_pages: number;
@@ -452,7 +455,11 @@ export default function ReaderPage() {
                     </button>
                     <div>
                         <h1 className="text-sm font-bold tracking-tight truncate max-w-[200px] md:max-w-md">{book.title}</h1>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Reader Mode</p>
+                        <p className="text-[10px] text-muted-foreground font-bold tracking-widest uppercase">
+                            {book.author ? `${book.author} ` : ''}
+                            {book.format ? `• ${book.format} ` : ''}
+                            {book.print_length ? `• ${book.print_length} Pages` : 'Reader Mode'}
+                        </p>
                     </div>
                 </div>
 
