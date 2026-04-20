@@ -28,7 +28,10 @@ class Book extends Model
         'price',
         'author_bio',
         'author_image',
-        'author_license'
+        'author_license',
+        'author_linkedin',
+        'rating',
+        'review_count'
     ];
 
     public function subject()

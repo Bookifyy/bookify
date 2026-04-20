@@ -55,6 +55,9 @@ class StoreBookRequest extends FormRequest
             'author_bio' => 'nullable|string',
             'author_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB limit
             'author_license' => 'nullable|string|max:255',
+            'author_linkedin' => 'nullable|string|max:255',
+            'rating' => 'nullable|numeric|min:0|max:5',
+            'review_count' => 'nullable|integer|min:0',
         ];
     }
 }

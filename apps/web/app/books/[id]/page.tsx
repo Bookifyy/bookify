@@ -26,6 +26,10 @@ interface Book {
     author_bio?: string;
     author_image?: string;
     author_license?: string;
+    author_linkedin?: string;
+    rating?: number;
+    review_count?: number;
+    isbn?: string;
     progress?: {
         current_page: number;
         total_pages: number;
@@ -141,7 +145,11 @@ export default function BookDetailPage() {
                                 )}
                             </div>
                             <div>
-                                <p className="font-bold text-sm hover:underline cursor-pointer text-indigo-400">{book.author}</p>
+                                {book.author_linkedin ? (
+                                    <a href={book.author_linkedin} target="_blank" rel="noopener noreferrer" className="font-bold text-sm hover:underline cursor-pointer text-indigo-400">{book.author}</a>
+                                ) : (
+                                    <p className="font-bold text-sm hover:underline cursor-pointer text-indigo-400">{book.author}</p>
+                                )}
                                 {book.author_license && (
                                     <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{book.author_license}</p>
                                 )}
@@ -163,21 +171,19 @@ export default function BookDetailPage() {
                     <h1 className="text-3xl md:text-4xl font-bold font-serif leading-tight">{book.title}</h1>
                     <div className="text-sm text-muted-foreground">
                         {book.edition && <span className="mr-2 font-medium">{book.edition}</span>}
-                        by <span className="text-indigo-400 hover:underline cursor-pointer">{book.author}</span> (Author) 
+                        by {book.author_linkedin ? <a href={book.author_linkedin} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline cursor-pointer font-medium">{book.author}</a> : <span className="text-indigo-400 hover:underline cursor-pointer font-medium">{book.author}</span>} (Author) 
                         <span className="mx-2">|</span> 
-                        Format: <span className="font-medium text-foreground">{book.format || 'Kindle Edition'}</span>
+                        Format: <span className="font-medium text-foreground">{book.format || 'Bookify Edition'}</span>
                     </div>
 
                     {/* Ratings */}
-                    <div className="flex items-center gap-1 text-yellow-500">
-                        <Star size={16} fill="currentColor" />
-                        <Star size={16} fill="currentColor" />
-                        <Star size={16} fill="currentColor" />
-                        <Star size={16} fill="currentColor" />
-                        <Star size={16} fill="currentColor" className="opacity-50" />
-                        <span className="text-sm text-foreground ml-1">4.4</span>
+                    <div className="flex items-center gap-1 text-yellow-500 mt-2">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                            <Star key={i} size={16} fill={i < Math.floor(book.rating || 4.5) ? "currentColor" : "none"} className={i >= Math.floor(book.rating || 4.5) ? "opacity-50" : ""} />
+                        ))}
+                        <span className="text-sm text-foreground ml-1">{book.rating || 4.5}</span>
                         <ChevronDown size={14} className="text-muted-foreground ml-1 mr-2" />
-                        <span className="text-sm text-indigo-400 hover:underline cursor-pointer">(3,108 ratings)</span>
+                        <span className="text-sm text-indigo-400 hover:underline cursor-pointer">({book.review_count?.toLocaleString() || '0'} ratings)</span>
                     </div>
 
                     {/* Charts / Awards */}
@@ -189,23 +195,15 @@ export default function BookDetailPage() {
                     <div className="py-2 border-b border-border"></div>
 
                     {/* Formats Grid Row */}
-                    <div className="hidden md:grid grid-cols-4 gap-2 pt-2">
+                    <div className="grid grid-cols-2 gap-2 pt-2 md:w-2/3">
                         <div className="border border-indigo-500 bg-indigo-500/10 p-2 rounded-md flex flex-col justify-center relative cursor-pointer group">
                             <div className="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold px-1 rounded-bl">Deal</div>
-                            <span className="text-xs font-bold text-foreground group-hover:text-indigo-400 transition-colors">Kindle Edition</span>
-                            <span className="text-sm font-bold text-red-500">EUR {price}</span>
+                            <span className="text-xs font-bold text-foreground group-hover:text-indigo-400 transition-colors">{book.format || 'Bookify Edition'}</span>
+                            <span className="text-sm font-bold text-red-500">USD {price}</span>
                         </div>
                         <div className="border border-border p-2 rounded-md flex flex-col justify-center cursor-pointer hover:bg-muted transition-colors">
                             <span className="text-xs font-bold text-muted-foreground">Audiobook</span>
-                            <span className="text-sm font-bold text-foreground">EUR 0.00</span>
-                        </div>
-                        <div className="border border-border p-2 rounded-md flex flex-col justify-center cursor-pointer hover:bg-muted transition-colors">
-                            <span className="text-xs font-bold text-muted-foreground">Hardcover</span>
-                            <span className="text-sm font-bold text-foreground">EUR 14.72</span>
-                        </div>
-                        <div className="border border-border p-2 rounded-md flex flex-col justify-center cursor-pointer hover:bg-muted transition-colors">
-                            <span className="text-xs font-bold text-muted-foreground">Paperback</span>
-                            <span className="text-sm font-bold text-foreground">EUR 10.32</span>
+                            <span className="text-sm font-bold text-foreground">USD {book.price ? (Number(book.price) * 0.8).toFixed(2) : '0.00'}</span>
                         </div>
                     </div>
 
@@ -230,33 +228,32 @@ export default function BookDetailPage() {
 
                     {/* Product Details Bar */}
                     <div className="mt-8 border-t border-border pt-6">
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                            <div className="flex flex-col items-center justify-center p-3 text-center gap-2">
-                                <FileTextIcon size={20} className="text-muted-foreground" />
-                                <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-bold">Print Length</span>
-                                <span className="text-sm font-semibold">{book.print_length || 'Unknown'} pages</span>
-                            </div>
-                            <div className="flex flex-col items-center justify-center p-3 text-center gap-2">
-                                <GlobeIcon size={20} className="text-muted-foreground" />
-                                <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-bold">Language</span>
-                                <span className="text-sm font-semibold">{book.language || 'English'}</span>
-                            </div>
-                            <div className="flex flex-col items-center justify-center p-3 text-center gap-2">
-                                <BuildingIcon size={20} className="text-muted-foreground" />
-                                <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-bold">Publisher</span>
-                                <span className="text-sm font-semibold">{book.publisher || 'Independent'}</span>
-                            </div>
-                            <div className="flex flex-col items-center justify-center p-3 text-center gap-2">
-                                <AccessibilityIcon size={20} className="text-muted-foreground" />
-                                <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-bold">Accessibility</span>
-                                <span className="text-sm font-semibold text-indigo-400 hover:underline cursor-pointer">{book.accessibility || 'Learn More'}</span>
-                            </div>
-                            <div className="flex flex-col items-center justify-center p-3 text-center gap-2">
-                                <CalendarIcon size={20} className="text-muted-foreground" />
-                                <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-bold">Publication Date</span>
-                                <span className="text-sm font-semibold">{book.publication_date || 'N/A'}</span>
-                            </div>
-                        </div>
+                        <h2 className="font-bold text-lg mb-4">Product details</h2>
+                        <ul className="text-sm space-y-2 text-foreground/90">
+                            <li><span className="font-bold pr-1">ASIN :</span> {book.isbn ? `B0${book.isbn.substring(0,8).toUpperCase()}` : 'B0DK2YSB8M'}</li>
+                            <li><span className="font-bold pr-1">Publisher :</span> {book.publisher || 'Independent'}</li>
+                            <li><span className="font-bold pr-1">Accessibility :</span> <span className="text-indigo-400 hover:underline cursor-pointer">{book.accessibility || 'Learn more'}</span></li>
+                            <li><span className="font-bold pr-1">Publication date :</span> {book.publication_date ? new Date(book.publication_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A'}</li>
+                            <li><span className="font-bold pr-1">Language :</span> {book.language || 'English'}</li>
+                            <li><span className="font-bold pr-1">File size :</span> 2.5 MB</li>
+                            <li><span className="font-bold pr-1">Screen Reader :</span> Supported</li>
+                            <li><span className="font-bold pr-1">Enhanced typesetting :</span> <span className="text-indigo-400 hover:underline cursor-pointer">Enabled</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
+                            <li><span className="font-bold pr-1">X-Ray :</span> Not Enabled</li>
+                            <li><span className="font-bold pr-1">Word Wise :</span> <span className="text-indigo-400 hover:underline cursor-pointer">Enabled</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
+                            <li><span className="font-bold pr-1">Print length :</span> <span className="text-indigo-400 hover:underline cursor-pointer">{book.print_length || 'Unknown'} pages</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
+                            <li><span className="font-bold pr-1">ISBN-13 :</span> {book.isbn || '000-0000000000'}</li>
+                            <li><span className="font-bold pr-1">Page Flip :</span> <span className="text-indigo-400 hover:underline cursor-pointer">Enabled</span><ChevronDown className="inline ml-1 w-3 h-3 text-muted-foreground" /></li>
+                            <li className="flex items-center gap-1 pt-2">
+                                <span className="font-bold">Customer reviews:</span> 
+                                <span className="text-yellow-500 flex items-center mx-1">
+                                    {Array.from({ length: 5 }).map((_, i) => (
+                                        <Star key={i} size={14} fill={i < Math.floor(book.rating || 4.5) ? "currentColor" : "none"} className={i >= Math.floor(book.rating || 4.5) ? "opacity-50" : ""} />
+                                    ))}
+                                </span>
+                                <span>{book.rating || 4.5}</span>
+                                <span className="text-indigo-400 hover:underline cursor-pointer ml-1">({book.review_count?.toLocaleString() || '0'})</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
@@ -272,7 +269,7 @@ export default function BookDetailPage() {
                         </div>
 
                         <div className="flex items-baseline gap-1 mb-6">
-                            <span className="text-sm text-foreground font-semibold">EUR</span>
+                            <span className="text-sm text-foreground font-semibold">USD</span>
                             <span className="text-3xl font-bold">{price.split('.')[0]}</span>
                             <span className="text-lg font-bold">.{price.split('.')[1]}</span>
                         </div>
@@ -306,8 +303,8 @@ export default function BookDetailPage() {
                         <div className="mt-5 p-3 border border-border rounded-lg bg-background/50 flex items-start gap-3">
                             <input type="checkbox" className="mt-1 rounded bg-background border-border text-indigo-600 focus:ring-0" />
                             <div className="text-xs">
-                                <span className="font-semibold">Add audiobook</span> for EUR 11.02.
-                                <p className="text-muted-foreground mt-0.5 line-through">EUR 16.66</p>
+                                <span className="font-semibold">Add audiobook</span> for USD {(Number(price) * 0.8).toFixed(2)}.
+                                <p className="text-muted-foreground mt-0.5 line-through">USD {(Number(price) * 1.5).toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
@@ -327,19 +324,4 @@ export default function BookDetailPage() {
     );
 }
 
-// Simple Icon Components to match details bar
-function FileTextIcon(props: any) {
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
-}
-function GlobeIcon(props: any) {
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-}
-function BuildingIcon(props: any) {
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>
-}
-function AccessibilityIcon(props: any) {
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="16" cy="4" r="1"></circle><path d="m18 19 1-7-6 1"></path><path d="m5 8 3-3 5.5 3-2.36 3.5"></path><path d="M4.24 14.5a5 5 0 0 0 6.88 6"></path><path d="M13.76 17.5a5 5 0 0 0-6.88-6"></path></svg>
-}
-function CalendarIcon(props: any) {
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-}
+

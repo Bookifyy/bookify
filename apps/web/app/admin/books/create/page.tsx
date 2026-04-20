@@ -23,13 +23,16 @@ export default function AdminBookCreatePage() {
         publisher: '',
         is_premium: false,
         edition: '',
-        format: 'Kindle Edition',
+        format: 'Bookify Edition',
         print_length: '',
         publication_date: '',
         accessibility: 'Learn More',
         price: '',
         author_bio: '',
         author_license: '',
+        author_linkedin: '',
+        rating: 4.5,
+        review_count: 0,
     });
 
     const [files, setFiles] = useState<{ book_file: File | null; cover_image: File | null; author_image: File | null }>({
@@ -210,6 +213,17 @@ export default function AdminBookCreatePage() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Initial Rating (Max 5)</label>
+                                    <input type="number" step="0.1" min="0" max="5" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.rating} onChange={e => setFormData({ ...formData, rating: parseFloat(e.target.value) || 0 })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Initial Review Count</label>
+                                    <input type="number" min="0" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.review_count} onChange={e => setFormData({ ...formData, review_count: parseInt(e.target.value) || 0 })} />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Publication Date</label>
                                     <input type="date" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.publication_date} onChange={e => setFormData({ ...formData, publication_date: e.target.value })} />
                                 </div>
@@ -254,8 +268,13 @@ export default function AdminBookCreatePage() {
                                 </div>
 
                                 <div className="space-y-1">
-                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author License</label>
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author License (Optional)</label>
                                     <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.author_license} onChange={e => setFormData({ ...formData, author_license: e.target.value })} />
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author LinkedIn URL</label>
+                                    <input type="url" placeholder="https://linkedin.com/in/" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.author_linkedin} onChange={e => setFormData({ ...formData, author_linkedin: e.target.value })} />
                                 </div>
 
                                 <div className="space-y-1">
