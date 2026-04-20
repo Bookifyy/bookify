@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuth } from '../../context/AuthContext';
-import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, ReactNode } from 'react';
@@ -15,16 +14,12 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
 
     const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith('/verify-email');
 
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
     useEffect(() => {
         if (!loading && !user && !isPublicRoute) {
             router.push('/onboarding');
         } else if (!loading && user && pathname === '/onboarding') {
             router.push('/');
         }
-        // Close sidebar on route change
-        setIsSidebarOpen(false);
     }, [user, loading, isPublicRoute, router, pathname]);
 
     if (loading) {
@@ -52,22 +47,8 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
     if (user && !isPublicRoute) {
         return (
             <div className="flex min-h-screen relative">
-                <Sidebar
-                    className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-nav transition-transform duration-300 ease-in-out lg:fixed lg:translate-x-0 border-r border-border ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                        }`}
-                    onClose={() => setIsSidebarOpen(false)}
-                />
-
-                {/* Mobile Overlay */}
-                {isSidebarOpen && (
-                    <div
-                        className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
-                        onClick={() => setIsSidebarOpen(false)}
-                    />
-                )}
-
-                <div className="flex flex-1 flex-col lg:pl-64 pt-0 w-full min-h-screen">
-                    <Header onMenuClick={() => setIsSidebarOpen(true)} />
+                <div className="flex flex-1 flex-col w-full min-h-screen">
+                    <Header />
                     <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden">
                         {children}
                     </main>
