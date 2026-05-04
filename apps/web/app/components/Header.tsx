@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Menu, Settings, Moon, Sun, Home, Library, FileText, GraduationCap, Users, Layers, BarChart3, ShieldCheck, LogOut, X, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeProvider';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NotificationBell } from './NotificationBell';
+import { getApiUrl } from '../lib/utils';
 
 const menuItems = [
     { icon: Home, label: 'Discover', href: '/' },
@@ -19,12 +20,28 @@ const menuItems = [
 ];
 
 export function Header() {
-    const { user, logout } = useAuth();
+    const { user, token, logout } = useAuth();
     const { theme, setTheme } = useTheme();
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [subjects, setSubjects] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchSubjects = async () => {
+            try {
+                const res = await fetch(`${getApiUrl()}/api/subjects`, {
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setSubjects(data);
+                }
+            } catch (err) {}
+        };
+        fetchSubjects();
+    }, [token]);
 
     const toggleTheme = () => {
         setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -161,29 +178,29 @@ export function Header() {
                 </nav>
             </div>
 
-            {/* Amazon-style Category Sub-Nav */}
-            <div className="bg-[#232f3e] text-foreground text-sm font-medium flex items-center px-4 overflow-x-auto whitespace-nowrap hide-scrollbar">
+            {/* Dynamic Subjects Sub-Nav */}
+            <div className="bg-card border-y border-border text-muted-foreground text-sm font-medium flex items-center px-4 overflow-x-auto whitespace-nowrap hide-scrollbar">
                 <button 
                     onClick={() => setIsSidebarOpen(true)}
-                    className="flex items-center gap-1 hover:border border-transparent hover:border-white py-1 px-2 rounded-sm outline-none transition-all my-1 mr-2"
+                    className="flex items-center gap-1 hover:text-foreground hover:bg-muted py-1 px-2 rounded-md outline-none transition-all my-1 mr-2"
                 >
                     <Menu size={20} /> <span className="font-bold">All</span>
                 </button>
-                {['Amazon Haul', 'Best Sellers', 'New Releases', 'Sell on Amazon', 'Amazon Basics', "Today's Deals", 'Fashion', 'Books', 'Prime Video', 'Prime', 'Home & Garden', 'Gift Cards & Top Up', 'Electronics', 'Beauty', 'Toys & Games', 'Health & Personal Care'].map(category => (
-                    <Link key={category} href="#" className="py-1 px-2 hover:border border-transparent hover:border-white rounded-sm transition-all my-1 mx-1">
-                        {category}
+                {subjects.slice(0, 8).map(subject => (
+                    <Link key={subject.id} href={`/library?subject=${subject.id}`} className="py-1 px-3 hover:text-foreground hover:bg-muted rounded-md transition-all my-1 mx-1">
+                        {subject.name}
                     </Link>
                 ))}
             </div>
 
-            {/* Amazon-style Sidebar Overlay */}
+            {/* Sidebar Overlay */}
             {isSidebarOpen && (
                 <div className="fixed inset-0 z-[100] flex">
-                    <div className="absolute inset-0 bg-background/70 transition-opacity" onClick={() => setIsSidebarOpen(false)} />
+                    <div className="absolute inset-0 bg-background/70 transition-opacity backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
                     
                     <div className="relative w-[360px] max-w-[85vw] bg-card h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
                         {/* Header */}
-                        <div className="bg-[#232f3e] text-foreground p-5 flex items-center gap-3 min-h-[80px]">
+                        <div className="bg-indigo-600 text-white p-5 flex items-center gap-3 min-h-[80px]">
                             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center border border-white/30 shrink-0">
                                 <span className="font-bold text-lg capitalize">{user?.name?.[0] || 'U'}</span>
                             </div>
@@ -193,49 +210,21 @@ export function Header() {
                         {/* Close button outside sidebar */}
                         <button 
                             onClick={() => setIsSidebarOpen(false)} 
-                            className="absolute top-4 -right-14 text-foreground p-2 hover:text-red-400 transition-colors z-[110]"
+                            className="absolute top-4 -right-14 text-white p-2 hover:text-red-400 transition-colors z-[110]"
                         >
                             <X size={32} />
                         </button>
 
                         {/* Content */}
                         <div className="overflow-y-auto flex-1 pb-10 text-foreground">
-                            
-                            <div className="py-3 border-b border-border">
-                                <h3 className="px-6 py-2 text-lg font-bold">Trending</h3>
-                                <Link href="#" className="block px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors">Movers & Shakers</Link>
-                            </div>
-
-                            <div className="py-3 border-b border-border">
-                                <h3 className="px-6 py-2 text-lg font-bold">Digital content & devices</h3>
-                                {['Prime Video', 'Amazon Music', 'Amazon Appstore', 'Echo, Alexa & Smart Home', 'Fire TV', 'Fire Tablets', 'Amazon Luna - Cloud Gaming', 'Kindle E-readers & Books'].map(item => (
-                                    <Link key={item} href="#" className="flex items-center justify-between px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors">
-                                        {item} <ChevronDown className="w-5 h-5 -rotate-90 text-muted-foreground" />
-                                    </Link>
-                                ))}
-                            </div>
-
-                            <div className="py-3 border-b border-border">
-                                <h3 className="px-6 py-2 text-lg font-bold">Shop by Department</h3>
-                                {['Books', 'Films, TV, Music & Games', 'Electronics & Computers', 'Home, Garden & DIY'].map(item => (
-                                    <Link key={item} href="#" className="flex items-center justify-between px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors">
-                                        {item} <ChevronDown className="w-5 h-5 -rotate-90 text-muted-foreground" />
-                                    </Link>
-                                ))}
-                                <button className="w-full flex items-center gap-2 px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors text-left">
-                                    See all <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                                </button>
-                            </div>
-
                             <div className="py-3">
-                                <h3 className="px-6 py-2 text-lg font-bold">Programs & Features</h3>
-                                {['Spotlight stores'].map(item => (
-                                    <Link key={item} href="#" className="flex items-center justify-between px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors">
-                                        {item} <ChevronDown className="w-5 h-5 -rotate-90 text-muted-foreground" />
+                                <h3 className="px-6 py-2 text-lg font-bold">Browse Subjects</h3>
+                                {subjects.map(subject => (
+                                    <Link key={subject.id} href={`/library?subject=${subject.id}`} onClick={() => setIsSidebarOpen(false)} className="flex items-center justify-between px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors">
+                                        {subject.name} <ChevronDown className="w-5 h-5 -rotate-90 text-muted-foreground" />
                                     </Link>
                                 ))}
                             </div>
-
                         </div>
                     </div>
                 </div>
