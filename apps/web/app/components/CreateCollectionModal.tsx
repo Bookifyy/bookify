@@ -35,7 +35,7 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm">
-            <div className="bg-[#0a0a0a] border border-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl relative">
+            <div className="bg-card border border-border rounded-xl w-full max-w-lg overflow-hidden shadow-2xl relative">
                 <form onSubmit={handleSubmit}>
                     <div className="p-6">
                         <div className="mb-6">
@@ -52,8 +52,8 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="e.g., Spring 2024 Reading"
-                                    className={`w-full bg-[#0a0a0a] border rounded-lg px-4 py-2.5 text-foreground transition-all placeholder:text-zinc-600 focus:outline-none focus:ring-1 ${
-                                        name ? 'border-[#0ea5e9] ring-[#0ea5e9]' : 'border-border focus:border-[#0ea5e9] focus:ring-[#0ea5e9]'
+                                    className={`w-full bg-background border rounded-lg px-4 py-2.5 text-foreground transition-all placeholder:text-muted-foreground focus:outline-none focus:ring-1 ${
+                                        name ? 'border-primary ring-primary' : 'border-border focus:border-primary focus:ring-primary'
                                     }`}
                                     autoFocus
                                     required
@@ -68,7 +68,7 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="What's this collection about?"
-                                    className="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-foreground transition-all placeholder:text-zinc-600 focus:outline-none focus:border-zinc-700"
+                                    className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-foreground transition-all placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                                 />
                             </div>
 
@@ -89,13 +89,13 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                                                 type="button"
                                                 onClick={() => setVisibility(type)}
                                                 className={`w-full flex items-center gap-4 p-3.5 rounded-xl border transition-all text-left ${
-                                                    isSelected ? 'border-zinc-700 bg-card/30' : 'border-border/60 hover:border-zinc-700'
+                                                    isSelected ? 'border-primary bg-primary/5' : 'border-border hover:border-foreground/30'
                                                 }`}
                                             >
                                                 <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                                                    isSelected ? 'border-indigo-500' : 'border-zinc-600'
+                                                    isSelected ? 'border-primary' : 'border-muted-foreground/50'
                                                 }`}>
-                                                    {isSelected && <div className="w-2 h-2 rounded-full bg-indigo-500" />}
+                                                    {isSelected && <div className="w-2 h-2 rounded-full bg-primary" />}
                                                 </div>
                                                 <div>
                                                     <span className="text-sm font-medium text-foreground mr-2">{type}</span>
@@ -131,18 +131,18 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                     </div>
 
                     {/* Footer */}
-                    <div className="p-4 border-t border-border flex justify-end gap-3 bg-[#0a0a0a]">
+                    <div className="p-4 border-t border-border flex justify-end gap-3 bg-muted/30">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground border border-transparent hover:border-border transition-colors"
+                            className="px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground border border-transparent hover:border-border transition-colors bg-background"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={!name.trim()}
-                            className="px-5 py-2.5 rounded-lg text-sm font-medium bg-[#3730a3] hover:bg-indigo-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-5 py-2.5 rounded-lg text-sm font-medium bg-[#3730A3] hover:bg-indigo-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Create Collection
                         </button>

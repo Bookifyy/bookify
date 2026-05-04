@@ -146,8 +146,8 @@ export default function CollectionsPage() {
                         onClick={() => setActiveTab('my')}
                         className={`flex-1 py-3 text-sm font-medium rounded-full transition-all ${
                             activeTab === 'my'
-                                ? 'bg-[#18181b] text-foreground shadow-sm'
-                                : 'text-muted-foreground hover:text-muted-foreground'
+                                ? 'bg-foreground text-background shadow-sm'
+                                : 'text-muted-foreground hover:text-foreground'
                         }`}
                     >
                         My Collections
@@ -156,8 +156,8 @@ export default function CollectionsPage() {
                         onClick={() => setActiveTab('smart')}
                         className={`flex-1 py-3 text-sm font-medium rounded-full transition-all ${
                             activeTab === 'smart'
-                                ? 'bg-[#18181b] text-foreground shadow-sm'
-                                : 'text-muted-foreground hover:text-muted-foreground'
+                                ? 'bg-foreground text-background shadow-sm'
+                                : 'text-muted-foreground hover:text-foreground'
                         }`}
                     >
                         Smart Collections
@@ -177,7 +177,7 @@ export default function CollectionsPage() {
                                         <Link
                                             key={collection.id}
                                             href={`/collections/${collection.id}`}
-                                            className="bg-[#0a0a0a] border border-border rounded-2xl overflow-hidden group hover:border-zinc-700 transition-colors flex flex-col block"
+                                            className="bg-card border border-border rounded-2xl overflow-hidden group hover:shadow-md hover:border-foreground/20 transition-all flex flex-col block"
                                         >
                                             {/* Image Layout */}
                                             <div className="relative h-56 bg-card border-b border-border overflow-hidden shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
