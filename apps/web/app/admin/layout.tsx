@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeProvider';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -22,14 +23,22 @@ import {
     Building2,
     Lock,
     GraduationCap,
-    ClipboardCheck
+    ClipboardCheck,
+    Moon,
+    Sun,
+    Search
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const { user, loading, logout } = useAuth();
+    const { theme, setTheme } = useTheme();
     const router = useRouter();
     const pathname = usePathname();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const toggleTheme = () => {
+        setTheme(theme === 'dark' ? 'light' : 'dark');
+    };
 
     // Protect Admin Route
     useEffect(() => {
@@ -169,12 +178,40 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Main Content */}
             <main className="flex-1 min-w-0">
-                {/* Mobile Header */}
-                <header className="lg:hidden h-16 border-b border-border flex items-center px-4 bg-card sticky top-0 z-30 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
-                    <button onClick={() => setIsSidebarOpen(true)} className="text-muted-foreground">
-                        <Menu size={24} />
-                    </button>
-                    <span className="ml-4 font-bold text-foreground">Admin Panel</span>
+                {/* Top Navbar */}
+                <header className="h-16 border-b border-border flex items-center justify-between px-4 lg:px-8 bg-card sticky top-0 z-30 shadow-sm transition-colors duration-200">
+                    <div className="flex items-center gap-4">
+                        {/* Mobile Toggle */}
+                        <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground">
+                            <Menu size={24} />
+                        </button>
+                        
+                        {/* Brand / Logo (Visible on mobile or if needed on desktop) */}
+                        <div className="flex lg:hidden items-center gap-2 font-serif font-bold text-lg tracking-tighter text-foreground">
+                            <span className="w-7 h-7 bg-indigo-500 rounded-md flex items-center justify-center font-sans text-white text-sm">B</span>
+                            <span>Admin</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 md:gap-4">
+                        <Link 
+                            href="/" 
+                            className="hidden sm:flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted px-4 py-2 rounded-lg transition-colors"
+                        >
+                            <LogOut size={16} className="rotate-180" />
+                            Back to App
+                        </Link>
+                        
+                        <div className="w-px h-6 bg-border hidden sm:block"></div>
+
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 hover:text-foreground hover:bg-muted text-muted-foreground transition-colors rounded-full"
+                        >
+                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                        </button>
+                    </div>
                 </header>
 
                 <div className="p-4 md:p-8 max-w-7xl mx-auto">

@@ -37,11 +37,17 @@ export default function LibraryPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const subjectFilter = searchParams.get('subject');
+    const qFilter = searchParams.get('q');
     const [books, setBooks] = useState<LibraryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('all');
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(qFilter || '');
     const [sortBy, setSortBy] = useState<'recent' | 'title' | 'author' | 'progress'>('recent');
+
+    // Sync external query
+    useEffect(() => {
+        if (qFilter !== null) setSearchQuery(qFilter);
+    }, [qFilter]);
 
     // Collections State (Mocked with LocalStorage)
     const [collections, setCollections] = useState<Collection[]>([]);

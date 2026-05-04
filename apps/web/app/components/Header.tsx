@@ -5,7 +5,7 @@ import { Search, Menu, Settings, Moon, Sun, Home, Library, FileText, GraduationC
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeProvider';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { NotificationBell } from './NotificationBell';
 import { getApiUrl } from '../lib/utils';
 
@@ -23,9 +23,11 @@ export function Header() {
     const { user, token, logout } = useAuth();
     const { theme, setTheme } = useTheme();
     const pathname = usePathname();
+    const router = useRouter();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const [subjects, setSubjects] = useState<any[]>([]);
 
     useEffect(() => {
@@ -45,6 +47,13 @@ export function Header() {
 
     const toggleTheme = () => {
         setTheme(theme === 'dark' ? 'light' : 'dark');
+    };
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/library?q=${encodeURIComponent(searchQuery.trim())}`);
+        }
     };
 
     const isAdmin = user?.roles?.some((r: any) => r.name === 'Admin');
@@ -73,23 +82,25 @@ export function Header() {
                 </div>
 
                 {/* Search Bar - Hidden on small screens, can be expanded or modal */}
-                <div className="hidden md:flex flex-1 max-w-xl mx-8">
+                <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xl mx-8">
                     <div className="relative w-full group">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                             <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-indigo-400 transition-colors" />
                         </div>
                         <input
                             type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             className="block w-full rounded-full border border-border/50 bg-background/50 py-2 pl-10 pr-10 text-sm text-foreground placeholder-muted-foreground focus:border-indigo-500/50 focus:bg-background focus:outline-none focus:ring-1 focus:ring-indigo-500/50 transition-all backdrop-blur-sm"
                             placeholder="Search books, authors, topics..."
                         />
-                        <div className="absolute inset-y-0 right-3 flex items-center">
+                        <button type="submit" className="absolute inset-y-0 right-3 flex items-center">
                             <kbd className="hidden sm:inline-block rounded border border-border/50 px-1.5 text-[10px] font-medium text-muted-foreground bg-muted/50">
-                                /
+                                ⏎
                             </kbd>
-                        </div>
+                        </button>
                     </div>
-                </div>
+                </form>
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 sm:gap-4 text-muted-foreground relative">
