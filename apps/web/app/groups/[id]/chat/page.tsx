@@ -151,7 +151,7 @@ export default function GroupChatPage() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Type a message..."
-                    className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-indigo-500 transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                 />
                 <button
                     type="submit"

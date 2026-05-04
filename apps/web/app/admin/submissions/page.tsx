@@ -74,7 +74,7 @@ export default function AdminSubmissionsPage() {
             </div>
 
             {/* Filters */}
-            <div className="bg-card border border-border p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="bg-card border border-border p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <div className="relative w-full md:w-96">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                     <input
@@ -101,7 +101,7 @@ export default function AdminSubmissionsPage() {
             </div>
 
             {/* Table */}
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <table className="w-full text-left">
                     <thead className="bg-background text-muted-foreground text-xs uppercase tracking-wider">
                         <tr>

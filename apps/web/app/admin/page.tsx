@@ -95,7 +95,7 @@ export default function AdminDashboard() {
     }
 
     const StatCard = ({ title, value, change, icon: Icon, color }: any) => (
-        <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden group hover:border-zinc-700 transition-all">
+        <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden group hover:border-zinc-700 transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
             <div className={`absolute top-4 right-4 p-3 rounded-xl bg-${color}-500/10 text-${color}-500 group-hover:bg-${color}-500/20 transition-colors`}>
                 <Icon size={24} />
             </div>
@@ -162,7 +162,7 @@ export default function AdminDashboard() {
             {/* Recent Activity Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Recent Users */}
-                <div className="bg-card border border-border rounded-2xl p-6">
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="flex justify-between items-center mb-6">
                         <h3 className="text-lg font-bold text-foreground">Recent Signups</h3>
                         <button onClick={() => router.push('/admin/users')} className="text-xs font-bold text-indigo-400 hover:text-indigo-300">View All</button>
@@ -195,7 +195,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* System Status */}
-                <div className="bg-card border border-border rounded-2xl p-6">
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <h3 className="text-lg font-bold text-foreground mb-6">System Status</h3>
                     <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 bg-background/40 rounded-xl border border-border">

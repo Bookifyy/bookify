@@ -134,7 +134,7 @@ export default function AdminQuizzesPage() {
                 <input
                     type="text"
                     placeholder="Search quizzes by title or book..."
-                    className="w-full bg-card border border-border text-foreground pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                    className="w-full bg-card border border-border text-foreground pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -143,14 +143,14 @@ export default function AdminQuizzesPage() {
             {/* Quiz List */}
             <div className="grid gap-4">
                 {filteredQuizzes.length === 0 ? (
-                    <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
+                    <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <FileText className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
                         <h3 className="text-lg font-medium text-foreground mb-1">No quizzes found</h3>
                         <p className="text-muted-foreground text-sm">Create your first quiz to get started.</p>
                     </div>
                 ) : (
                     filteredQuizzes.map((quiz) => (
-                        <div key={quiz.id} className="bg-card border border-border rounded-xl p-5 hover:border-zinc-700 transition-colors flex flex-col md:flex-row gap-6 md:items-center">
+                        <div key={quiz.id} className="bg-card border border-border rounded-xl p-5 hover:border-zinc-700 transition-colors flex flex-col md:flex-row gap-6 md:items-center shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <div className="flex-1">
                                 <div className="flex items-start justify-between mb-2">
                                     <h3 className="text-lg font-bold text-foreground">{quiz.title}</h3>

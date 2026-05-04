@@ -14,7 +14,7 @@ export default function AdminSettingsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* General Settings */}
-                <div className="bg-card border border-border rounded-2xl p-6">
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="p-2 bg-indigo-500/10 text-indigo-500 rounded-lg">
                             <Globe size={20} />
@@ -42,7 +42,7 @@ export default function AdminSettingsPage() {
                 </div>
 
                 {/* Notifications */}
-                <div className="bg-card border border-border rounded-2xl p-6">
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="p-2 bg-amber-500/10 text-amber-500 rounded-lg">
                             <Bell size={20} />
@@ -66,7 +66,7 @@ export default function AdminSettingsPage() {
                 </div>
 
                 {/* Security */}
-                <div className="bg-card border border-border rounded-2xl p-6">
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="p-2 bg-red-500/10 text-red-500 rounded-lg">
                             <Lock size={20} />

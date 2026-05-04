@@ -175,7 +175,7 @@ export default function CollectionDetailPage() {
                         Bookify
                     </div>
                     <div className="flex-1 max-w-xl px-8">
-                        <div className="bg-card border border-border rounded-md px-4 py-1.5 flex items-center text-sm text-muted-foreground">
+                        <div className="bg-card border border-border rounded-md px-4 py-1.5 flex items-center text-sm text-muted-foreground shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             Search books, authors, topics
                             <span className="ml-auto bg-background text-zinc-600 px-2 py-0.5 rounded text-xs border border-border">/</span>
                         </div>
@@ -328,7 +328,7 @@ export default function CollectionDetailPage() {
                         ) : (
                             <div className="text-center py-20 border border-dashed border-border rounded-2xl">
                                 <p className="text-muted-foreground mb-4">No books in this collection yet.</p>
-                                <Link href="/library" className="bg-card hover:bg-muted text-foreground px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
+                                <Link href="/library" className="bg-card hover:bg-muted text-foreground px-6 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                     Add Books
                                 </Link>
                             </div>
@@ -341,7 +341,7 @@ export default function CollectionDetailPage() {
             <div className="w-[320px] border-l border-border bg-background min-h-screen p-6 flex-shrink-0">
                 <h3 className="text-[15px] font-medium text-foreground mb-4">Collection Activity</h3>
                 
-                <div className="flex items-center p-1 bg-card rounded-xl mb-8">
+                <div className="flex items-center p-1 bg-card rounded-xl mb-8 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <button 
                         onClick={() => setActiveTab('Activity')}
                         className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${activeTab === 'Activity' ? 'bg-[#18181b] text-foreground shadow' : 'text-muted-foreground hover:text-muted-foreground'}`}

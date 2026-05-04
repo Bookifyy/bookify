@@ -93,7 +93,7 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                             placeholder="Search groups..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-sm text-foreground focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-sm text-foreground focus:outline-none focus:border-indigo-500 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                         />
                     </div>
                 </div>

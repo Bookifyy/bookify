@@ -445,7 +445,7 @@ export default function ReaderPage() {
     return (
         <div className="h-screen bg-background text-foreground flex flex-col overflow-hidden">
             {/* Reader Header */}
-            <header className="h-16 border-b border-border bg-card/50 backdrop-blur-md px-6 flex items-center justify-between z-20">
+            <header className="h-16 border-b border-border bg-card/50 backdrop-blur-md px-6 flex items-center justify-between z-20 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <div className="flex items-center gap-4">
                     <button
                         onClick={() => router.back()}
@@ -479,7 +479,7 @@ export default function ReaderPage() {
             </header>
 
             {/* Reader Canvas */}
-            <main className="flex-1 overflow-auto bg-card flex justify-center p-4 md:p-8 custom-scrollbar relative select-text overscroll-x-none touch-pan-y">
+            <main className="flex-1 overflow-auto bg-card flex justify-center p-4 md:p-8 custom-scrollbar relative select-text overscroll-x-none touch-pan-y shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <div ref={containerRef} className="w-full max-w-4xl mx-auto flex justify-center">
                     <Document
                         file={pdfBlob}
@@ -585,7 +585,7 @@ export default function ReaderPage() {
             </main>
 
             {/* Navigation Footer */}
-            <footer className="h-16 border-t border-border bg-card/80 backdrop-blur-md px-6 flex items-center justify-center gap-8 z-20 mb-20">
+            <footer className="h-16 border-t border-border bg-card/80 backdrop-blur-md px-6 flex items-center justify-center gap-8 z-20 mb-20 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <button
                     disabled={pageNumber <= 1}
                     onClick={() => setPageNumber(p => Math.max(1, p - 1))}
@@ -622,7 +622,7 @@ export default function ReaderPage() {
                         className="absolute top-0 bottom-0 right-0 w-[85vw] md:w-[400px] bg-card border-l border-border shadow-2xl flex flex-col animate-in slide-in-from-right duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="p-4 border-b border-border flex justify-between items-center bg-card/95 backdrop-blur shrink-0">
+                        <div className="p-4 border-b border-border flex justify-between items-center bg-card/95 backdrop-blur shrink-0 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <div>
                                 <h3 className="font-bold text-foreground text-lg">Contents</h3>
                                 <p className="text-xs text-muted-foreground">{outline && outline.length > 0 ? `${outline.length} Chapters` : 'No embedded chapters'}</p>
@@ -633,7 +633,7 @@ export default function ReaderPage() {
                         </div>
 
                         {/* Jump to Page Input */}
-                        <div className="p-4 border-b border-border bg-card/50 shrink-0">
+                        <div className="p-4 border-b border-border bg-card/50 shrink-0 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Jump to Page</label>
                             <div className="flex gap-2">
                                 <input
@@ -816,7 +816,7 @@ export default function ReaderPage() {
                                                         setPageNumber(result.page);
                                                         setActiveModal('none');
                                                     }}
-                                                    className="w-full text-left p-3 rounded-lg bg-card/50 hover:bg-muted border border-border transition-colors group"
+                                                    className="w-full text-left p-3 rounded-lg bg-card/50 hover:bg-muted border border-border transition-colors group shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                                                 >
                                                     <div className="flex justify-between items-center mb-1">
                                                         <span className="text-[10px] uppercase font-bold text-muted-foreground">Page {result.page}</span>
@@ -847,7 +847,7 @@ export default function ReaderPage() {
                                         <span className="text-xs text-muted-foreground">{bookmarks.length} saved</span>
                                     </div>
 
-                                    <div className="p-4 border-b border-border bg-card/50">
+                                    <div className="p-4 border-b border-border bg-card/50 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                         <div className="flex gap-2">
                                             <input
                                                 type="text"
@@ -909,7 +909,7 @@ export default function ReaderPage() {
                                         <span className="text-xs text-muted-foreground">{notes.length} saved</span>
                                     </div>
 
-                                    <div className="p-4 border-b border-border bg-card/50">
+                                    <div className="p-4 border-b border-border bg-card/50 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                         <div className="space-y-2">
                                             <textarea
                                                 placeholder="Write a note..."
@@ -993,7 +993,7 @@ export default function ReaderPage() {
                                         <span className="text-xs text-muted-foreground">{flashcards.length} cards</span>
                                     </div>
 
-                                    <div className="p-4 border-b border-border bg-card/50">
+                                    <div className="p-4 border-b border-border bg-card/50 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                         <div className="space-y-2">
                                             <input
                                                 type="text"
@@ -1134,7 +1134,7 @@ export default function ReaderPage() {
                         onClick={() => setActiveModal(activeModal === 'typography' ? 'none' : 'typography')}
                         className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'typography' ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'}`}
                     >
-                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <Type size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Font</span>
@@ -1145,7 +1145,7 @@ export default function ReaderPage() {
                         onClick={() => setActiveModal(activeModal === 'search' ? 'none' : 'search')}
                         className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'search' ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'}`}
                     >
-                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <Search size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Search</span>
@@ -1155,7 +1155,7 @@ export default function ReaderPage() {
                         onClick={() => setActiveModal(activeModal === 'highlight' ? 'none' : 'highlight')}
                         className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'highlight' ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'}`}
                     >
-                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <Type size={18} className="rotate-90" />
                         </div>
                         <span className="text-[10px] font-medium">Highlight</span>
@@ -1169,7 +1169,7 @@ export default function ReaderPage() {
                         onClick={() => setActiveModal(activeModal === 'note' ? 'none' : 'note')}
                         className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'note' ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'}`}
                     >
-                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <BookOpen size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Note</span>
@@ -1180,7 +1180,7 @@ export default function ReaderPage() {
                         onClick={() => setActiveModal(activeModal === 'bookmark' ? 'none' : 'bookmark')}
                         className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'bookmark' ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'}`}
                     >
-                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <Bookmark size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Bookmark</span>
@@ -1191,7 +1191,7 @@ export default function ReaderPage() {
                         onClick={() => setActiveModal(activeModal === 'flashcard' ? 'none' : 'flashcard')}
                         className={`flex flex-col items-center gap-1.5 transition-colors group ${activeModal === 'flashcard' ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'}`}
                     >
-                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors">
+                        <div className="p-2 rounded-xl bg-card group-hover:bg-muted border border-border transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <Star size={18} />
                         </div>
                         <span className="text-[10px] font-medium">Flashcard</span>

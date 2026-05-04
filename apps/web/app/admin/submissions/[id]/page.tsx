@@ -130,7 +130,7 @@ export default function AdminGradingPage() {
         <div className="max-w-5xl mx-auto space-y-6 pb-20">
             {/* Header */}
             <div className="flex items-center gap-4">
-                <Link href="/admin/submissions" className="p-2 bg-card hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/admin/submissions" className="p-2 bg-card hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <ArrowLeft size={20} />
                 </Link>
                 <div>
@@ -145,7 +145,7 @@ export default function AdminGradingPage() {
                 <div className="lg:col-span-2 space-y-6">
 
                     {/* Student & Quiz Info */}
-                    <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+                    <div className="bg-card border border-border rounded-xl p-6 space-y-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <div className="flex gap-4 items-start">
                             <div className="w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-500">
                                 <User size={24} />
@@ -190,7 +190,7 @@ export default function AdminGradingPage() {
                     </div>
 
                     {/* Attachment Viewer */}
-                    <div className="bg-card border border-border rounded-xl p-6">
+                    <div className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                             <FileText size={20} className="text-indigo-400" />
                             Submitted Answer Sheet
@@ -228,7 +228,7 @@ export default function AdminGradingPage() {
 
                     {/* Question Responses (if any) */}
                     {attempt.quiz.questions.length > 0 && (
-                        <div className="bg-card border border-border rounded-xl p-6 space-y-6">
+                        <div className="bg-card border border-border rounded-xl p-6 space-y-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <h3 className="text-lg font-bold text-foreground mb-4">Question Responses</h3>
                             {attempt.quiz.questions.map((q, index) => {
                                 const answer = attempt.answers.find(a => a.question_id === q.id);
@@ -260,7 +260,7 @@ export default function AdminGradingPage() {
 
                 {/* Right Column: Grading Action */}
                 <div className="lg:col-span-1">
-                    <div className="bg-card border border-border rounded-xl p-6 sticky top-6">
+                    <div className="bg-card border border-border rounded-xl p-6 sticky top-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <h3 className="text-xl font-bold text-foreground mb-4">Grading</h3>
 
                         <div className="space-y-4">

@@ -412,7 +412,7 @@ export default function BookDetailPage() {
                     </div>
 
                     {/* Secondary Box */}
-                    <div className="border border-border bg-card rounded-xl p-5">
+                    <div className="border border-border bg-card rounded-xl p-5 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <h4 className="font-bold text-sm mb-2 text-foreground">Gift this book</h4>
                         <p className="text-xs text-muted-foreground mb-4">Give as a gift or purchase for a group.</p>
                         <button className="w-full border border-border hover:bg-muted text-foreground text-sm font-semibold py-2 rounded-full transition-colors">

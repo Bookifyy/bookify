@@ -304,7 +304,7 @@ export default function QuizTakingPage() {
                     </div>
                 </div>
 
-                <div className="bg-card/50 p-6 rounded-2xl border border-border max-w-lg mx-auto text-left space-y-4">
+                <div className="bg-card/50 p-6 rounded-2xl border border-border max-w-lg mx-auto text-left space-y-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <h3 className="font-bold text-foreground">Instructions:</h3>
                     <ul className="list-disc list-inside text-muted-foreground space-y-2 text-sm">
                         <li>This is a timed quiz. The timer starts immediately when you click Start.</li>
@@ -414,7 +414,7 @@ export default function QuizTakingPage() {
 
             {/* Question Paper Download */}
             {quiz.attachment_path && (
-                <div className="bg-card border border-border p-6 rounded-2xl flex items-center justify-between flex-wrap gap-4">
+                <div className="bg-card border border-border p-6 rounded-2xl flex items-center justify-between flex-wrap gap-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div>
                         <h3 className="text-lg text-foreground font-medium mb-1">Question Paper</h3>
                         <p className="text-muted-foreground text-sm">Download the attached file to view questions/instructions.</p>
@@ -435,7 +435,7 @@ export default function QuizTakingPage() {
             {quiz.questions && quiz.questions.length > 0 ? (
                 <div className="space-y-8">
                     {quiz.questions.map((q, index) => (
-                        <div key={q.id} className="bg-card border border-border p-6 rounded-2xl">
+                        <div key={q.id} className="bg-card border border-border p-6 rounded-2xl shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <div className="flex items-start gap-4 mb-6">
                                 <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center font-bold text-muted-foreground text-sm flex-shrink-0">
                                     {index + 1}
@@ -509,7 +509,7 @@ export default function QuizTakingPage() {
                     ))}
                 </div>
             ) : (
-                <div className="bg-card border border-border p-8 rounded-2xl text-center">
+                <div className="bg-card border border-border p-8 rounded-2xl text-center shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <p className="text-muted-foreground">No interactive questions in this quiz. Please refer to the Question Paper above.</p>
                 </div>
             )}
@@ -520,7 +520,7 @@ export default function QuizTakingPage() {
                 So hide this if (!quiz.attachment_path && quiz.questions.length > 0).
             */}
             {(!quiz.questions || quiz.questions.length === 0 || quiz.attachment_path) && (
-                <div className="bg-card border border-border p-6 rounded-2xl">
+                <div className="bg-card border border-border p-6 rounded-2xl shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="mb-4">
                         <h3 className="text-lg text-foreground font-medium mb-1 flex items-center gap-2">
                             <Upload size={20} />

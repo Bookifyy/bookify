@@ -106,7 +106,7 @@ export function InviteMemberModal({ isOpen, onClose, groupId }: { isOpen: boolea
                             type="text"
                             value={search}
                             onChange={(e) => handleSearch(e.target.value)}
-                            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-foreground focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-foreground focus:outline-none focus:border-indigo-500 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                             placeholder="Search contacts..."
                         />
                     </div>

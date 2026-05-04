@@ -89,7 +89,7 @@ export default function SubscriptionsPage() {
             </div>
 
             {/* Subscriber List Placeholder */}
-            <div className="bg-card border border-border rounded-2xl p-8 text-center">
+            <div className="bg-card border border-border rounded-2xl p-8 text-center shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <h3 className="text-lg font-bold text-foreground mb-2">Subscriber Management</h3>
                 <p className="text-muted-foreground text-sm mb-4">Connect Stripe or Paypal to view real-time subscriber lists and manage cancellations.</p>
                 <div className="flex items-center justify-center gap-4">

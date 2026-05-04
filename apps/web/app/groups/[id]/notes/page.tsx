@@ -112,14 +112,14 @@ export default function GroupNotesPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {notes.length === 0 ? (
-                    <div className="col-span-full text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
+                    <div className="col-span-full text-center py-12 bg-card/50 rounded-xl border border-border border-dashed shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <FileText className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
                         <h3 className="text-lg font-medium text-foreground mb-1">No notes yet</h3>
                         <p className="text-muted-foreground text-sm">Share study notes with your group.</p>
                     </div>
                 ) : (
                     notes.map(note => (
-                        <div key={note.id} className="bg-card border border-border rounded-xl p-5 flex flex-col group hover:border-zinc-700 transition-colors">
+                        <div key={note.id} className="bg-card border border-border rounded-xl p-5 flex flex-col group hover:border-zinc-700 transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <div className="flex justify-between items-start mb-3">
                                 <h3 className="text-lg font-bold text-foreground line-clamp-1">{note.title}</h3>
                                 {note.user.id === user?.id && (

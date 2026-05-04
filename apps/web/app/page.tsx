@@ -159,7 +159,7 @@ export default function Home() {
             })}
           </div>
         ) : (
-          <div className="bg-card/30 rounded-xl py-12 text-center text-muted-foreground border border-border/50 border-dashed">
+          <div className="bg-card/30 rounded-xl py-12 text-center text-muted-foreground border border-border/50 border-dashed shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
             Visit the Admin Panel to upload your first book!
           </div>
         )}
@@ -260,7 +260,7 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <div className="bg-card/30 rounded-xl py-12 text-center text-muted-foreground border border-border/50 border-dashed">
+          <div className="bg-card/30 rounded-xl py-12 text-center text-muted-foreground border border-border/50 border-dashed shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
             <p className="mb-4">You haven't started reading any books yet.</p>
             <Link
               href="/library"

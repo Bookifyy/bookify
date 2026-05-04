@@ -52,7 +52,7 @@ export default function ForgotPasswordPage() {
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border">
+                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         {status && (
                             <div className="rounded-md bg-green-50 p-4 dark:bg-green-900/20">

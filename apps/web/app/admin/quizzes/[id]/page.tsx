@@ -157,14 +157,14 @@ export default function EditQuizPage() {
             {/* Questions List */}
             <div className="space-y-4">
                 {quiz.questions.length === 0 ? (
-                    <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
+                    <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <AlertCircle className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
                         <h3 className="text-lg font-medium text-foreground mb-1">No questions yet</h3>
                         <p className="text-muted-foreground text-sm">Add questions to publish this quiz.</p>
                     </div>
                 ) : (
                     quiz.questions.map((q, idx) => (
-                        <div key={q.id} className="bg-card border border-border rounded-xl p-6 relative group">
+                        <div key={q.id} className="bg-card border border-border rounded-xl p-6 relative group shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <button
                                 onClick={() => handleDeleteQuestion(q.id)}
                                 className="absolute top-4 right-4 p-2 text-zinc-600 hover:text-red-400 hover:bg-muted rounded-lg opacity-0 group-hover:opacity-100 transition-all"
@@ -210,8 +210,8 @@ export default function EditQuizPage() {
             {/* Add Question Modal */}
             {showAddModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
-                    <div className="bg-card border border-border rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                        <div className="p-6 border-b border-border flex items-center justify-between sticky top-0 bg-card z-10">
+                    <div className="bg-card border border-border rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
+                        <div className="p-6 border-b border-border flex items-center justify-between sticky top-0 bg-card z-10 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <h2 className="text-xl font-bold text-foreground">Add Question</h2>
                             <button onClick={() => setShowAddModal(false)} className="text-muted-foreground hover:text-foreground">
                                 <X size={24} />

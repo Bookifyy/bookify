@@ -111,7 +111,7 @@ export default function DashboardPage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Day Streak */}
-                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors">
+                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <div className="flex items-center gap-3">
                             <Flame className="text-foreground w-5 h-5" />
                             <div>
@@ -123,7 +123,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* This Week */}
-                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors">
+                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <div className="flex items-center gap-3">
                             <Target className="text-blue-600 w-5 h-5" />
                             <div>
@@ -135,7 +135,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Completed */}
-                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors">
+                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <div className="flex items-center gap-3">
                             <Medal className="text-muted-foreground w-5 h-5" />
                             <div>
@@ -147,7 +147,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Reading Speed */}
-                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors">
+                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <div className="flex items-center gap-3">
                             <TrendingUp className="text-blue-600 w-5 h-5" />
                             <div>
@@ -164,7 +164,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* 2. WEEKLY ACTIVITY (Bar Chart) - Takes 2 cols on Large screens */}
-                <div className="lg:col-span-2 bg-card border border-border/60 rounded-xl p-6">
+                <div className="lg:col-span-2 bg-card border border-border/60 rounded-xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="flex items-center gap-2 mb-8">
                         <Calendar className="w-4 h-4 text-foreground" />
                         <h2 className="text-[15px] font-semibold text-foreground">Weekly Activity</h2>
@@ -205,7 +205,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* 3. STUDY DISTRIBUTION (Donut Chart) - Takes 1 col */}
-                <div className="bg-card border border-border/60 rounded-xl p-6 flex flex-col">
+                <div className="bg-card border border-border/60 rounded-xl p-6 flex flex-col shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <h2 className="text-[15px] font-semibold text-foreground mb-2">Study Distribution</h2>
                     
                     <div className="flex-1 flex flex-col justify-between">
@@ -254,7 +254,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 {/* 4. BOOKS IN PROGRESS */}
-                <div className="bg-card border border-border/60 rounded-xl p-6">
+                <div className="bg-card border border-border/60 rounded-xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <h2 className="text-[15px] font-semibold text-muted-foreground mb-6">Books in Progress</h2>
                     {booksInProgress.length === 0 ? (
                         <div className="py-12 flex flex-col items-center justify-center text-center">
@@ -273,7 +273,7 @@ export default function DashboardPage() {
                                         </div>
                                         <span className="text-xs font-semibold text-muted-foreground ml-4">{book.progress}%</span>
                                     </div>
-                                    <div className="w-full h-1.5 bg-card rounded-full overflow-hidden shrink-0">
+                                    <div className="w-full h-1.5 bg-card rounded-full overflow-hidden shrink-0 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                         <div 
                                             className="h-full bg-blue-600 rounded-full transition-all duration-1000 ease-out" 
                                             style={{ width: `${book.progress}%` }} 
@@ -288,7 +288,7 @@ export default function DashboardPage() {
                 {/* 5. RECENT ACHIEVEMENTS & CURRENT PLAN */}
                 <div className="space-y-6 flex flex-col">
                     {/* Achievements */}
-                    <div className="bg-card border border-border/60 rounded-xl p-6 flex-1">
+                    <div className="bg-card border border-border/60 rounded-xl p-6 flex-1 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <div className="flex items-center gap-2 mb-6">
                             <Award className="w-4 h-4 text-muted-foreground" />
                             <h2 className="text-[15px] font-semibold text-muted-foreground">Recent Achievements</h2>
@@ -308,7 +308,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Weekly Goals Miniature Block */}
-                    <div className="bg-card border border-border/60 rounded-xl p-6">
+                    <div className="bg-card border border-border/60 rounded-xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                          <div className="flex items-center justify-between">
                              <div>
                                 <h3 className="text-sm font-bold text-foreground tracking-wide">Weekly Goal Status</h3>

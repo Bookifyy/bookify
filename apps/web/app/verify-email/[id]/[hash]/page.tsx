@@ -56,7 +56,7 @@ export default function VerifyEmailHandler({ params }: { params: Promise<{ id: s
     return (
         <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-background">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border text-center">
+                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border text-center shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
 
                     {status === 'loading' && (
                         <div className="flex flex-col items-center">

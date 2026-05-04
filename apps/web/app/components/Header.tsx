@@ -155,7 +155,7 @@ export function Header() {
             </div>
 
             {/* Bottom Nav Tier - Desktop ONLY (Mobile has accordion menu) */}
-            <div className="hidden lg:flex items-center px-4 lg:px-8 bg-card/30 backdrop-blur-md">
+            <div className="hidden lg:flex items-center px-4 lg:px-8 bg-card/30 backdrop-blur-md shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <nav className="flex gap-2">
                     {menuItems.map((item) => {
                         const isActive = pathname === item.href;
@@ -179,7 +179,7 @@ export function Header() {
             </div>
 
             {/* Dynamic Subjects Sub-Nav */}
-            <div className="bg-card border-y border-border text-muted-foreground text-sm font-medium flex items-center px-4 overflow-x-auto whitespace-nowrap hide-scrollbar">
+            <div className="bg-card border-y border-border text-muted-foreground text-sm font-medium flex items-center px-4 overflow-x-auto whitespace-nowrap hide-scrollbar shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <button 
                     onClick={() => setIsSidebarOpen(true)}
                     className="flex items-center gap-1 hover:text-foreground hover:bg-muted py-1 px-2 rounded-md outline-none transition-all my-1 mr-2"
@@ -285,7 +285,7 @@ export function Header() {
                     </nav>
                     
                     {/* Mobile Profile Actions */}
-                    <div className="mt-auto p-4 border-t border-border/50 bg-card/50">
+                    <div className="mt-auto p-4 border-t border-border/50 bg-card/50 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                          <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-lg border border-indigo-500/30">
                                 {user?.name?.[0] || 'U'}

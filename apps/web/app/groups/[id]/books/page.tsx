@@ -63,14 +63,14 @@ export default function GroupBooksPage() {
 
             <div className="space-y-4">
                 {books.length === 0 ? (
-                    <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
+                    <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <BookOpen className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
                         <h3 className="text-lg font-medium text-foreground mb-1">No books yet</h3>
                         <p className="text-muted-foreground text-sm">Add a book to start reading together.</p>
                     </div>
                 ) : (
                     books.map(book => (
-                        <div key={book.id} className="bg-card border border-border rounded-xl p-4 flex gap-4">
+                        <div key={book.id} className="bg-card border border-border rounded-xl p-4 flex gap-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             {/* Cover */}
                             <div className="w-16 h-24 bg-muted rounded-lg flex-shrink-0 overflow-hidden relative">
                                 {book.cover_image ? (

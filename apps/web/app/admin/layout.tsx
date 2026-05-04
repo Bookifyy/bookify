@@ -170,7 +170,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Main Content */}
             <main className="flex-1 min-w-0">
                 {/* Mobile Header */}
-                <header className="lg:hidden h-16 border-b border-border flex items-center px-4 bg-card sticky top-0 z-30">
+                <header className="lg:hidden h-16 border-b border-border flex items-center px-4 bg-card sticky top-0 z-30 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <button onClick={() => setIsSidebarOpen(true)} className="text-muted-foreground">
                         <Menu size={24} />
                     </button>

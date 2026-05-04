@@ -75,14 +75,14 @@ export default function StudentQuizzesPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {quizzes.length === 0 ? (
-                    <div className="col-span-full text-center py-20 bg-card/50 rounded-2xl border border-border border-dashed">
+                    <div className="col-span-full text-center py-20 bg-card/50 rounded-2xl border border-border border-dashed shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <Award className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
                         <h3 className="text-xl font-bold text-foreground mb-2">No Quizzes Available Yet</h3>
                         <p className="text-muted-foreground">Check back later for new quizzes added by your instructor.</p>
                     </div>
                 ) : (
                     quizzes.map((quiz) => (
-                        <div key={quiz.id} className="bg-card border border-border rounded-2xl overflow-hidden hover:border-zinc-700 transition-all group">
+                        <div key={quiz.id} className="bg-card border border-border rounded-2xl overflow-hidden hover:border-zinc-700 transition-all group shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <div className="p-6">
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="space-y-1">

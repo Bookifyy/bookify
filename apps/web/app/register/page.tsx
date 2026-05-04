@@ -67,7 +67,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border">
+                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         {error && (
                             <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
@@ -176,7 +176,7 @@ export default function RegisterPage() {
                                 <div className="w-full border-t border-zinc-300 dark:border-zinc-700" />
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className="bg-white px-2 text-muted-foreground dark:bg-card">
+                                <span className="bg-white px-2 text-muted-foreground dark:bg-card shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                     Or
                                 </span>
                             </div>

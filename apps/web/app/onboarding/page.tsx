@@ -155,7 +155,7 @@ export default function OnboardingPage() {
                 </section>
 
                 {/* SECTION 2: CORE VALUE PROPOSITION */}
-                <section className="bg-white/50 dark:bg-card/30 border-y border-black/5 dark:border-white/5 relative transition-colors duration-300">
+                <section className="bg-white/50 dark:bg-card/30 border-y border-black/5 dark:border-white/5 relative transition-colors duration-300 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
                         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
                             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-foreground">Everything you need to succeed</h2>

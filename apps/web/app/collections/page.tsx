@@ -141,7 +141,7 @@ export default function CollectionsPage() {
 
             <div className="max-w-7xl mx-auto px-8 mt-6">
                 {/* Tabs */}
-                <div className="p-1.5 bg-card rounded-full flex items-center mb-8 border border-border">
+                <div className="p-1.5 bg-card rounded-full flex items-center mb-8 border border-border shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <button
                         onClick={() => setActiveTab('my')}
                         className={`flex-1 py-3 text-sm font-medium rounded-full transition-all ${
@@ -180,7 +180,7 @@ export default function CollectionsPage() {
                                             className="bg-[#0a0a0a] border border-border rounded-2xl overflow-hidden group hover:border-zinc-700 transition-colors flex flex-col block"
                                         >
                                             {/* Image Layout */}
-                                            <div className="relative h-56 bg-card border-b border-border overflow-hidden">
+                                            <div className="relative h-56 bg-card border-b border-border overflow-hidden shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                                 {images.length === 1 && (
                                                     <div className="relative w-full h-full">
                                                         <img src={images[0]} alt={collection.name} className="w-full h-full object-cover" />
@@ -260,7 +260,7 @@ export default function CollectionsPage() {
 
                     return activeTab === 'my' ? (
                         <div className="py-20 flex flex-col items-center justify-center text-center border border-dashed border-border rounded-3xl">
-                            <div className="bg-card p-4 rounded-full mb-4">
+                            <div className="bg-card p-4 rounded-full mb-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                 <BookOpen size={32} className="text-zinc-700" />
                             </div>
                             <h3 className="text-lg font-medium text-foreground mb-2 font-serif">No collections yet</h3>
@@ -270,7 +270,7 @@ export default function CollectionsPage() {
                         </div>
                     ) : (
                         <div className="py-20 flex flex-col items-center justify-center text-center border border-dashed border-border rounded-3xl">
-                            <div className="w-16 h-16 bg-card rounded-2xl flex items-center justify-center mb-4 border border-border">
+                            <div className="w-16 h-16 bg-card rounded-2xl flex items-center justify-center mb-4 border border-border shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                 <Layers className="text-muted-foreground" size={32} />
                             </div>
                             <h3 className="text-lg font-medium text-foreground mb-2 font-serif">Smart Collections</h3>

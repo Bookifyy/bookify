@@ -9,7 +9,7 @@ export default function GroupsPage() {
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-            <div className="w-16 h-16 bg-card rounded-2xl flex items-center justify-center mb-6">
+            <div className="w-16 h-16 bg-card rounded-2xl flex items-center justify-center mb-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <Users size={32} className="text-zinc-600" />
             </div>
             <h1 className="text-2xl font-bold text-foreground mb-2">No group selected</h1>

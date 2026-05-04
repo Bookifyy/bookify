@@ -165,7 +165,7 @@ export default function NotesPage() {
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4">
+                <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-indigo-400">
                         <FileText size={24} />
                     </div>
@@ -174,7 +174,7 @@ export default function NotesPage() {
                         <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Total</div>
                     </div>
                 </div>
-                <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4">
+                <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-yellow-400">
                         <Highlighter size={24} />
                     </div>
@@ -183,7 +183,7 @@ export default function NotesPage() {
                         <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Highlights</div>
                     </div>
                 </div>
-                <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4">
+                <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-blue-400">
                         <FileText size={24} />
                     </div>
@@ -192,7 +192,7 @@ export default function NotesPage() {
                         <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Notes</div>
                     </div>
                 </div>
-                <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4">
+                <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-indigo-400">
                         <Bookmark size={24} />
                     </div>
@@ -212,14 +212,14 @@ export default function NotesPage() {
                         placeholder="Search notes, highlights, or bookmarks..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-card border border-border rounded-xl py-3 pl-10 pr-4 text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        className="w-full bg-card border border-border rounded-xl py-3 pl-10 pr-4 text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                     />
                 </div>
                 <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 max-w-full custom-scrollbar">
                     <select
                         value={filterBook}
                         onChange={(e) => setFilterBook(e.target.value)}
-                        className="bg-card border border-border rounded-xl px-4 py-3 text-sm text-muted-foreground focus:outline-none focus:border-indigo-500 appearance-none min-w-[150px]"
+                        className="bg-card border border-border rounded-xl px-4 py-3 text-sm text-muted-foreground focus:outline-none focus:border-indigo-500 appearance-none min-w-[150px] shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                     >
                         <option value="all">All Books</option>
                         {uniqueBooks.map(([id, title]) => (
@@ -230,7 +230,7 @@ export default function NotesPage() {
                     <select
                         value={filterType}
                         onChange={(e) => setFilterType(e.target.value as any)}
-                        className="bg-card border border-border rounded-xl px-4 py-3 text-sm text-muted-foreground focus:outline-none focus:border-indigo-500 appearance-none min-w-[120px]"
+                        className="bg-card border border-border rounded-xl px-4 py-3 text-sm text-muted-foreground focus:outline-none focus:border-indigo-500 appearance-none min-w-[120px] shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                     >
                         <option value="all">All Types</option>
                         <option value="highlight">Highlights</option>
@@ -241,7 +241,7 @@ export default function NotesPage() {
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as any)}
-                        className="bg-card border border-border rounded-xl px-4 py-3 text-sm text-muted-foreground focus:outline-none focus:border-indigo-500 appearance-none min-w-[120px]"
+                        className="bg-card border border-border rounded-xl px-4 py-3 text-sm text-muted-foreground focus:outline-none focus:border-indigo-500 appearance-none min-w-[120px] shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                     >
                         <option value="recent">Most Recent</option>
                         <option value="oldest">Oldest</option>
@@ -265,7 +265,7 @@ export default function NotesPage() {
                     </div>
                 ) : (
                     filteredItems.map((item) => (
-                        <div key={`${item.type}-${item.id}`} className="bg-card/30 border border-border hover:border-zinc-700 transition-colors rounded-2xl p-6 group">
+                        <div key={`${item.type}-${item.id}`} className="bg-card/30 border border-border hover:border-zinc-700 transition-colors rounded-2xl p-6 group shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                             <div className="flex items-start justify-between gap-4">
                                 <div className="space-y-3 flex-1">
                                     <div className="flex items-center gap-3 text-xs text-muted-foreground">

@@ -160,7 +160,7 @@ export default function ResetPasswordPage() {
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border">
+                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-card border border-zinc-200 dark:border-border shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <Suspense fallback={<p className="text-center text-muted-foreground">Loading form...</p>}>
                         <ResetPasswordForm />
                     </Suspense>

@@ -39,7 +39,7 @@ export default function RevenuePage() {
 
             {/* Financial Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden">
+                <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="absolute top-4 right-4 p-3 rounded-xl bg-green-500/10 text-green-500">
                         <DollarSign size={24} />
                     </div>
@@ -47,7 +47,7 @@ export default function RevenuePage() {
                     <h3 className="text-3xl font-serif font-bold text-foreground mb-2">$84,230</h3>
                     <span className="text-green-500 text-xs font-bold bg-green-500/10 px-2 py-1 rounded">+18% vs last year</span>
                 </div>
-                <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden">
+                <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="absolute top-4 right-4 p-3 rounded-xl bg-blue-500/10 text-blue-500">
                         <CreditCard size={24} />
                     </div>
@@ -55,7 +55,7 @@ export default function RevenuePage() {
                     <h3 className="text-3xl font-serif font-bold text-foreground mb-2">1,240</h3>
                     <span className="text-blue-500 text-xs font-bold bg-blue-500/10 px-2 py-1 rounded">+5% this month</span>
                 </div>
-                <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden">
+                <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="absolute top-4 right-4 p-3 rounded-xl bg-purple-500/10 text-purple-500">
                         <TrendingUp size={24} />
                     </div>
@@ -67,7 +67,7 @@ export default function RevenuePage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Revenue Chart */}
-                <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6">
+                <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <h3 className="text-lg font-bold text-foreground mb-6">Revenue Growth</h3>
                     <div className="h-80">
                         <ResponsiveContainer width="100%" height="100%">
@@ -92,7 +92,7 @@ export default function RevenuePage() {
                 </div>
 
                 {/* Recent Transactions */}
-                <div className="bg-card border border-border rounded-2xl p-6">
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <h3 className="text-lg font-bold text-foreground mb-4">Recent Transactions</h3>
                     <div className="space-y-4">
                         {transactions.map((trx, i) => (

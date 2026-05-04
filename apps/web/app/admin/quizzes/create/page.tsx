@@ -108,7 +108,7 @@ export default function CreateQuizPage() {
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-card border border-border rounded-xl p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="bg-card border border-border rounded-xl p-6 space-y-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
 
                 {/* Title */}
                 <div className="space-y-2">

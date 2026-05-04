@@ -149,7 +149,7 @@ export default function AdminBookCreatePage() {
                                 <input
                                     required
                                     type="text"
-                                    className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                    className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                                     value={formData.title}
                                     onChange={e => setFormData({ ...formData, title: e.target.value })}
                                 />
@@ -161,7 +161,7 @@ export default function AdminBookCreatePage() {
                                     <input
                                         required
                                         type="text"
-                                        className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                        className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                                         value={formData.author}
                                         onChange={e => setFormData({ ...formData, author: e.target.value })}
                                     />
@@ -170,7 +170,7 @@ export default function AdminBookCreatePage() {
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Subject</label>
                                     <select
                                         required
-                                        className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                        className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                                         value={formData.subject_id}
                                         onChange={e => setFormData({ ...formData, subject_id: e.target.value })}
                                     >
@@ -188,105 +188,105 @@ export default function AdminBookCreatePage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Format</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.format} onChange={e => setFormData({ ...formData, format: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.format} onChange={e => setFormData({ ...formData, format: e.target.value })} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Edition</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.edition} onChange={e => setFormData({ ...formData, edition: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.edition} onChange={e => setFormData({ ...formData, edition: e.target.value })} />
                                 </div>
                             </div>
                             
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Price (EUR)</label>
-                                    <input type="number" step="0.01" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} />
+                                    <input type="number" step="0.01" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Print Length (Pages)</label>
-                                    <input type="number" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.print_length} onChange={e => setFormData({ ...formData, print_length: e.target.value })} />
+                                    <input type="number" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.print_length} onChange={e => setFormData({ ...formData, print_length: e.target.value })} />
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Language</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.language} onChange={e => setFormData({ ...formData, language: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.language} onChange={e => setFormData({ ...formData, language: e.target.value })} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Publisher</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.publisher} onChange={e => setFormData({ ...formData, publisher: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.publisher} onChange={e => setFormData({ ...formData, publisher: e.target.value })} />
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Initial Rating (Max 5)</label>
-                                    <input type="number" step="0.1" min="0" max="5" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.rating} onChange={e => setFormData({ ...formData, rating: parseFloat(e.target.value) || 0 })} />
+                                    <input type="number" step="0.1" min="0" max="5" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.rating} onChange={e => setFormData({ ...formData, rating: parseFloat(e.target.value) || 0 })} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Initial Review Count</label>
-                                    <input type="number" min="0" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.review_count} onChange={e => setFormData({ ...formData, review_count: parseInt(e.target.value) || 0 })} />
+                                    <input type="number" min="0" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.review_count} onChange={e => setFormData({ ...formData, review_count: parseInt(e.target.value) || 0 })} />
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Publication Date</label>
-                                    <input type="date" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.publication_date} onChange={e => setFormData({ ...formData, publication_date: e.target.value })} />
+                                    <input type="date" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.publication_date} onChange={e => setFormData({ ...formData, publication_date: e.target.value })} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Accessibility</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.accessibility} onChange={e => setFormData({ ...formData, accessibility: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.accessibility} onChange={e => setFormData({ ...formData, accessibility: e.target.value })} />
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">File Size</label>
-                                    <input type="text" placeholder="e.g. 2.5 MB" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.file_size} onChange={e => setFormData({ ...formData, file_size: e.target.value })} />
+                                    <input type="text" placeholder="e.g. 2.5 MB" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.file_size} onChange={e => setFormData({ ...formData, file_size: e.target.value })} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Accessibility Conformance</label>
-                                    <input type="text" placeholder="e.g. EPUB Accessibility 1.1, WCAG 2.2 AA" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.accessibility_conformance} onChange={e => setFormData({ ...formData, accessibility_conformance: e.target.value })} />
+                                    <input type="text" placeholder="e.g. EPUB Accessibility 1.1, WCAG 2.2 AA" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.accessibility_conformance} onChange={e => setFormData({ ...formData, accessibility_conformance: e.target.value })} />
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Screen Reader</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.screen_reader} onChange={e => setFormData({ ...formData, screen_reader: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.screen_reader} onChange={e => setFormData({ ...formData, screen_reader: e.target.value })} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Enhanced Typesetting</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.enhanced_typesetting} onChange={e => setFormData({ ...formData, enhanced_typesetting: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.enhanced_typesetting} onChange={e => setFormData({ ...formData, enhanced_typesetting: e.target.value })} />
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-3 gap-2">
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">X-Ray</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.x_ray} onChange={e => setFormData({ ...formData, x_ray: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.x_ray} onChange={e => setFormData({ ...formData, x_ray: e.target.value })} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Word Wise</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.word_wise} onChange={e => setFormData({ ...formData, word_wise: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.word_wise} onChange={e => setFormData({ ...formData, word_wise: e.target.value })} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Page Flip</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.page_flip} onChange={e => setFormData({ ...formData, page_flip: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.page_flip} onChange={e => setFormData({ ...formData, page_flip: e.target.value })} />
                                 </div>
                             </div>
 
                             <div className="space-y-1">
                                 <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Description</label>
                                 <textarea
-                                    className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all h-32"
+                                    className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all h-32 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                                     value={formData.description}
                                     onChange={e => setFormData({ ...formData, description: e.target.value })}
                                 />
                             </div>
 
-                            <div className="flex items-center gap-3 bg-card/50 border border-border p-4 rounded-xl">
+                            <div className="flex items-center gap-3 bg-card/50 border border-border p-4 rounded-xl shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                 <input
                                     type="checkbox"
                                     id="is_premium"
@@ -300,12 +300,12 @@ export default function AdminBookCreatePage() {
 
                         {/* Right Column: Files */}
                         <div className="space-y-6">
-                            <div className="p-4 bg-card/30 border border-border rounded-xl space-y-4">
+                            <div className="p-4 bg-card/30 border border-border rounded-xl space-y-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                 <h3 className="text-sm font-bold text-foreground mb-2">Author Details</h3>
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author Biography</label>
                                     <textarea
-                                        className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all h-24"
+                                        className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all h-24 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                                         value={formData.author_bio}
                                         onChange={e => setFormData({ ...formData, author_bio: e.target.value })}
                                     />
@@ -313,12 +313,12 @@ export default function AdminBookCreatePage() {
 
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author License (Optional)</label>
-                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.author_license} onChange={e => setFormData({ ...formData, author_license: e.target.value })} />
+                                    <input type="text" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.author_license} onChange={e => setFormData({ ...formData, author_license: e.target.value })} />
                                 </div>
 
                                 <div className="space-y-1">
                                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Author LinkedIn URL</label>
-                                    <input type="url" placeholder="https://linkedin.com/in/" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.author_linkedin} onChange={e => setFormData({ ...formData, author_linkedin: e.target.value })} />
+                                    <input type="url" placeholder="https://linkedin.com/in/" className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300" value={formData.author_linkedin} onChange={e => setFormData({ ...formData, author_linkedin: e.target.value })} />
                                 </div>
 
                                 <div className="space-y-1">
@@ -330,7 +330,7 @@ export default function AdminBookCreatePage() {
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                             onChange={e => setFiles({ ...files, author_image: e.target.files?.[0] || null })}
                                         />
-                                        <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-4 bg-card transition-colors group-hover:bg-muted group-hover:border-indigo-500/50">
+                                        <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-4 bg-card transition-colors group-hover:bg-muted group-hover:border-indigo-500/50 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                             <span className="text-xs font-medium text-muted-foreground">
                                                 {files.author_image ? files.author_image.name : 'Select Author Image'}
                                             </span>
@@ -349,7 +349,7 @@ export default function AdminBookCreatePage() {
                                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                         onChange={e => setFiles({ ...files, book_file: e.target.files?.[0] || null })}
                                     />
-                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-8 bg-card transition-colors group-hover:bg-muted group-hover:border-indigo-500/50">
+                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-8 bg-card transition-colors group-hover:bg-muted group-hover:border-indigo-500/50 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                         <Upload size={24} className="text-muted-foreground mb-2 group-hover:text-indigo-400" />
                                         <span className="text-sm font-medium text-muted-foreground">
                                             {files.book_file ? files.book_file.name : 'Select PDF or EPUB'}
@@ -367,7 +367,7 @@ export default function AdminBookCreatePage() {
                                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                         onChange={e => setFiles({ ...files, cover_image: e.target.files?.[0] || null })}
                                     />
-                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-8 bg-card transition-colors group-hover:bg-muted group-hover:border-indigo-500/50">
+                                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-8 bg-card transition-colors group-hover:bg-muted group-hover:border-indigo-500/50 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                         <BookIcon size={24} className="text-muted-foreground mb-2 group-hover:text-indigo-400" />
                                         <span className="text-sm font-medium text-muted-foreground">
                                             {files.cover_image ? files.cover_image.name : 'Select Cover Image'}

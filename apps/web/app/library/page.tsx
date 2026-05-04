@@ -197,10 +197,10 @@ export default function LibraryPage() {
 
                     {!viewingCollectionId && (
                         <div className="flex items-center gap-1">
-                            <button className="p-1.5 text-muted-foreground hover:text-foreground bg-card rounded-md transition-colors">
+                            <button className="p-1.5 text-muted-foreground hover:text-foreground bg-card rounded-md transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                 <Grid size={14} />
                             </button>
-                            <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-card rounded-md transition-colors">
+                            <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-card rounded-md transition-colors shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                 <ListIcon size={14} />
                             </button>
                         </div>
@@ -280,7 +280,7 @@ export default function LibraryPage() {
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-32 text-center border border-dashed border-border rounded-3xl bg-background/50">
-                                    <div className="bg-card p-4 rounded-full mb-4">
+                                    <div className="bg-card p-4 rounded-full mb-4 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                                         <LibraryIcon size={32} className="text-zinc-700" />
                                     </div>
                                     <h3 className="text-lg font-medium text-foreground mb-1">No books found</h3>
@@ -295,7 +295,7 @@ export default function LibraryPage() {
                                 {/* Create New Collection "Dropzone" */}
                                 <button
                                     onClick={() => setShowCreateCollection(true)}
-                                    className="w-full h-32 border border-dashed border-border hover:border-zinc-700 hover:bg-card/20 rounded-2xl flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-muted-foreground transition-all group"
+                                    className="w-full h-32 border border-dashed border-border hover:border-zinc-700 hover:bg-card/20 rounded-2xl flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-muted-foreground transition-all group shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                                 >
                                     <Plus size={24} className="group-hover:scale-110 transition-transform" />
                                     <span className="font-medium">Create New Collection</span>
@@ -313,7 +313,7 @@ export default function LibraryPage() {
                                             <div
                                                 key={collection.id}
                                                 onClick={() => setViewingCollectionId(collection.id)}
-                                                className="group relative bg-card/20 hover:bg-card/40 border border-border/60 hover:border-zinc-700 transition-all p-5 rounded-xl cursor-pointer flex items-center justify-between"
+                                                className="group relative bg-card/20 hover:bg-card/40 border border-border/60 hover:border-zinc-700 transition-all p-5 rounded-xl cursor-pointer flex items-center justify-between shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                                             >
                                                 <div className="flex items-center gap-4">
                                                     {/* Mock Avatar Stack */}

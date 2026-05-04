@@ -61,7 +61,7 @@ export default function AnalyticsPage() {
                 </div>
                 <div className="flex items-center gap-3">
                     <select
-                        className="bg-card border border-border text-foreground text-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600"
+                        className="bg-card border border-border text-foreground text-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300"
                         value={timeRange}
                         onChange={(e) => setTimeRange(e.target.value)}
                     >
@@ -84,7 +84,7 @@ export default function AnalyticsPage() {
                     { label: 'Bounce Rate', value: '42%', change: '-3%', isUp: true }, // Down is good for bounce rate
                     { label: 'New Signups', value: '843', change: '+24%', isUp: true },
                 ].map((stat, i) => (
-                    <div key={i} className="bg-card border border-border p-5 rounded-2xl">
+                    <div key={i} className="bg-card border border-border p-5 rounded-2xl shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                         <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider mb-2">{stat.label}</p>
                         <div className="flex items-end justify-between">
                             <span className="text-2xl font-bold text-foreground">{stat.value}</span>
@@ -99,7 +99,7 @@ export default function AnalyticsPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Main Graph: User Growth */}
-                <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6">
+                <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <div className="flex items-center justify-between mb-6">
                         <h3 className="text-lg font-bold text-foreground">User Growth</h3>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -132,7 +132,7 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Pie Chart: Device Usage */}
-                <div className="bg-card border border-border rounded-2xl p-6">
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                     <h3 className="text-lg font-bold text-foreground mb-2">Device Usage</h3>
                     <p className="text-muted-foreground text-sm mb-6">User preference by platform</p>
                     <div className="h-64 relative">
@@ -167,7 +167,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Popular Categories Bar Chart */}
-            <div className="bg-card border border-border rounded-2xl p-6">
+            <div className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md dark:shadow-none transition-shadow duration-300">
                 <h3 className="text-lg font-bold text-foreground mb-6">Popular Categories</h3>
                 <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
