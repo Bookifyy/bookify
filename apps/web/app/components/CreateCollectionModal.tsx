@@ -39,20 +39,20 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                 <form onSubmit={handleSubmit}>
                     <div className="p-6">
                         <div className="mb-6">
-                            <h2 className="text-xl font-bold text-white mb-1">Create New Collection</h2>
+                            <h2 className="text-xl font-bold text-foreground mb-1">Create New Collection</h2>
                             <p className="text-sm text-muted-foreground">Organize your books into a curated collection</p>
                         </div>
 
                         <div className="space-y-5">
                             {/* Name */}
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-white">Collection Name <span className="text-muted-foreground">*</span></label>
+                                <label className="text-sm font-medium text-foreground">Collection Name <span className="text-muted-foreground">*</span></label>
                                 <input
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="e.g., Spring 2024 Reading"
-                                    className={`w-full bg-[#0a0a0a] border rounded-lg px-4 py-2.5 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:ring-1 ${
+                                    className={`w-full bg-[#0a0a0a] border rounded-lg px-4 py-2.5 text-foreground transition-all placeholder:text-zinc-600 focus:outline-none focus:ring-1 ${
                                         name ? 'border-[#0ea5e9] ring-[#0ea5e9]' : 'border-border focus:border-[#0ea5e9] focus:ring-[#0ea5e9]'
                                     }`}
                                     autoFocus
@@ -62,19 +62,19 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
 
                             {/* Description */}
                             <div className="space-y-1.5">
-                                <label className="text-sm font-medium text-white">Description</label>
+                                <label className="text-sm font-medium text-foreground">Description</label>
                                 <input
                                     type="text"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="What's this collection about?"
-                                    className="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:border-zinc-700"
+                                    className="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-foreground transition-all placeholder:text-zinc-600 focus:outline-none focus:border-zinc-700"
                                 />
                             </div>
 
                             {/* Visibility */}
                             <div className="space-y-3">
-                                <label className="text-sm font-medium text-white block">Visibility</label>
+                                <label className="text-sm font-medium text-foreground block">Visibility</label>
                                 <div className="space-y-2">
                                     {(['Private', 'Group', 'Public'] as const).map((type) => {
                                         const isSelected = visibility === type;
@@ -98,7 +98,7 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                                                     {isSelected && <div className="w-2 h-2 rounded-full bg-indigo-500" />}
                                                 </div>
                                                 <div>
-                                                    <span className="text-sm font-medium text-white mr-2">{type}</span>
+                                                    <span className="text-sm font-medium text-foreground mr-2">{type}</span>
                                                     <span className="text-sm text-muted-foreground">{descriptions[type]}</span>
                                                 </div>
                                             </button>
@@ -110,7 +110,7 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                             {/* Smart Collection Toggle */}
                             <div className={`flex items-center justify-between p-4 rounded-xl border transition-all ${isSmart ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-border/60'}`}>
                                 <div>
-                                    <h4 className="text-sm font-medium text-white">Smart Collection</h4>
+                                    <h4 className="text-sm font-medium text-foreground">Smart Collection</h4>
                                     <p className="text-xs text-muted-foreground mt-0.5">Auto-update based on rules</p>
                                 </div>
                                 <button
@@ -135,7 +135,7 @@ export function CreateCollectionModal({ isOpen, onClose, onCreate }: CreateColle
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-white border border-transparent hover:border-border transition-colors"
+                            className="px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground border border-transparent hover:border-border transition-colors"
                         >
                             Cancel
                         </button>

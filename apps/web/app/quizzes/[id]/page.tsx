@@ -265,7 +265,7 @@ export default function QuizTakingPage() {
                         </div>
                     )}
 
-                    <h1 className="text-4xl font-bold text-white mb-2">
+                    <h1 className="text-4xl font-bold text-foreground mb-2">
                         {isPending ? 'Submitted for Review' : (passed ? 'Quiz Passed!' : 'Quiz Failed')}
                     </h1>
 
@@ -276,13 +276,13 @@ export default function QuizTakingPage() {
                     ) : (
                         <>
                             <p className="text-muted-foreground">You scored</p>
-                            <div className="text-6xl font-black text-white mt-2 mb-2">{submittedData.score}%</div>
+                            <div className="text-6xl font-black text-foreground mt-2 mb-2">{submittedData.score}%</div>
                         </>
                     )}
                 </div>
 
                 <div className="flex gap-4 w-full max-w-sm">
-                    <Link href="/quizzes" className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-xl font-bold transition-colors">
+                    <Link href="/quizzes" className="flex-1 bg-muted hover:bg-zinc-700 text-foreground py-3 rounded-xl font-bold transition-colors">
                         Back to Quizzes
                     </Link>
                 </div>
@@ -295,7 +295,7 @@ export default function QuizTakingPage() {
         return (
             <div className="max-w-2xl mx-auto p-8 text-center space-y-8 min-h-[80vh] flex flex-col items-center justify-center">
                 <div className="space-y-4">
-                    <h1 className="text-4xl font-bold text-white">{quiz.title}</h1>
+                    <h1 className="text-4xl font-bold text-foreground">{quiz.title}</h1>
                     <div className="flex items-center justify-center gap-6 text-muted-foreground">
                         <div className="flex items-center gap-2">
                             <Clock size={20} />
@@ -305,7 +305,7 @@ export default function QuizTakingPage() {
                 </div>
 
                 <div className="bg-card/50 p-6 rounded-2xl border border-border max-w-lg mx-auto text-left space-y-4">
-                    <h3 className="font-bold text-white">Instructions:</h3>
+                    <h3 className="font-bold text-foreground">Instructions:</h3>
                     <ul className="list-disc list-inside text-muted-foreground space-y-2 text-sm">
                         <li>This is a timed quiz. The timer starts immediately when you click Start.</li>
                         <li>You cannot pause the timer once it starts.</li>
@@ -368,7 +368,7 @@ export default function QuizTakingPage() {
                     <div className="flex gap-3 pt-4">
                         <button
                             onClick={() => setShowSubmitModal(false)}
-                            className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-2.5 rounded-lg font-medium transition-colors"
+                            className="flex-1 bg-muted hover:bg-zinc-700 text-foreground py-2.5 rounded-lg font-medium transition-colors"
                         >
                             Cancel
                         </button>
@@ -395,7 +395,7 @@ export default function QuizTakingPage() {
                     <div className="pt-4">
                         <button
                             onClick={() => setShowErrorModal(false)}
-                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                            className="w-full bg-muted hover:bg-zinc-700 text-foreground py-3 rounded-lg font-bold transition-colors"
                         >
                             Understood
                         </button>
@@ -405,7 +405,7 @@ export default function QuizTakingPage() {
 
             {/* Header / Timer */}
             <div className="sticky top-4 z-40 bg-background/80 backdrop-blur-md border border-border rounded-xl p-4 flex items-center justify-between shadow-2xl">
-                <div className="font-bold text-white truncate max-w-[200px]">{quiz.title}</div>
+                <div className="font-bold text-foreground truncate max-w-[200px]">{quiz.title}</div>
                 <div className={`flex items-center gap-2 font-mono text-xl font-bold ${timeLeft && timeLeft < 60 ? 'text-red-500 animate-pulse' : 'text-indigo-400'}`}>
                     <Clock size={24} />
                     {timeLeft !== null ? formatTime(timeLeft) : '--:--'}
@@ -416,14 +416,14 @@ export default function QuizTakingPage() {
             {quiz.attachment_path && (
                 <div className="bg-card border border-border p-6 rounded-2xl flex items-center justify-between flex-wrap gap-4">
                     <div>
-                        <h3 className="text-lg text-white font-medium mb-1">Question Paper</h3>
+                        <h3 className="text-lg text-foreground font-medium mb-1">Question Paper</h3>
                         <p className="text-muted-foreground text-sm">Download the attached file to view questions/instructions.</p>
                     </div>
                     <a
                         href={`${getApiUrl()}/storage/${quiz.attachment_path}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded-lg font-bold transition-colors"
+                        className="flex items-center gap-2 bg-muted hover:bg-zinc-700 text-foreground px-4 py-2 rounded-lg font-bold transition-colors"
                     >
                         <Download size={18} />
                         Download PDF
@@ -437,11 +437,11 @@ export default function QuizTakingPage() {
                     {quiz.questions.map((q, index) => (
                         <div key={q.id} className="bg-card border border-border p-6 rounded-2xl">
                             <div className="flex items-start gap-4 mb-6">
-                                <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-muted-foreground text-sm flex-shrink-0">
+                                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center font-bold text-muted-foreground text-sm flex-shrink-0">
                                     {index + 1}
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="text-lg text-white font-medium leading-relaxed">{q.question_text}</h3>
+                                    <h3 className="text-lg text-foreground font-medium leading-relaxed">{q.question_text}</h3>
                                     <span className="text-xs text-muted-foreground font-semibold mt-1 block">{q.points} Points</span>
                                 </div>
                             </div>
@@ -455,7 +455,7 @@ export default function QuizTakingPage() {
                                                 flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all
                                                 ${answers[q.id] === opt
                                                     ? 'bg-indigo-600/10 border-indigo-500 text-white'
-                                                    : 'bg-background border-border text-muted-foreground hover:bg-zinc-800 hover:border-zinc-700'}
+                                                    : 'bg-background border-border text-muted-foreground hover:bg-muted hover:border-zinc-700'}
                                             `}
                                         >
                                             <div className={`
@@ -483,7 +483,7 @@ export default function QuizTakingPage() {
                                                 flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all
                                                 ${answers[q.id] === val
                                                     ? 'bg-indigo-600/10 border-indigo-500 text-white'
-                                                    : 'bg-background border-border text-muted-foreground hover:bg-zinc-800 hover:border-zinc-700'}
+                                                    : 'bg-background border-border text-muted-foreground hover:bg-muted hover:border-zinc-700'}
                                             `}
                                         >
                                             <div className={`
@@ -522,7 +522,7 @@ export default function QuizTakingPage() {
             {(!quiz.questions || quiz.questions.length === 0 || quiz.attachment_path) && (
                 <div className="bg-card border border-border p-6 rounded-2xl">
                     <div className="mb-4">
-                        <h3 className="text-lg text-white font-medium mb-1 flex items-center gap-2">
+                        <h3 className="text-lg text-foreground font-medium mb-1 flex items-center gap-2">
                             <Upload size={20} />
                             Upload Answer Sheet
                             {quiz.attachment_path && <span className="text-xs text-red-500 bg-red-500/10 px-2 py-0.5 rounded ml-2">REQUIRED</span>}
@@ -541,7 +541,7 @@ export default function QuizTakingPage() {
                             file:mr-4 file:py-2.5 file:px-4
                             file:rounded-lg file:border-0
                             file:text-sm file:font-semibold
-                            file:bg-zinc-800 file:text-white
+                            file:bg-muted file:text-foreground
                             hover:file:bg-zinc-700
                             cursor-pointer"
                     />

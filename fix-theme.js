@@ -40,8 +40,11 @@ walk('/home/mbokani-pr/bookify/apps/web/app', (err, results) => {
     // Replace hardcoded dark borders
     content = content.replace(/border-zinc-800/g, 'border-border');
     content = content.replace(/border-zinc-900/g, 'border-border');
+    content = content.replace(/bg-zinc-800/g, 'bg-muted');
 
     // Replace dark mode text specifics safely
+    content = content.replace(/text-white/g, 'text-foreground');
+    content = content.replace(/text-zinc-200/g, 'text-foreground');
     content = content.replace(/text-zinc-400/g, 'text-muted-foreground');
     content = content.replace(/text-zinc-300/g, 'text-muted-foreground');
     content = content.replace(/text-zinc-500/g, 'text-muted-foreground');
@@ -51,9 +54,15 @@ walk('/home/mbokani-pr/bookify/apps/web/app', (err, results) => {
     
     // Exceptions correction
     // If a button has text-foreground but it should be text-white, we fix it
-    content = content.replace(/bg-indigo-600 text-foreground/g, 'bg-indigo-600 text-white');
-    content = content.replace(/bg-blue-600 text-foreground/g, 'bg-blue-600 text-white');
-    content = content.replace(/bg-red-600 text-foreground/g, 'bg-red-600 text-white');
+    content = content.replace(/bg-indigo-600(.*?)text-foreground/g, 'bg-indigo-600$1text-white');
+    content = content.replace(/bg-indigo-500(.*?)text-foreground/g, 'bg-indigo-500$1text-white');
+    content = content.replace(/bg-blue-600(.*?)text-foreground/g, 'bg-blue-600$1text-white');
+    content = content.replace(/bg-red-600(.*?)text-foreground/g, 'bg-red-600$1text-white');
+    content = content.replace(/bg-red-500(.*?)text-foreground/g, 'bg-red-500$1text-white');
+    content = content.replace(/bg-yellow-400(.*?)text-foreground/g, 'bg-yellow-400$1text-black');
+    content = content.replace(/bg-\[\#FFD814\](.*?)text-foreground/g, 'bg-[#FFD814]$1text-black');
+    content = content.replace(/text-foreground(.*?)bg-indigo-600/g, 'text-white$1bg-indigo-600');
+    content = content.replace(/bg-green-500(.*?)text-foreground/g, 'bg-green-500$1text-white');
     
     if (content !== original) {
       fs.writeFileSync(file, content, 'utf8');

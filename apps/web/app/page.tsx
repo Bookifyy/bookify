@@ -116,15 +116,15 @@ export default function Home() {
           <Zap size={14} className="text-yellow-500 fill-yellow-500" />
           <span>12 day streak</span>
         </div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">{greeting}, {user?.name || 'Reader'}</h1>
+        <h1 className="text-3xl font-bold text-foreground tracking-tight">{greeting}, {user?.name || 'Reader'}</h1>
         <p className="text-sm text-muted-foreground">Keep your streak going</p>
       </section>
 
       {/* Recommended Section (Real Data) */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Recommended for You</h2>
-          <Link href="/library" className="text-xs font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1">
+          <h2 className="text-lg font-semibold text-foreground">Recommended for You</h2>
+          <Link href="/library" className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
             See all <ChevronRight size={14} />
           </Link>
         </div>
@@ -133,9 +133,9 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {[1, 2, 3, 4, 5].map(i => (
               <div key={i} className="space-y-4 animate-pulse">
-                <div className="aspect-[2/3] w-full bg-zinc-800 rounded-md" />
-                <div className="h-4 w-3/4 bg-zinc-800 rounded" />
-                <div className="h-3 w-1/2 bg-zinc-800 rounded" />
+                <div className="aspect-[2/3] w-full bg-muted rounded-md" />
+                <div className="h-4 w-3/4 bg-muted rounded" />
+                <div className="h-3 w-1/2 bg-muted rounded" />
               </div>
             ))}
           </div>
@@ -169,8 +169,8 @@ export default function Home() {
       {recommendedSubject && recommendedSubject.books.length > 0 && (
         <section className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">Because you studied {recommendedSubject.name}</h2>
-            <Link href="#" className="text-xs font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1">
+            <h2 className="text-lg font-semibold text-foreground">Because you studied {recommendedSubject.name}</h2>
+            <Link href="#" className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
               See all <ChevronRight size={14} />
             </Link>
           </div>
@@ -199,8 +199,8 @@ export default function Home() {
       {editorsPicks.length > 0 && (
         <section className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">Editors' Picks</h2>
-            <Link href="#" className="text-xs font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1">
+            <h2 className="text-lg font-semibold text-foreground">Editors' Picks</h2>
+            <Link href="#" className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
               See all <ChevronRight size={14} />
             </Link>
           </div>
@@ -230,9 +230,9 @@ export default function Home() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="bg-indigo-600 rounded p-1">
-              <LayoutGrid size={14} className="text-white" />
+              <LayoutGrid size={14} className="text-foreground" />
             </div>
-            <h2 className="text-lg font-semibold text-white">Continue Reading</h2>
+            <h2 className="text-lg font-semibold text-foreground">Continue Reading</h2>
           </div>
         </div>
 
@@ -240,9 +240,9 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {[1, 2, 3].map(i => (
               <div key={i} className="space-y-4 animate-pulse">
-                <div className="aspect-[2/3] w-full bg-zinc-800 rounded-md" />
-                <div className="h-4 w-3/4 bg-zinc-800 rounded" />
-                <div className="h-3 w-1/2 bg-zinc-800 rounded" />
+                <div className="aspect-[2/3] w-full bg-muted rounded-md" />
+                <div className="h-4 w-3/4 bg-muted rounded" />
+                <div className="h-3 w-1/2 bg-muted rounded" />
               </div>
             ))}
           </div>
@@ -280,7 +280,7 @@ export default function Home() {
       >
         <div className="space-y-6">
           <p className="text-muted-foreground">
-            You have already started reading <span className="font-bold text-white">{modalBook?.title}</span>.
+            You have already started reading <span className="font-bold text-foreground">{modalBook?.title}</span>.
           </p>
           <p className="text-muted-foreground text-sm">
             Check your Library or the Continue Reading section to pick up exactly where you left off.
@@ -294,7 +294,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setModalBook(null)}
-              className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-2.5 rounded-lg transition-colors border border-zinc-700"
+              className="flex-1 bg-muted hover:bg-muted/80 text-foreground font-medium py-2.5 rounded-lg transition-colors border border-border"
             >
               Close
             </button>

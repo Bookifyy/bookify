@@ -159,45 +159,45 @@ export default function NotesPage() {
         <div className="p-8 max-w-7xl mx-auto space-y-8">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-bold text-white mb-2">Notes & Highlights</h1>
+                <h1 className="text-3xl font-bold text-foreground mb-2">Notes & Highlights</h1>
                 <p className="text-muted-foreground">All your book notes, highlights, and bookmarks in one place</p>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-indigo-400">
+                    <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-indigo-400">
                         <FileText size={24} />
                     </div>
                     <div>
-                        <div className="text-2xl font-bold text-white">{stats.total}</div>
+                        <div className="text-2xl font-bold text-foreground">{stats.total}</div>
                         <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Total</div>
                     </div>
                 </div>
                 <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-yellow-400">
+                    <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-yellow-400">
                         <Highlighter size={24} />
                     </div>
                     <div>
-                        <div className="text-2xl font-bold text-white">{stats.highlights}</div>
+                        <div className="text-2xl font-bold text-foreground">{stats.highlights}</div>
                         <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Highlights</div>
                     </div>
                 </div>
                 <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-blue-400">
+                    <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-blue-400">
                         <FileText size={24} />
                     </div>
                     <div>
-                        <div className="text-2xl font-bold text-white">{stats.notes}</div>
+                        <div className="text-2xl font-bold text-foreground">{stats.notes}</div>
                         <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Notes</div>
                     </div>
                 </div>
                 <div className="bg-card/50 border border-border p-6 rounded-2xl flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-indigo-400">
+                    <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-indigo-400">
                         <Bookmark size={24} />
                     </div>
                     <div>
-                        <div className="text-2xl font-bold text-white">{stats.bookmarks}</div>
+                        <div className="text-2xl font-bold text-foreground">{stats.bookmarks}</div>
                         <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Bookmarks</div>
                     </div>
                 </div>
@@ -212,7 +212,7 @@ export default function NotesPage() {
                         placeholder="Search notes, highlights, or bookmarks..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-card border border-border rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        className="w-full bg-card border border-border rounded-xl py-3 pl-10 pr-4 text-sm text-foreground placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     />
                 </div>
                 <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 max-w-full custom-scrollbar">
@@ -287,7 +287,7 @@ export default function NotesPage() {
                                     {/* Content */}
                                     {item.type === 'highlight' && (
                                         <div className="space-y-2">
-                                            {item.title && <h3 className="text-white font-medium">{item.title}</h3>}
+                                            {item.title && <h3 className="text-foreground font-medium">{item.title}</h3>}
                                             <blockquote className="pl-4 border-l-2 border-zinc-700 text-muted-foreground italic">
                                                 "{item.text_content}"
                                             </blockquote>
@@ -299,7 +299,7 @@ export default function NotesPage() {
                                     )}
 
                                     {item.type === 'bookmark' && (
-                                        <div className="flex items-center gap-2 text-white font-medium">
+                                        <div className="flex items-center gap-2 text-foreground font-medium">
                                             <Bookmark size={16} className="text-indigo-500" />
                                             {item.title || `Bookmark on page ${item.page_number}`}
                                         </div>
@@ -309,7 +309,7 @@ export default function NotesPage() {
                                 <div className="flex flex-col gap-2">
                                     <Link
                                         href={`/books/${item.book_id}/read`}
-                                        className="p-2 hover:bg-zinc-800 rounded-lg text-muted-foreground hover:text-white transition-colors"
+                                        className="p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors"
                                         title="Go to book"
                                     >
                                         <BookOpen size={18} />

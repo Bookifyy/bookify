@@ -24,6 +24,7 @@ export function Header() {
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const toggleTheme = () => {
         setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -39,16 +40,16 @@ export function Header() {
                     {/* Mobile Menu Toggle */}
                     <button
                         type="button"
-                        className="text-muted-foreground hover:text-white lg:hidden"
+                        className="text-muted-foreground hover:text-foreground lg:hidden"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     >
                         {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
 
                     {/* Brand */}
-                    <Link href="/" className="text-2xl font-serif font-bold text-white tracking-wide flex items-center gap-2">
+                    <Link href="/" className="text-2xl font-serif font-bold text-foreground tracking-wide flex items-center gap-2">
                         <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                            <span className="font-sans text-xl text-white">B</span>
+                            <span className="font-sans text-xl text-foreground">B</span>
                         </div>
                         <span className="hidden sm:inline-block">Bookify</span>
                     </Link>
@@ -77,7 +78,7 @@ export function Header() {
                 <div className="flex items-center gap-2 sm:gap-4 text-muted-foreground relative">
                     <button
                         onClick={toggleTheme}
-                        className="p-2 hover:text-white hover:bg-white/5 transition-colors rounded-full"
+                        className="p-2 hover:text-foreground hover:bg-muted transition-colors rounded-full"
                         aria-label="Toggle Dark Mode"
                     >
                         {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
@@ -93,13 +94,13 @@ export function Header() {
                     <div className="relative">
                         <button 
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
-                            className="flex items-center gap-2 hover:bg-white/5 p-1.5 rounded-full lg:rounded-xl transition-colors focus:outline-none"
+                            className="flex items-center gap-2 hover:bg-muted p-1.5 rounded-full lg:rounded-xl transition-colors focus:outline-none"
                         >
                             <div className="w-8 h-8 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm font-bold uppercase transition-transform hover:scale-105">
                                 {user?.name?.[0] || 'U'}
                             </div>
                             <div className="hidden lg:flex flex-col items-start pr-1">
-                                <span className="text-xs font-semibold text-white leading-tight">{user?.name?.split(' ')[0]}</span>
+                                <span className="text-xs font-semibold text-foreground leading-tight">{user?.name?.split(' ')[0]}</span>
                                 <span className="text-[10px] text-muted-foreground leading-tight">Member</span>
                             </div>
                             <ChevronDown size={14} className="hidden lg:block text-muted-foreground" />
@@ -114,12 +115,12 @@ export function Header() {
                                         <p className="text-sm font-medium text-foreground truncate">{user?.name}</p>
                                         <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
                                     </div>
-                                    <Link href="/settings" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-white/5 transition-colors">
+                                    <Link href="/settings" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors">
                                         <Settings size={16} className="text-muted-foreground" />
                                         Settings
                                     </Link>
                                     {isAdmin && (
-                                        <Link href="/admin" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm text-indigo-400 hover:bg-white/5 transition-colors">
+                                        <Link href="/admin" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm text-indigo-400 hover:bg-muted transition-colors">
                                             <ShieldCheck size={16} />
                                             Admin Panel
                                         </Link>
@@ -149,7 +150,7 @@ export function Header() {
                                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all border-b-2 ${
                                     isActive
                                         ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5'
-                                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border hover:bg-white/5'
+                                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border hover:bg-muted/50'
                                 }`}
                             >
                                 <Icon size={18} className={isActive ? 'text-indigo-400' : 'text-muted-foreground opacity-70'} />
@@ -159,6 +160,86 @@ export function Header() {
                     })}
                 </nav>
             </div>
+
+            {/* Amazon-style Category Sub-Nav */}
+            <div className="bg-[#232f3e] text-foreground text-sm font-medium flex items-center px-4 overflow-x-auto whitespace-nowrap hide-scrollbar">
+                <button 
+                    onClick={() => setIsSidebarOpen(true)}
+                    className="flex items-center gap-1 hover:border border-transparent hover:border-white py-1 px-2 rounded-sm outline-none transition-all my-1 mr-2"
+                >
+                    <Menu size={20} /> <span className="font-bold">All</span>
+                </button>
+                {['Amazon Haul', 'Best Sellers', 'New Releases', 'Sell on Amazon', 'Amazon Basics', "Today's Deals", 'Fashion', 'Books', 'Prime Video', 'Prime', 'Home & Garden', 'Gift Cards & Top Up', 'Electronics', 'Beauty', 'Toys & Games', 'Health & Personal Care'].map(category => (
+                    <Link key={category} href="#" className="py-1 px-2 hover:border border-transparent hover:border-white rounded-sm transition-all my-1 mx-1">
+                        {category}
+                    </Link>
+                ))}
+            </div>
+
+            {/* Amazon-style Sidebar Overlay */}
+            {isSidebarOpen && (
+                <div className="fixed inset-0 z-[100] flex">
+                    <div className="absolute inset-0 bg-background/70 transition-opacity" onClick={() => setIsSidebarOpen(false)} />
+                    
+                    <div className="relative w-[360px] max-w-[85vw] bg-card h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
+                        {/* Header */}
+                        <div className="bg-[#232f3e] text-foreground p-5 flex items-center gap-3 min-h-[80px]">
+                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center border border-white/30 shrink-0">
+                                <span className="font-bold text-lg capitalize">{user?.name?.[0] || 'U'}</span>
+                            </div>
+                            <span className="text-xl font-bold tracking-wide truncate">Hello, {user?.name || 'sign in'}</span>
+                        </div>
+
+                        {/* Close button outside sidebar */}
+                        <button 
+                            onClick={() => setIsSidebarOpen(false)} 
+                            className="absolute top-4 -right-14 text-foreground p-2 hover:text-red-400 transition-colors z-[110]"
+                        >
+                            <X size={32} />
+                        </button>
+
+                        {/* Content */}
+                        <div className="overflow-y-auto flex-1 pb-10 text-foreground">
+                            
+                            <div className="py-3 border-b border-border">
+                                <h3 className="px-6 py-2 text-lg font-bold">Trending</h3>
+                                <Link href="#" className="block px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors">Movers & Shakers</Link>
+                            </div>
+
+                            <div className="py-3 border-b border-border">
+                                <h3 className="px-6 py-2 text-lg font-bold">Digital content & devices</h3>
+                                {['Prime Video', 'Amazon Music', 'Amazon Appstore', 'Echo, Alexa & Smart Home', 'Fire TV', 'Fire Tablets', 'Amazon Luna - Cloud Gaming', 'Kindle E-readers & Books'].map(item => (
+                                    <Link key={item} href="#" className="flex items-center justify-between px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors">
+                                        {item} <ChevronDown className="w-5 h-5 -rotate-90 text-muted-foreground" />
+                                    </Link>
+                                ))}
+                            </div>
+
+                            <div className="py-3 border-b border-border">
+                                <h3 className="px-6 py-2 text-lg font-bold">Shop by Department</h3>
+                                {['Books', 'Films, TV, Music & Games', 'Electronics & Computers', 'Home, Garden & DIY'].map(item => (
+                                    <Link key={item} href="#" className="flex items-center justify-between px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors">
+                                        {item} <ChevronDown className="w-5 h-5 -rotate-90 text-muted-foreground" />
+                                    </Link>
+                                ))}
+                                <button className="w-full flex items-center gap-2 px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors text-left">
+                                    See all <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                                </button>
+                            </div>
+
+                            <div className="py-3">
+                                <h3 className="px-6 py-2 text-lg font-bold">Programs & Features</h3>
+                                {['Spotlight stores'].map(item => (
+                                    <Link key={item} href="#" className="flex items-center justify-between px-6 py-3 hover:bg-muted font-medium text-[15px] text-foreground/90 transition-colors">
+                                        {item} <ChevronDown className="w-5 h-5 -rotate-90 text-muted-foreground" />
+                                    </Link>
+                                ))}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
@@ -189,7 +270,7 @@ export function Header() {
                                     className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                                         isActive
                                             ? 'bg-indigo-500/10 text-indigo-400'
-                                            : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+                                            : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                                     }`}
                                 >
                                     <Icon size={20} className={isActive ? 'text-indigo-400' : ''} />

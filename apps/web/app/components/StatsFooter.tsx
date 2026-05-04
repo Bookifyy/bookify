@@ -14,20 +14,20 @@ export function StatsFooter({ booksCompleted }: StatsFooterProps) {
             <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-12">
                 <div className="flex-1 w-full grid grid-cols-3 gap-4">
                     <div className="space-y-1">
-                        <p className="text-2xl font-bold text-white">{minutesThisWeek}</p>
+                        <p className="text-2xl font-bold text-foreground">{minutesThisWeek}</p>
                         <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Minutes this week</p>
                     </div>
                     <div className="space-y-1 border-l border-border pl-4">
-                        <p className="text-2xl font-bold text-white">{booksCompleted}</p>
+                        <p className="text-2xl font-bold text-foreground">{booksCompleted}</p>
                         <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Books completed</p>
                     </div>
                     <div className="space-y-1 border-l border-border pl-4">
-                        <p className="text-2xl font-bold text-white">{pagesPerHour}</p>
+                        <p className="text-2xl font-bold text-foreground">{pagesPerHour}</p>
                         <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Pages/hour</p>
                     </div>
                 </div>
                 <div className="hidden md:flex items-center justify-center bg-blue-600 rounded-full p-2 shadow-lg shadow-blue-600/20">
-                    <Zap size={20} className="text-white fill-white" />
+                    <Zap size={20} className="text-foreground fill-white" />
                 </div>
             </div>
         </div>

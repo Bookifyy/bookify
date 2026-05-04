@@ -130,11 +130,11 @@ export default function AdminGradingPage() {
         <div className="max-w-5xl mx-auto space-y-6 pb-20">
             {/* Header */}
             <div className="flex items-center gap-4">
-                <Link href="/admin/submissions" className="p-2 bg-card hover:bg-zinc-800 rounded-lg text-muted-foreground hover:text-white transition-colors">
+                <Link href="/admin/submissions" className="p-2 bg-card hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors">
                     <ArrowLeft size={20} />
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Grading Submission #{attempt.id}</h1>
+                    <h1 className="text-2xl font-bold text-foreground">Grading Submission #{attempt.id}</h1>
                     <p className="text-muted-foreground text-sm">Review student work and assign a grade.</p>
                 </div>
             </div>
@@ -151,27 +151,27 @@ export default function AdminGradingPage() {
                                 <User size={24} />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-white">{attempt.user.name}</h3>
+                                <h3 className="text-lg font-bold text-foreground">{attempt.user.name}</h3>
                                 <p className="text-muted-foreground text-sm">{attempt.user.email}</p>
                             </div>
                         </div>
-                        <div className="h-px bg-zinc-800 my-4" />
+                        <div className="h-px bg-muted my-4" />
                         <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
                                 <span className="block text-muted-foreground mb-1">Quiz Title</span>
-                                <span className="text-white font-medium flex items-center gap-2">
+                                <span className="text-foreground font-medium flex items-center gap-2">
                                     <FileText size={14} /> {attempt.quiz.title}
                                 </span>
                             </div>
                             <div>
                                 <span className="block text-muted-foreground mb-1">Book</span>
-                                <span className="text-white font-medium flex items-center gap-2">
+                                <span className="text-foreground font-medium flex items-center gap-2">
                                     <BookOpen size={14} /> {attempt.quiz.book?.title || 'General Quiz'}
                                 </span>
                             </div>
                             <div>
                                 <span className="block text-muted-foreground mb-1">Submitted At</span>
-                                <span className="text-white font-medium flex items-center gap-2">
+                                <span className="text-foreground font-medium flex items-center gap-2">
                                     <Calendar size={14} /> {new Date(attempt.completed_at).toLocaleString()}
                                 </span>
                             </div>
@@ -191,7 +191,7 @@ export default function AdminGradingPage() {
 
                     {/* Attachment Viewer */}
                     <div className="bg-card border border-border rounded-xl p-6">
-                        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                             <FileText size={20} className="text-indigo-400" />
                             Submitted Answer Sheet
                         </h3>
@@ -199,11 +199,11 @@ export default function AdminGradingPage() {
                         {attempt.attachment_path ? (
                             <div className="bg-background border border-border rounded-lg p-4 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-zinc-800 rounded flex items-center justify-center text-muted-foreground">
+                                    <div className="w-10 h-10 bg-muted rounded flex items-center justify-center text-muted-foreground">
                                         <FileText size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-white break-all">
+                                        <p className="text-sm font-medium text-foreground break-all">
                                             {attempt.attachment_path.split('/').pop()}
                                         </p>
                                         <p className="text-xs text-muted-foreground">Document/Image</p>
@@ -229,19 +229,19 @@ export default function AdminGradingPage() {
                     {/* Question Responses (if any) */}
                     {attempt.quiz.questions.length > 0 && (
                         <div className="bg-card border border-border rounded-xl p-6 space-y-6">
-                            <h3 className="text-lg font-bold text-white mb-4">Question Responses</h3>
+                            <h3 className="text-lg font-bold text-foreground mb-4">Question Responses</h3>
                             {attempt.quiz.questions.map((q, index) => {
                                 const answer = attempt.answers.find(a => a.question_id === q.id);
                                 return (
                                     <div key={q.id} className="border-b border-border pb-4 last:border-0 last:pb-0">
-                                        <p className="font-medium text-zinc-200 mb-2">
+                                        <p className="font-medium text-foreground mb-2">
                                             <span className="text-muted-foreground mr-2">{index + 1}.</span>
                                             {q.question_text}
                                             <span className="text-xs text-muted-foreground ml-2">({q.points} pts)</span>
                                         </p>
                                         <div className="flex items-center gap-2 text-sm ml-6">
                                             <span className="text-muted-foreground">Student Answer:</span>
-                                            <span className={`font-mono ${answer?.user_answer ? 'text-white' : 'text-zinc-600 italic'}`}>
+                                            <span className={`font-mono ${answer?.user_answer ? 'text-foreground' : 'text-zinc-600 italic'}`}>
                                                 {answer?.user_answer || 'No Answer'}
                                             </span>
                                         </div>
@@ -261,7 +261,7 @@ export default function AdminGradingPage() {
                 {/* Right Column: Grading Action */}
                 <div className="lg:col-span-1">
                     <div className="bg-card border border-border rounded-xl p-6 sticky top-6">
-                        <h3 className="text-xl font-bold text-white mb-4">Grading</h3>
+                        <h3 className="text-xl font-bold text-foreground mb-4">Grading</h3>
 
                         <div className="space-y-4">
                             <div>
@@ -275,7 +275,7 @@ export default function AdminGradingPage() {
                                         max="100"
                                         value={grade}
                                         onChange={e => setGrade(e.target.value)}
-                                        className="w-full bg-background border border-zinc-700 text-white p-3 rounded-lg text-2xl font-bold text-center focus:outline-none focus:border-indigo-500"
+                                        className="w-full bg-background border border-zinc-700 text-foreground p-3 rounded-lg text-2xl font-bold text-center focus:outline-none focus:border-indigo-500"
                                         placeholder="0"
                                     />
                                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">%</span>
@@ -318,7 +318,7 @@ export default function AdminGradingPage() {
                                 setShowModal(false);
                                 if (modalType === 'success') router.push('/admin/submissions');
                             }}
-                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                            className="w-full bg-muted hover:bg-zinc-700 text-foreground py-3 rounded-lg font-bold transition-colors"
                         >
                             {modalType === 'success' ? 'Continue' : 'Close'}
                         </button>

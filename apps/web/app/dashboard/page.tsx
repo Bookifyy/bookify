@@ -81,7 +81,7 @@ export default function DashboardPage() {
         return (
             <div className="min-h-screen bg-background flex flex-col items-center justify-center py-32 gap-4">
                 <Loader2 className="animate-spin text-blue-600" size={32} />
-                <p className="text-zinc-600 text-sm font-medium tracking-wide animate-pulse">SYNCING METRICS...</p>
+                <p className="text-muted-foreground text-sm font-medium tracking-wide animate-pulse">SYNCING METRICS...</p>
             </div>
         );
     }
@@ -90,8 +90,8 @@ export default function DashboardPage() {
     const CustomTooltip = ({ active, payload, label }: any) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-[#121212] border border-border p-3 rounded-lg shadow-xl">
-                    <p className="text-white font-medium mb-1">{label}</p>
+                <div className="bg-card border border-border p-3 rounded-lg shadow-xl">
+                    <p className="text-foreground font-medium mb-1">{label}</p>
                     <p className="text-blue-500 text-sm">{`${payload[0].value} minutes`}</p>
                 </div>
             );
@@ -100,20 +100,20 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="min-h-screen bg-background text-white p-8 pb-32 max-w-[1600px] mx-auto space-y-8 font-sans">
+        <div className="min-h-screen bg-background text-foreground p-8 pb-32 max-w-[1600px] mx-auto space-y-8 font-sans">
             
             {/* 1. YOUR PROGRESS SECTION */}
             <div className="space-y-4">
                 <div>
-                    <h2 className="text-xl font-semibold tracking-wide text-white">Your Progress</h2>
+                    <h2 className="text-xl font-semibold tracking-wide text-foreground">Your Progress</h2>
                     <p className="text-muted-foreground text-sm mt-1">Track your learning journey</p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Day Streak */}
-                    <div className="bg-[#0f0f12] border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-zinc-700/80 transition-colors">
+                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors">
                         <div className="flex items-center gap-3">
-                            <Flame className="text-white w-5 h-5" />
+                            <Flame className="text-foreground w-5 h-5" />
                             <div>
                                 <h3 className="text-2xl font-bold">{stats.streak}</h3>
                                 <p className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">Day Streak</p>
@@ -123,7 +123,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* This Week */}
-                    <div className="bg-[#0f0f12] border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-zinc-700/80 transition-colors">
+                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors">
                         <div className="flex items-center gap-3">
                             <Target className="text-blue-600 w-5 h-5" />
                             <div>
@@ -135,7 +135,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Completed */}
-                    <div className="bg-[#0f0f12] border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-zinc-700/80 transition-colors">
+                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors">
                         <div className="flex items-center gap-3">
                             <Medal className="text-muted-foreground w-5 h-5" />
                             <div>
@@ -147,7 +147,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Reading Speed */}
-                    <div className="bg-[#0f0f12] border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-zinc-700/80 transition-colors">
+                    <div className="bg-card border border-border/60 rounded-xl p-5 flex flex-col justify-between h-32 hover:border-indigo-500/50 transition-colors">
                         <div className="flex items-center gap-3">
                             <TrendingUp className="text-blue-600 w-5 h-5" />
                             <div>
@@ -164,10 +164,10 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* 2. WEEKLY ACTIVITY (Bar Chart) - Takes 2 cols on Large screens */}
-                <div className="lg:col-span-2 bg-[#0f0f12] border border-border/60 rounded-xl p-6">
+                <div className="lg:col-span-2 bg-card border border-border/60 rounded-xl p-6">
                     <div className="flex items-center gap-2 mb-8">
-                        <Calendar className="w-4 h-4 text-white" />
-                        <h2 className="text-[15px] font-semibold text-white">Weekly Activity</h2>
+                        <Calendar className="w-4 h-4 text-foreground" />
+                        <h2 className="text-[15px] font-semibold text-foreground">Weekly Activity</h2>
                     </div>
                     
                     <div className="h-48 w-full">
@@ -205,8 +205,8 @@ export default function DashboardPage() {
                 </div>
 
                 {/* 3. STUDY DISTRIBUTION (Donut Chart) - Takes 1 col */}
-                <div className="bg-[#0f0f12] border border-border/60 rounded-xl p-6 flex flex-col">
-                    <h2 className="text-[15px] font-semibold text-white mb-2">Study Distribution</h2>
+                <div className="bg-card border border-border/60 rounded-xl p-6 flex flex-col">
+                    <h2 className="text-[15px] font-semibold text-foreground mb-2">Study Distribution</h2>
                     
                     <div className="flex-1 flex flex-col justify-between">
                         <div className="h-40 w-full relative -mt-4">
@@ -254,13 +254,13 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 {/* 4. BOOKS IN PROGRESS */}
-                <div className="bg-[#0f0f12] border border-border/60 rounded-xl p-6">
+                <div className="bg-card border border-border/60 rounded-xl p-6">
                     <h2 className="text-[15px] font-semibold text-muted-foreground mb-6">Books in Progress</h2>
                     {booksInProgress.length === 0 ? (
                         <div className="py-12 flex flex-col items-center justify-center text-center">
-                            <BookOpen className="text-zinc-800 w-12 h-12 mb-3" />
+                            <BookOpen className="text-muted-foreground w-12 h-12 mb-3" />
                             <p className="text-muted-foreground text-sm font-medium">No books in progress.</p>
-                            <p className="text-zinc-600 text-xs mt-1">Start reading a book to see it here!</p>
+                            <p className="text-muted-foreground text-xs mt-1">Start reading a book to see it here!</p>
                         </div>
                     ) : (
                         <div className="space-y-6">
@@ -268,7 +268,7 @@ export default function DashboardPage() {
                                 <div key={i} className="flex flex-col gap-2">
                                     <div className="flex justify-between items-end">
                                         <div>
-                                            <h4 className="text-sm font-medium text-zinc-200 line-clamp-1">{book.title}</h4>
+                                            <h4 className="text-sm font-medium text-foreground line-clamp-1">{book.title}</h4>
                                             <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{book.author}</p>
                                         </div>
                                         <span className="text-xs font-semibold text-muted-foreground ml-4">{book.progress}%</span>
@@ -288,7 +288,7 @@ export default function DashboardPage() {
                 {/* 5. RECENT ACHIEVEMENTS & CURRENT PLAN */}
                 <div className="space-y-6 flex flex-col">
                     {/* Achievements */}
-                    <div className="bg-[#0f0f12] border border-border/60 rounded-xl p-6 flex-1">
+                    <div className="bg-card border border-border/60 rounded-xl p-6 flex-1">
                         <div className="flex items-center gap-2 mb-6">
                             <Award className="w-4 h-4 text-muted-foreground" />
                             <h2 className="text-[15px] font-semibold text-muted-foreground">Recent Achievements</h2>
@@ -296,10 +296,10 @@ export default function DashboardPage() {
                         
                         <div className="space-y-3">
                             {achievements.map((achievement, i) => (
-                                <div key={i} className="bg-[#151518] rounded-lg p-4 flex items-center gap-4 border border-border/30">
+                                <div key={i} className="bg-muted rounded-lg p-4 flex items-center gap-4 border border-border/30">
                                     <achievement.icon className={`w-4 h-4 ${achievement.color}`} />
                                     <div>
-                                        <h4 className="text-sm font-medium text-white">{achievement.title}</h4>
+                                        <h4 className="text-sm font-medium text-foreground">{achievement.title}</h4>
                                         <p className="text-[11px] text-muted-foreground mt-0.5">{achievement.subtitle}</p>
                                     </div>
                                 </div>
@@ -308,10 +308,10 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Weekly Goals Miniature Block */}
-                    <div className="bg-[#0f0f12] border border-border/60 rounded-xl p-6">
+                    <div className="bg-card border border-border/60 rounded-xl p-6">
                          <div className="flex items-center justify-between">
                              <div>
-                                <h3 className="text-sm font-bold text-white tracking-wide">Weekly Goal Status</h3>
+                                <h3 className="text-sm font-bold text-foreground tracking-wide">Weekly Goal Status</h3>
                                 <p className="text-xs text-muted-foreground mt-1">4 of 5 reading sessions completed</p>
                              </div>
                              <div className="h-10 w-10 border-2 border-border rounded-full flex items-center justify-center relative">

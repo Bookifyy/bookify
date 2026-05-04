@@ -138,12 +138,12 @@ export default function EditQuizPage() {
     return (
         <div className="space-y-6 pb-20">
             <div className="flex items-center gap-4">
-                <Link href="/admin/quizzes" className="p-2 hover:bg-zinc-800 rounded-lg text-muted-foreground hover:text-white transition-colors">
+                <Link href="/admin/quizzes" className="p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors">
                     <ArrowLeft size={20} />
                 </Link>
                 <div className="flex-1">
                     <p className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-1">Editing Quiz</p>
-                    <h1 className="text-2xl font-bold text-white">{quiz.title}</h1>
+                    <h1 className="text-2xl font-bold text-foreground">{quiz.title}</h1>
                 </div>
                 <button
                     onClick={() => setShowAddModal(true)}
@@ -159,7 +159,7 @@ export default function EditQuizPage() {
                 {quiz.questions.length === 0 ? (
                     <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
                         <AlertCircle className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-                        <h3 className="text-lg font-medium text-white mb-1">No questions yet</h3>
+                        <h3 className="text-lg font-medium text-foreground mb-1">No questions yet</h3>
                         <p className="text-muted-foreground text-sm">Add questions to publish this quiz.</p>
                     </div>
                 ) : (
@@ -167,13 +167,13 @@ export default function EditQuizPage() {
                         <div key={q.id} className="bg-card border border-border rounded-xl p-6 relative group">
                             <button
                                 onClick={() => handleDeleteQuestion(q.id)}
-                                className="absolute top-4 right-4 p-2 text-zinc-600 hover:text-red-400 hover:bg-zinc-800 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                                className="absolute top-4 right-4 p-2 text-zinc-600 hover:text-red-400 hover:bg-muted rounded-lg opacity-0 group-hover:opacity-100 transition-all"
                             >
                                 <Trash2 size={18} />
                             </button>
 
                             <div className="flex gap-4">
-                                <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-muted-foreground text-sm flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-bold text-muted-foreground text-sm flex-shrink-0">
                                     {idx + 1}
                                 </div>
                                 <div className="flex-1">
@@ -183,7 +183,7 @@ export default function EditQuizPage() {
                                         </span>
                                         <span className="text-xs text-muted-foreground font-medium">{q.points} Points</span>
                                     </div>
-                                    <p className="text-white font-medium text-lg mb-4">{q.question_text}</p>
+                                    <p className="text-foreground font-medium text-lg mb-4">{q.question_text}</p>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {q.type === 'multiple_choice' ? (
@@ -212,8 +212,8 @@ export default function EditQuizPage() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
                     <div className="bg-card border border-border rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         <div className="p-6 border-b border-border flex items-center justify-between sticky top-0 bg-card z-10">
-                            <h2 className="text-xl font-bold text-white">Add Question</h2>
-                            <button onClick={() => setShowAddModal(false)} className="text-muted-foreground hover:text-white">
+                            <h2 className="text-xl font-bold text-foreground">Add Question</h2>
+                            <button onClick={() => setShowAddModal(false)} className="text-muted-foreground hover:text-foreground">
                                 <X size={24} />
                             </button>
                         </div>
@@ -226,7 +226,7 @@ export default function EditQuizPage() {
                                     required
                                     value={qText}
                                     onChange={e => setQText(e.target.value)}
-                                    className="w-full bg-background border border-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                                    className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                                     rows={3}
                                     placeholder="Enter your question here..."
                                 />
@@ -241,7 +241,7 @@ export default function EditQuizPage() {
                                             setQType(e.target.value as any);
                                             setCorrectAnswer(''); // Reset correct answer on type change
                                         }}
-                                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                                     >
                                         <option value="multiple_choice">Multiple Choice</option>
                                         <option value="true_false">True / False</option>
@@ -254,7 +254,7 @@ export default function EditQuizPage() {
                                         min="1"
                                         value={points}
                                         onChange={e => setPoints(parseInt(e.target.value))}
-                                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                                     />
                                 </div>
                             </div>
@@ -284,7 +284,7 @@ export default function EditQuizPage() {
                                                     // If this was the correct answer, update it
                                                     if (correctAnswer === opt && opt !== '') setCorrectAnswer(e.target.value);
                                                 }}
-                                                className="flex-1 bg-background border border-border rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                                                className="flex-1 bg-background border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                                                 placeholder={`Option ${i + 1}`}
                                             />
                                         </div>
@@ -297,7 +297,7 @@ export default function EditQuizPage() {
                                         {['True', 'False'].map(val => (
                                             <label key={val} className={`
                                                 flex-1 cursor-pointer rounded-lg border border-border p-4 text-center transition-all
-                                                ${correctAnswer === val ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-background text-muted-foreground hover:bg-zinc-800'}
+                                                ${correctAnswer === val ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-background text-muted-foreground hover:bg-muted'}
                                             `}>
                                                 <input
                                                     type="radio"
@@ -336,7 +336,7 @@ export default function EditQuizPage() {
                     <div className="pt-4">
                         <button
                             onClick={() => setShowModal(false)}
-                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                            className="w-full bg-muted hover:bg-zinc-700 text-foreground py-3 rounded-lg font-bold transition-colors"
                         >
                             Close
                         </button>

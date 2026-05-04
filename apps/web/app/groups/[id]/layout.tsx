@@ -66,10 +66,10 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
             <div className="border-b border-border p-6 flex items-center justify-between">
                 <div>
                     <div className="flex items-center gap-3 mb-1">
-                        <Link href="/groups" className="lg:hidden text-muted-foreground hover:text-white">
+                        <Link href="/groups" className="lg:hidden text-muted-foreground hover:text-foreground">
                             <ArrowLeft size={20} />
                         </Link>
-                        <h1 className="text-2xl font-bold text-white">{group.name}</h1>
+                        <h1 className="text-2xl font-bold text-foreground">{group.name}</h1>
                         <span className={`
                             text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded
                             ${group.privacy === 'invite_only' ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}
@@ -87,7 +87,7 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <button className="p-2 text-muted-foreground hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
+                    <button className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
                         <MoreVertical size={20} />
                     </button>
                     {/* Invite Button could go here too */}
@@ -105,7 +105,7 @@ export default function GroupDetailLayout({ children }: { children: React.ReactN
                             className={`
                                 flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors
                                 ${isActive
-                                    ? 'border-indigo-500 text-white'
+                                    ? 'border-indigo-500 text-foreground'
                                     : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-zinc-700'
                                 }
                             `}

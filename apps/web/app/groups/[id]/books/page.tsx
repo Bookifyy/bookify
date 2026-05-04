@@ -65,14 +65,14 @@ export default function GroupBooksPage() {
                 {books.length === 0 ? (
                     <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
                         <BookOpen className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-                        <h3 className="text-lg font-medium text-white mb-1">No books yet</h3>
+                        <h3 className="text-lg font-medium text-foreground mb-1">No books yet</h3>
                         <p className="text-muted-foreground text-sm">Add a book to start reading together.</p>
                     </div>
                 ) : (
                     books.map(book => (
                         <div key={book.id} className="bg-card border border-border rounded-xl p-4 flex gap-4">
                             {/* Cover */}
-                            <div className="w-16 h-24 bg-zinc-800 rounded-lg flex-shrink-0 overflow-hidden relative">
+                            <div className="w-16 h-24 bg-muted rounded-lg flex-shrink-0 overflow-hidden relative">
                                 {book.cover_image ? (
                                     <Image
                                         src={book.cover_image?.startsWith('http') ? book.cover_image : `${getApiUrl()}${book.cover_image}`}
@@ -89,7 +89,7 @@ export default function GroupBooksPage() {
 
                             {/* Details */}
                             <div className="flex-1 min-w-0">
-                                <h3 className="text-lg font-bold text-white truncate">{book.title}</h3>
+                                <h3 className="text-lg font-bold text-foreground truncate">{book.title}</h3>
                                 <p className="text-muted-foreground text-sm mb-3">{book.author}</p>
 
                                 {/* Progress Bar (Mocked for now as per plan, assuming user progress) */}
@@ -98,7 +98,7 @@ export default function GroupBooksPage() {
                                         <span className="text-muted-foreground">Your Progress</span>
                                         <span className="text-indigo-400 font-bold">0%</span>
                                     </div>
-                                    <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                                         <div className="h-full bg-indigo-500 w-0" />
                                     </div>
                                 </div>

@@ -69,7 +69,7 @@ export default function StudentQuizzesPage() {
     return (
         <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto">
             <div>
-                <h1 className="text-3xl font-bold text-white mb-2">Quizzes</h1>
+                <h1 className="text-3xl font-bold text-foreground mb-2">Quizzes</h1>
                 <p className="text-muted-foreground">Practice comprehension with quick quizzes generated from your books and notes.</p>
             </div>
 
@@ -77,7 +77,7 @@ export default function StudentQuizzesPage() {
                 {quizzes.length === 0 ? (
                     <div className="col-span-full text-center py-20 bg-card/50 rounded-2xl border border-border border-dashed">
                         <Award className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-white mb-2">No Quizzes Available Yet</h3>
+                        <h3 className="text-xl font-bold text-foreground mb-2">No Quizzes Available Yet</h3>
                         <p className="text-muted-foreground">Check back later for new quizzes added by your instructor.</p>
                     </div>
                 ) : (
@@ -92,7 +92,7 @@ export default function StudentQuizzesPage() {
                                                 <span>{quiz.book.title}</span>
                                             </div>
                                         )}
-                                        <h3 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">{quiz.title}</h3>
+                                        <h3 className="text-xl font-bold text-foreground group-hover:text-indigo-400 transition-colors">{quiz.title}</h3>
                                     </div>
 
                                     {quiz.latest_attempt ? (
@@ -109,7 +109,7 @@ export default function StudentQuizzesPage() {
                                             </div>
                                         )
                                     ) : (
-                                        <div className="bg-zinc-800 text-muted-foreground px-3 py-1 rounded-full text-xs font-bold">
+                                        <div className="bg-muted text-muted-foreground px-3 py-1 rounded-full text-xs font-bold">
                                             Not Started
                                         </div>
                                     )}
@@ -137,7 +137,7 @@ export default function StudentQuizzesPage() {
                                     className={`
                                         w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition-all
                                         ${quiz.latest_attempt && quiz.latest_attempt.status === 'in_progress'
-                                            ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-900/20'
+                                            ? 'bg-amber-600 hover:bg-amber-500 text-foreground shadow-lg shadow-amber-900/20'
                                             : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-900/20'
                                         }
                                     `}
@@ -149,7 +149,7 @@ export default function StudentQuizzesPage() {
 
                             {/* Progress Bar visual decoration */}
                             {quiz.latest_attempt && quiz.latest_attempt.status === 'completed' && (
-                                <div className="h-1 bg-zinc-800 w-full mt-auto">
+                                <div className="h-1 bg-muted w-full mt-auto">
                                     <div
                                         className={`h-full ${quiz.latest_attempt.score >= quiz.passing_score ? 'bg-green-500' : 'bg-amber-500'}`}
                                         style={{ width: `${quiz.latest_attempt.score}%` }}

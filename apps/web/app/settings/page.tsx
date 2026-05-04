@@ -335,14 +335,14 @@ export default function SettingsPage() {
                                     <button 
                                         type="button"
                                         onClick={() => setTheme('light')}
-                                        className={`px-4 py-1 rounded-md text-[13px] font-medium transition-all ${theme === 'light' ? 'bg-primary text-white' : 'text-muted-foreground hover:text-foreground'}`}
+                                        className={`px-4 py-1 rounded-md text-[13px] font-medium transition-all ${theme === 'light' ? 'bg-primary text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                                     >
                                         Light
                                     </button>
                                     <button 
                                         type="button"
                                         onClick={() => setTheme('dark')}
-                                        className={`px-4 py-1 rounded-md text-[13px] font-medium transition-all ${theme === 'dark' ? 'bg-primary text-white' : 'text-muted-foreground hover:text-foreground'}`}
+                                        className={`px-4 py-1 rounded-md text-[13px] font-medium transition-all ${theme === 'dark' ? 'bg-primary text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                                     >
                                         Dark
                                     </button>
@@ -481,7 +481,7 @@ export default function SettingsPage() {
                         <button 
                             type="submit" 
                             disabled={isSaving}
-                            className="bg-primary hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-full shadow-xl transition-all flex items-center gap-2 disabled:opacity-50"
+                            className="bg-primary hover:bg-blue-700 text-foreground font-medium py-3 px-8 rounded-full shadow-xl transition-all flex items-center gap-2 disabled:opacity-50"
                         >
                             {isSaving ? <Loader2 size={18} className="animate-spin" /> : null}
                             {isSaving ? 'Saving Changes...' : 'Save All Changes'}

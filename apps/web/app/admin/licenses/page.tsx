@@ -23,7 +23,7 @@ export default function LicensesPage() {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">License Management</h1>
+                    <h1 className="text-3xl font-bold text-foreground tracking-tight">License Management</h1>
                     <p className="text-muted-foreground text-sm">Manage access keys for institutions and premium users.</p>
                 </div>
 
@@ -33,7 +33,7 @@ export default function LicensesPage() {
                         <input
                             type="text"
                             placeholder="Search licenses..."
-                            className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
+                            className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -62,14 +62,14 @@ export default function LicensesPage() {
                         </thead>
                         <tbody className="divide-y divide-zinc-800">
                             {filteredLicenses.map(license => (
-                                <tr key={license.id} className="group hover:bg-zinc-800/30 transition-colors">
+                                <tr key={license.id} className="group hover:bg-muted/30 transition-colors">
                                     <td className="p-4">
                                         <div className="flex items-center gap-2">
-                                            <div className="p-1.5 bg-zinc-800 rounded text-muted-foreground">
+                                            <div className="p-1.5 bg-muted rounded text-muted-foreground">
                                                 <Key size={14} />
                                             </div>
-                                            <span className="font-mono text-sm text-white">{license.key}</span>
-                                            <button className="text-zinc-600 hover:text-white transition-colors" title="Copy Key">
+                                            <span className="font-mono text-sm text-foreground">{license.key}</span>
+                                            <button className="text-zinc-600 hover:text-foreground transition-colors" title="Copy Key">
                                                 <Copy size={12} />
                                             </button>
                                         </div>

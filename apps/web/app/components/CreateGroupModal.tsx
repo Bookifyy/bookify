@@ -61,8 +61,8 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }: { isOpen: boole
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
             <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl">
                 <div className="flex items-center justify-between p-6 border-b border-border">
-                    <h2 className="text-xl font-bold text-white">Create Group</h2>
-                    <button onClick={onClose} className="text-muted-foreground hover:text-white transition-colors">
+                    <h2 className="text-xl font-bold text-foreground">Create Group</h2>
+                    <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
                         <X size={24} />
                     </button>
                 </div>
@@ -82,7 +82,7 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }: { isOpen: boole
                             maxLength={60}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full bg-background border border-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                            className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                             placeholder="e.g., Advanced Mathematics Study Group"
                         />
                         <div className="text-right text-xs text-zinc-600">
@@ -95,7 +95,7 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }: { isOpen: boole
                         <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            className="w-full bg-background border border-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                            className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                             placeholder="What is this group about?"
                             rows={3}
                         />
@@ -122,7 +122,7 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }: { isOpen: boole
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <Lock size={16} className={privacy === 'invite_only' ? 'text-indigo-400' : 'text-muted-foreground'} />
-                                    <span className={`font-bold ${privacy === 'invite_only' ? 'text-white' : 'text-muted-foreground'}`}>
+                                    <span className={`font-bold ${privacy === 'invite_only' ? 'text-foreground' : 'text-muted-foreground'}`}>
                                         Invite Only
                                     </span>
                                 </div>
@@ -148,7 +148,7 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }: { isOpen: boole
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <Globe size={16} className={privacy === 'open' ? 'text-teal-400' : 'text-muted-foreground'} />
-                                    <span className={`font-bold ${privacy === 'open' ? 'text-white' : 'text-muted-foreground'}`}>
+                                    <span className={`font-bold ${privacy === 'open' ? 'text-foreground' : 'text-muted-foreground'}`}>
                                         Open by Link
                                     </span>
                                 </div>

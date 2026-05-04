@@ -135,7 +135,7 @@ export default function AdminBooksPage() {
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Book Management</h1>
+                    <h1 className="text-3xl font-bold text-foreground tracking-tight">Book Management</h1>
                     <p className="text-muted-foreground text-sm">Manage library content, availability, and metadata.</p>
                 </div>
 
@@ -145,7 +145,7 @@ export default function AdminBooksPage() {
                         <input
                             type="text"
                             placeholder="Search books..."
-                            className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
+                            className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -180,10 +180,10 @@ export default function AdminBooksPage() {
                                 <tr><td colSpan={4} className="p-8 text-center text-muted-foreground">No books found.</td></tr>
                             ) : (
                                 filteredBooks.map(book => (
-                                    <tr key={book.id} className="group hover:bg-zinc-800/30 transition-colors">
+                                    <tr key={book.id} className="group hover:bg-muted/30 transition-colors">
                                         <td className="p-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-10 h-14 bg-zinc-800 rounded overflow-hidden shrink-0">
+                                                <div className="w-10 h-14 bg-muted rounded overflow-hidden shrink-0">
                                                     {book.cover_image ? (
                                                         <img src={resolveAssetUrl(book.cover_image)} alt={book.title} className="w-full h-full object-cover" />
                                                     ) : (
@@ -191,13 +191,13 @@ export default function AdminBooksPage() {
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <p className="font-medium text-white text-sm line-clamp-1">{book.title}</p>
+                                                    <p className="font-medium text-foreground text-sm line-clamp-1">{book.title}</p>
                                                     <p className="text-xs text-muted-foreground">{book.author}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="p-4 text-sm text-muted-foreground">
-                                            <span className="bg-zinc-800 text-muted-foreground px-2 py-1 rounded text-xs">
+                                            <span className="bg-muted text-muted-foreground px-2 py-1 rounded text-xs">
                                                 {book.subject?.name || 'Uncategorized'}
                                             </span>
                                         </td>
@@ -214,7 +214,7 @@ export default function AdminBooksPage() {
                                         </td>
                                         <td className="p-4 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button className="p-2 hover:bg-zinc-800 rounded-lg text-muted-foreground hover:text-white transition-colors" title="Edit">
+                                                <button className="p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors" title="Edit">
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button

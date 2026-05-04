@@ -92,12 +92,12 @@ export default function CollectionDetailPage() {
     }, [params.id, token]);
 
     if (loading) {
-        return <div className="min-h-screen bg-background text-white flex items-center justify-center">Loading...</div>;
+        return <div className="min-h-screen bg-background text-foreground flex items-center justify-center">Loading...</div>;
     }
 
     if (!collection) {
         return (
-            <div className="min-h-screen bg-background text-white flex flex-col items-center justify-center">
+            <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center">
                 <h2 className="text-xl font-medium mb-4">Collection not found</h2>
                 <button onClick={() => router.push('/collections')} className="text-blue-500 hover:underline">
                     Return to Collections
@@ -171,7 +171,7 @@ export default function CollectionDetailPage() {
             <div className="flex-1 flex flex-col min-h-screen">
                 {/* Topbar equivalent (for layout spacing/design) */}
                 <div className="h-16 border-b border-border px-6 flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-white font-medium">
+                    <div className="flex items-center gap-2 text-foreground font-medium">
                         Bookify
                     </div>
                     <div className="flex-1 max-w-xl px-8">
@@ -181,8 +181,8 @@ export default function CollectionDetailPage() {
                         </div>
                     </div>
                     <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
-                        <span className="cursor-pointer hover:text-white transition-colors">Settings</span>
-                        <span className="cursor-pointer hover:text-white transition-colors">Profile</span>
+                        <span className="cursor-pointer hover:text-foreground transition-colors">Settings</span>
+                        <span className="cursor-pointer hover:text-foreground transition-colors">Profile</span>
                     </div>
                 </div>
 
@@ -191,7 +191,7 @@ export default function CollectionDetailPage() {
                     <div className="mb-8">
                         <button 
                             onClick={() => router.push('/collections')}
-                            className="flex items-center gap-3 text-white hover:text-muted-foreground transition-colors group mb-2"
+                            className="flex items-center gap-3 text-foreground hover:text-muted-foreground transition-colors group mb-2"
                         >
                             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                             <h1 className="text-2xl font-medium tracking-wide">{collection.name}</h1>
@@ -201,13 +201,13 @@ export default function CollectionDetailPage() {
                         </p>
                         
                         <div className="flex items-center gap-4 ml-8 text-sm">
-                            <span className="bg-[#0ea5e9] text-white px-2.5 py-0.5 rounded-full text-xs font-semibold lowercase">
+                            <span className="bg-[#0ea5e9] text-foreground px-2.5 py-0.5 rounded-full text-xs font-semibold lowercase">
                                 {collection.visibility || 'private'}
                             </span>
-                            <span className="text-muted-foreground"><span className="text-white font-medium">{books.length}</span> items</span>
+                            <span className="text-muted-foreground"><span className="text-foreground font-medium">{books.length}</span> items</span>
                             <span className="text-muted-foreground flex items-center gap-1.5">
-                                <span className="text-white font-medium">1</span> members
-                                <div className="w-5 h-5 rounded bg-zinc-800 text-muted-foreground flex items-center justify-center text-[10px] ml-1">
+                                <span className="text-foreground font-medium">1</span> members
+                                <div className="w-5 h-5 rounded bg-muted text-muted-foreground flex items-center justify-center text-[10px] ml-1">
                                     Y
                                 </div>
                                 by You
@@ -225,7 +225,7 @@ export default function CollectionDetailPage() {
                                             setIsSelectMode(false);
                                             setSelectedBookIds([]);
                                         }}
-                                        className="flex items-center gap-2 text-sm font-medium text-white transition-colors"
+                                        className="flex items-center gap-2 text-sm font-medium text-foreground transition-colors"
                                     >
                                         <X size={16} /> Cancel
                                     </button>
@@ -240,7 +240,7 @@ export default function CollectionDetailPage() {
                             ) : (
                                 <button 
                                     onClick={() => setIsSelectMode(true)}
-                                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-white transition-colors"
+                                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     <CheckCircle2 size={16} /> Select
                                 </button>
@@ -249,7 +249,7 @@ export default function CollectionDetailPage() {
                             <div className="relative">
                                 <button 
                                     onClick={() => setShowSortDropdown(!showSortDropdown)}
-                                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-white transition-colors"
+                                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     <ListFilter size={16} /> Sort
                                 </button>
@@ -262,7 +262,7 @@ export default function CollectionDetailPage() {
                                                     setSortBy(option);
                                                     setShowSortDropdown(false);
                                                 }}
-                                                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${sortBy === option ? 'text-white bg-card' : 'text-muted-foreground hover:text-white hover:bg-zinc-800/50'}`}
+                                                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${sortBy === option ? 'text-foreground bg-card' : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'}`}
                                             >
                                                 {option}
                                             </button>
@@ -271,14 +271,14 @@ export default function CollectionDetailPage() {
                                 )}
                             </div>
 
-                            <Link href="/library" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-white transition-colors">
+                            <Link href="/library" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                                 <Plus size={16} /> Add Items
                             </Link>
                         </div>
                         <div className="flex items-center gap-4">
                             <button 
                                 onClick={() => setShowShareModal(true)}
-                                className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-white transition-colors"
+                                className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 <Share2 size={16} /> Share
                             </button>
@@ -299,7 +299,7 @@ export default function CollectionDetailPage() {
                                             {isSelectMode && (
                                                 <div 
                                                     className={`absolute top-2 right-2 z-20 w-6 h-6 rounded-md border-2 flex items-center justify-center pointer-events-none transition-colors ${
-                                                        isSelected ? 'bg-blue-500 border-blue-500 text-white' : 'bg-background/50 border-zinc-500'
+                                                        isSelected ? 'bg-blue-500 border-blue-500 text-foreground' : 'bg-background/50 border-zinc-500'
                                                     }`}
                                                 >
                                                     {isSelected && <CheckCircle2 size={14} />}
@@ -328,7 +328,7 @@ export default function CollectionDetailPage() {
                         ) : (
                             <div className="text-center py-20 border border-dashed border-border rounded-2xl">
                                 <p className="text-muted-foreground mb-4">No books in this collection yet.</p>
-                                <Link href="/library" className="bg-card hover:bg-zinc-800 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
+                                <Link href="/library" className="bg-card hover:bg-muted text-foreground px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
                                     Add Books
                                 </Link>
                             </div>
@@ -339,18 +339,18 @@ export default function CollectionDetailPage() {
 
             {/* Right Sidebar - Activity */}
             <div className="w-[320px] border-l border-border bg-background min-h-screen p-6 flex-shrink-0">
-                <h3 className="text-[15px] font-medium text-white mb-4">Collection Activity</h3>
+                <h3 className="text-[15px] font-medium text-foreground mb-4">Collection Activity</h3>
                 
                 <div className="flex items-center p-1 bg-card rounded-xl mb-8">
                     <button 
                         onClick={() => setActiveTab('Activity')}
-                        className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${activeTab === 'Activity' ? 'bg-[#18181b] text-white shadow' : 'text-muted-foreground hover:text-muted-foreground'}`}
+                        className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${activeTab === 'Activity' ? 'bg-[#18181b] text-foreground shadow' : 'text-muted-foreground hover:text-muted-foreground'}`}
                     >
                         Activity
                     </button>
                     <button 
                         onClick={() => setActiveTab('Notes')}
-                        className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${activeTab === 'Notes' ? 'bg-[#18181b] text-white shadow' : 'text-muted-foreground hover:text-muted-foreground'}`}
+                        className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${activeTab === 'Notes' ? 'bg-[#18181b] text-foreground shadow' : 'text-muted-foreground hover:text-muted-foreground'}`}
                     >
                         Notes
                     </button>
@@ -365,7 +365,7 @@ export default function CollectionDetailPage() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-muted-foreground leading-snug">
-                                        <span className="font-medium text-white">{act.user.name}</span> {act.action}
+                                        <span className="font-medium text-foreground">{act.user.name}</span> {act.action}
                                     </p>
                                     <p className="text-xs text-muted-foreground mt-1">
                                         {new Date(act.created_at).toLocaleDateString()}
@@ -403,7 +403,7 @@ export default function CollectionDetailPage() {
                                     if(e.key === 'Enter') handleAddNote(); 
                                 }}
                                 placeholder="Write a note..."
-                                className="w-full bg-background border border-border focus:border-[#0ea5e9] rounded-xl px-4 py-3 text-sm text-white transition-colors focus:outline-none"
+                                className="w-full bg-background border border-border focus:border-[#0ea5e9] rounded-xl px-4 py-3 text-sm text-foreground transition-colors focus:outline-none"
                             />
                         </div>
                     </div>
@@ -414,14 +414,14 @@ export default function CollectionDetailPage() {
             {showDeleteConfirm && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
                     <div className="bg-[#0a0a0a] border border-border rounded-2xl w-full max-w-sm p-6 shadow-2xl">
-                        <h3 className="text-lg font-bold text-white mb-2">Remove Items</h3>
+                        <h3 className="text-lg font-bold text-foreground mb-2">Remove Items</h3>
                         <p className="text-muted-foreground text-sm mb-6">
                             Are you sure you want to remove the {selectedBookIds.length} selected items from this collection? This action cannot be undone.
                         </p>
                         <div className="flex justify-end gap-3">
                             <button 
                                 onClick={() => setShowDeleteConfirm(false)}
-                                className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-white transition-colors"
+                                className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 Cancel
                             </button>

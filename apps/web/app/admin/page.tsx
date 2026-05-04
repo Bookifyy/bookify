@@ -100,7 +100,7 @@ export default function AdminDashboard() {
                 <Icon size={24} />
             </div>
             <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider mb-1">{title}</p>
-            <h3 className="text-3xl font-serif font-bold text-white mb-4">{value.toLocaleString()}</h3>
+            <h3 className="text-3xl font-serif font-bold text-foreground mb-4">{value.toLocaleString()}</h3>
             <div className="flex items-center gap-2 text-xs">
                 {change && (
                     <span className="text-green-500 font-bold bg-green-500/10 px-2 py-0.5 rounded flex items-center gap-1">
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
         <div className="space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight mb-2">Dashboard</h1>
+                    <h1 className="text-3xl font-bold text-foreground tracking-tight mb-2">Dashboard</h1>
                     <p className="text-muted-foreground">Welcome back, Administrator. Here's what's happening.</p>
                 </div>
                 <button
@@ -164,7 +164,7 @@ export default function AdminDashboard() {
                 {/* Recent Users */}
                 <div className="bg-card border border-border rounded-2xl p-6">
                     <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-lg font-bold text-white">Recent Signups</h3>
+                        <h3 className="text-lg font-bold text-foreground">Recent Signups</h3>
                         <button onClick={() => router.push('/admin/users')} className="text-xs font-bold text-indigo-400 hover:text-indigo-300">View All</button>
                     </div>
 
@@ -173,11 +173,11 @@ export default function AdminDashboard() {
                             recentUsers.map((user) => (
                                 <div key={user.id} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-muted-foreground text-sm font-bold">
+                                        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground text-sm font-bold">
                                             {user.name?.charAt(0).toUpperCase() || 'U'}
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-zinc-200">{user.name}</p>
+                                            <p className="text-sm font-medium text-foreground">{user.name}</p>
                                             <p className="text-xs text-muted-foreground">{user.email}</p>
                                         </div>
                                     </div>
@@ -196,7 +196,7 @@ export default function AdminDashboard() {
 
                 {/* System Status */}
                 <div className="bg-card border border-border rounded-2xl p-6">
-                    <h3 className="text-lg font-bold text-white mb-6">System Status</h3>
+                    <h3 className="text-lg font-bold text-foreground mb-6">System Status</h3>
                     <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 bg-background/40 rounded-xl border border-border">
                             <div className="flex items-center gap-3">

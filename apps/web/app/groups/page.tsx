@@ -12,7 +12,7 @@ export default function GroupsPage() {
             <div className="w-16 h-16 bg-card rounded-2xl flex items-center justify-center mb-6">
                 <Users size={32} className="text-zinc-600" />
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">No group selected</h1>
+            <h1 className="text-2xl font-bold text-foreground mb-2">No group selected</h1>
             <p className="text-muted-foreground mb-8 max-w-sm">
                 Choose a group from the left to see its books and chat, or create a new community.
             </p>

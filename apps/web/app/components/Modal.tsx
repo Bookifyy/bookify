@@ -27,10 +27,10 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             />
             <div className="relative bg-card border border-border rounded-xl max-w-md w-full p-6 shadow-2xl scale-100 opacity-100 transition-all">
                 <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-bold text-white">{title}</h3>
+                    <h3 className="text-xl font-bold text-foreground">{title}</h3>
                     <button
                         onClick={onClose}
-                        className="p-1 hover:bg-zinc-800 rounded-lg transition-colors text-muted-foreground hover:text-white"
+                        className="p-1 hover:bg-muted rounded-lg transition-colors text-muted-foreground hover:text-foreground"
                     >
                         <X size={20} />
                     </button>

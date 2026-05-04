@@ -49,7 +49,7 @@ export default function LoginPage() {
     return (
         <div className="flex min-h-screen flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-background relative">
             <div className="absolute top-6 left-6 sm:top-8 sm:left-8">
-                <Link href="/onboarding" className="flex items-center text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors">
+                <Link href="/onboarding" className="flex items-center text-sm font-medium text-muted-foreground hover:text-zinc-900 dark:text-muted-foreground dark:hover:text-foreground transition-colors">
                     <svg className="mr-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
@@ -91,7 +91,7 @@ export default function LoginPage() {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 placeholder-zinc-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+                                    className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 placeholder-zinc-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-muted dark:border-zinc-700 dark:text-foreground"
                                 />
                             </div>
                         </div>
@@ -119,7 +119,7 @@ export default function LoginPage() {
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 placeholder-zinc-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+                                    className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 placeholder-zinc-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-muted dark:border-zinc-700 dark:text-foreground"
                                 />
                             </div>
                         </div>
@@ -153,7 +153,7 @@ export default function LoginPage() {
                                     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
                                     window.location.href = `${apiUrl}/api/auth/google/redirect`;
                                 }}
-                                className="flex w-full items-center justify-center rounded-md border border-zinc-300 bg-white py-2 px-4 text-sm font-medium text-muted-foreground shadow-sm hover:bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 dark:text-muted-foreground dark:hover:bg-zinc-700"
+                                className="flex w-full items-center justify-center rounded-md border border-zinc-300 bg-white py-2 px-4 text-sm font-medium text-muted-foreground shadow-sm hover:bg-zinc-50 dark:bg-muted dark:border-zinc-700 dark:text-muted-foreground dark:hover:bg-zinc-700"
                             >
                                 <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                                     <path
@@ -170,7 +170,7 @@ export default function LoginPage() {
                                     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
                                     window.location.href = `${apiUrl}/api/auth/facebook/redirect`;
                                 }}
-                                className="flex w-full items-center justify-center rounded-md border border-zinc-300 bg-white py-2 px-4 text-sm font-medium text-muted-foreground shadow-sm hover:bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 dark:text-muted-foreground dark:hover:bg-zinc-700"
+                                className="flex w-full items-center justify-center rounded-md border border-zinc-300 bg-white py-2 px-4 text-sm font-medium text-muted-foreground shadow-sm hover:bg-zinc-50 dark:bg-muted dark:border-zinc-700 dark:text-muted-foreground dark:hover:bg-zinc-700"
                             >
                                 <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.791-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -180,7 +180,7 @@ export default function LoginPage() {
 
                             <Link
                                 href="/register"
-                                className="flex w-full justify-center rounded-md border border-zinc-300 bg-white py-2 px-4 text-sm font-medium text-muted-foreground shadow-sm hover:bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 dark:text-muted-foreground dark:hover:bg-zinc-700"
+                                className="flex w-full justify-center rounded-md border border-zinc-300 bg-white py-2 px-4 text-sm font-medium text-muted-foreground shadow-sm hover:bg-zinc-50 dark:bg-muted dark:border-zinc-700 dark:text-muted-foreground dark:hover:bg-zinc-700"
                             >
                                 Create new account
                             </Link>

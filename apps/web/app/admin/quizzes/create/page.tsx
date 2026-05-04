@@ -99,11 +99,11 @@ export default function CreateQuizPage() {
     return (
         <div className="max-w-3xl mx-auto space-y-6">
             <div className="flex items-center gap-4">
-                <Link href="/admin/quizzes" className="p-2 hover:bg-zinc-800 rounded-lg text-muted-foreground hover:text-white transition-colors">
+                <Link href="/admin/quizzes" className="p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors">
                     <ArrowLeft size={20} />
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-bold text-white mb-1">Create New Quiz</h1>
+                    <h1 className="text-2xl font-bold text-foreground mb-1">Create New Quiz</h1>
                     <p className="text-muted-foreground text-sm">Set up the basic information for the quiz.</p>
                 </div>
             </div>
@@ -119,7 +119,7 @@ export default function CreateQuizPage() {
                         value={title}
                         onChange={e => setTitle(e.target.value)}
                         placeholder="e.g., Calculus - Chapter 1 Review"
-                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     />
                 </div>
 
@@ -131,7 +131,7 @@ export default function CreateQuizPage() {
                         onChange={e => setDescription(e.target.value)}
                         placeholder="Briefly describe what this quiz covers..."
                         rows={3}
-                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
                     />
                 </div>
 
@@ -150,7 +150,7 @@ export default function CreateQuizPage() {
                                 file:mr-4 file:py-2.5 file:px-4
                                 file:rounded-lg file:border-0
                                 file:text-sm file:font-semibold
-                                file:bg-zinc-800 file:text-white
+                                file:bg-muted file:text-foreground
                                 hover:file:bg-zinc-700
                                 cursor-pointer"
                         />
@@ -169,7 +169,7 @@ export default function CreateQuizPage() {
                     <select
                         value={bookId}
                         onChange={e => setBookId(e.target.value)}
-                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     >
                         <option value="">-- No specific book --</option>
                         {books.map(book => (
@@ -192,7 +192,7 @@ export default function CreateQuizPage() {
                             max="180"
                             value={timeLimit}
                             onChange={e => setTimeLimit(parseInt(e.target.value))}
-                            className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                            className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                         />
                     </div>
 
@@ -209,7 +209,7 @@ export default function CreateQuizPage() {
                                 max="100"
                                 value={passingScore}
                                 onChange={e => setPassingScore(parseInt(e.target.value))}
-                                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                                className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                             />
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
                         </div>
@@ -241,7 +241,7 @@ export default function CreateQuizPage() {
                     <div className="pt-4">
                         <button
                             onClick={() => setShowModal(false)}
-                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                            className="w-full bg-muted hover:bg-zinc-700 text-foreground py-3 rounded-lg font-bold transition-colors"
                         >
                             Close
                         </button>

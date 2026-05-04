@@ -183,24 +183,24 @@ export default function LibraryPage() {
                     <div>
                         {viewingCollectionId ? (
                             <div className="flex items-center gap-2">
-                                <button onClick={() => setViewingCollectionId(null)} className="text-muted-foreground hover:text-white transition-colors">
+                                <button onClick={() => setViewingCollectionId(null)} className="text-muted-foreground hover:text-foreground transition-colors">
                                     <ArrowLeft size={18} />
                                 </button>
-                                <h1 className="text-base font-medium text-white tracking-wide font-serif">
+                                <h1 className="text-base font-medium text-foreground tracking-wide font-serif">
                                     {collections.find(c => c.id === viewingCollectionId)?.name}
                                 </h1>
                             </div>
                         ) : (
-                            <h1 className="text-base font-medium text-white tracking-wide font-serif">Your Library</h1>
+                            <h1 className="text-base font-medium text-foreground tracking-wide font-serif">Your Library</h1>
                         )}
                     </div>
 
                     {!viewingCollectionId && (
                         <div className="flex items-center gap-1">
-                            <button className="p-1.5 text-muted-foreground hover:text-white bg-card rounded-md transition-colors">
+                            <button className="p-1.5 text-muted-foreground hover:text-foreground bg-card rounded-md transition-colors">
                                 <Grid size={14} />
                             </button>
-                            <button className="p-1.5 text-muted-foreground hover:text-white hover:bg-card rounded-md transition-colors">
+                            <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-card rounded-md transition-colors">
                                 <ListIcon size={14} />
                             </button>
                         </div>
@@ -219,7 +219,7 @@ export default function LibraryPage() {
                                         onClick={() => setSortBy(type as 'recent' | 'title' | 'author' | 'progress')}
                                         className={`px-4 py-1.5 rounded-lg text-[13px] font-medium transition-all border ${sortBy === type
                                             ? 'bg-blue-600 border-blue-600 text-white'
-                                            : 'bg-card border-border text-muted-foreground hover:text-white hover:border-zinc-700'
+                                            : 'bg-card border-border text-muted-foreground hover:text-foreground hover:border-zinc-700'
                                             }`}
                                     >
                                         {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -283,7 +283,7 @@ export default function LibraryPage() {
                                     <div className="bg-card p-4 rounded-full mb-4">
                                         <LibraryIcon size={32} className="text-zinc-700" />
                                     </div>
-                                    <h3 className="text-lg font-medium text-white mb-1">No books found</h3>
+                                    <h3 className="text-lg font-medium text-foreground mb-1">No books found</h3>
                                     <p className="text-muted-foreground text-sm">
                                         {viewingCollectionId ? "This collection is empty." : "Your library is waiting for its first story."}
                                     </p>
@@ -319,13 +319,13 @@ export default function LibraryPage() {
                                                     {/* Mock Avatar Stack */}
                                                     <div className="flex -space-x-3">
                                                         {[1, 2, 3].map(i => (
-                                                            <div key={i} className="w-10 h-10 rounded-full bg-zinc-800 border-2 border-black flex items-center justify-center">
+                                                            <div key={i} className="w-10 h-10 rounded-full bg-muted border-2 border-black flex items-center justify-center">
                                                                 <LibraryIcon size={14} className="text-zinc-600" />
                                                             </div>
                                                         ))}
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-base font-semibold text-white font-serif">{collection.name}</h3>
+                                                        <h3 className="text-base font-semibold text-foreground font-serif">{collection.name}</h3>
                                                         <p className="text-xs text-muted-foreground font-medium">{collection.bookIds.length} books</p>
                                                     </div>
                                                 </div>

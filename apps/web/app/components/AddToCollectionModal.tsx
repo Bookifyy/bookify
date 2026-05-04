@@ -132,8 +132,8 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
             <div className="bg-[#121212] border border-border rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl">
                 {/* Header */}
                 <div className="p-5 border-b border-border flex items-center justify-between">
-                    <h3 className="font-semibold text-white">Add to Collection</h3>
-                    <button onClick={onClose} className="text-muted-foreground hover:text-white transition-colors">
+                    <h3 className="font-semibold text-foreground">Add to Collection</h3>
+                    <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
                         <X size={20} />
                     </button>
                 </div>
@@ -145,7 +145,7 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                         placeholder="Search or create collection..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-[#1f1f1f] border-none rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all placeholder:text-muted-foreground"
+                        className="w-full bg-[#1f1f1f] border-none rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all placeholder:text-muted-foreground"
                     />
                 </div>
 
@@ -160,7 +160,7 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                                     onClick={() => toggleBookInCollection(collection.id)}
                                     className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${isAdded
                                             ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-200'
-                                            : 'bg-zinc-800/30 border-border/50 text-muted-foreground hover:bg-zinc-800 hover:border-zinc-700'
+                                            : 'bg-muted/30 border-border/50 text-muted-foreground hover:bg-muted hover:border-zinc-700'
                                         }`}
                                 >
                                     <span className="font-medium">{collection.name}</span>
@@ -187,7 +187,7 @@ export function AddToCollectionModal({ bookId, collections, onClose, onUpdateCol
                 <div className="p-5 bg-[#0a0a0a] border-t border-border flex gap-3">
                     <button 
                         onClick={onClose} 
-                        className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-muted-foreground font-medium py-2.5 rounded-xl transition-colors"
+                        className="flex-1 bg-muted hover:bg-zinc-700 text-muted-foreground font-medium py-2.5 rounded-xl transition-colors"
                     >
                         Cancel
                     </button>

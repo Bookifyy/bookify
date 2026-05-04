@@ -123,8 +123,8 @@ export default function BookDetailPage() {
                                 className="w-full h-auto object-contain cursor-pointer"
                             />
                         ) : (
-                            <div className="w-full aspect-[2/3] bg-zinc-800 flex items-center justify-center">
-                                <BookOpen className="text-zinc-600" size={60} />
+                            <div className="w-full aspect-[2/3] bg-muted flex items-center justify-center">
+                                <BookOpen className="text-muted-foreground" size={60} />
                             </div>
                         )}
                     </div>
@@ -250,7 +250,7 @@ export default function BookDetailPage() {
                                 </span>
                                 {showAccessibility && (
                                     <div className="mt-4 mb-4 border border-border rounded-lg bg-card p-5 shadow-lg relative">
-                                        <button onClick={() => setShowAccessibility(false)} className="absolute top-3 right-3 text-muted-foreground hover:text-white"><X size={16} /></button>
+                                        <button onClick={() => setShowAccessibility(false)} className="absolute top-3 right-3 text-muted-foreground hover:text-foreground"><X size={16} /></button>
                                         <h3 className="font-bold text-sm mb-4 pr-6">Accessibility features for this Bookify book (as provided by the publisher)</h3>
                                         
                                         <div className="space-y-4 text-xs">
@@ -344,7 +344,7 @@ export default function BookDetailPage() {
 
                         {/* Rate Feedback */}
                         <div className="mt-12 flex flex-col items-center justify-center border-t border-border pt-8 relative">
-                            <button className="absolute top-8 right-2 text-muted-foreground hover:text-white"><X size={16} /></button>
+                            <button className="absolute top-8 right-2 text-muted-foreground hover:text-foreground"><X size={16} /></button>
                             <h4 className="font-bold text-sm mb-6">Rate today's book shopping experience</h4>
                             <div className="flex items-center gap-2 md:gap-4 lg:gap-8 min-w-[280px] justify-between">
                                 {['Very poor', 'Poor', 'Neutral', 'Good', 'Great'].map((label, idx) => (

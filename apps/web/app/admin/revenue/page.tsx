@@ -29,10 +29,10 @@ export default function RevenuePage() {
         <div className="space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Revenue & Subscriptions</h1>
+                    <h1 className="text-3xl font-bold text-foreground tracking-tight">Revenue & Subscriptions</h1>
                     <p className="text-muted-foreground">Financial overview and transaction history.</p>
                 </div>
-                <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
+                <button className="bg-green-600 hover:bg-green-700 text-foreground px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
                     <Download size={18} /> Download Report
                 </button>
             </div>
@@ -44,7 +44,7 @@ export default function RevenuePage() {
                         <DollarSign size={24} />
                     </div>
                     <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider mb-1">Total Revenue (YTD)</p>
-                    <h3 className="text-3xl font-serif font-bold text-white mb-2">$84,230</h3>
+                    <h3 className="text-3xl font-serif font-bold text-foreground mb-2">$84,230</h3>
                     <span className="text-green-500 text-xs font-bold bg-green-500/10 px-2 py-1 rounded">+18% vs last year</span>
                 </div>
                 <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden">
@@ -52,7 +52,7 @@ export default function RevenuePage() {
                         <CreditCard size={24} />
                     </div>
                     <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider mb-1">Active Subscriptions</p>
-                    <h3 className="text-3xl font-serif font-bold text-white mb-2">1,240</h3>
+                    <h3 className="text-3xl font-serif font-bold text-foreground mb-2">1,240</h3>
                     <span className="text-blue-500 text-xs font-bold bg-blue-500/10 px-2 py-1 rounded">+5% this month</span>
                 </div>
                 <div className="bg-card border border-border p-6 rounded-2xl relative overflow-hidden">
@@ -60,7 +60,7 @@ export default function RevenuePage() {
                         <TrendingUp size={24} />
                     </div>
                     <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider mb-1">MRR</p>
-                    <h3 className="text-3xl font-serif font-bold text-white mb-2">$14,880</h3>
+                    <h3 className="text-3xl font-serif font-bold text-foreground mb-2">$14,880</h3>
                     <span className="text-purple-500 text-xs font-bold bg-purple-500/10 px-2 py-1 rounded">Monthly Recurring Revenue</span>
                 </div>
             </div>
@@ -68,7 +68,7 @@ export default function RevenuePage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Revenue Chart */}
                 <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6">
-                    <h3 className="text-lg font-bold text-white mb-6">Revenue Growth</h3>
+                    <h3 className="text-lg font-bold text-foreground mb-6">Revenue Growth</h3>
                     <div className="h-80">
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={revenueData}>
@@ -93,16 +93,16 @@ export default function RevenuePage() {
 
                 {/* Recent Transactions */}
                 <div className="bg-card border border-border rounded-2xl p-6">
-                    <h3 className="text-lg font-bold text-white mb-4">Recent Transactions</h3>
+                    <h3 className="text-lg font-bold text-foreground mb-4">Recent Transactions</h3>
                     <div className="space-y-4">
                         {transactions.map((trx, i) => (
                             <div key={i} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
                                 <div>
-                                    <p className="text-sm font-medium text-white">{trx.user}</p>
+                                    <p className="text-sm font-medium text-foreground">{trx.user}</p>
                                     <p className="text-xs text-muted-foreground">{trx.plan} • {trx.date}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm font-bold text-white">{trx.amount}</p>
+                                    <p className="text-sm font-bold text-foreground">{trx.amount}</p>
                                     <p className={`text-[10px] font-bold ${trx.status === 'Completed' ? 'text-green-500' : 'text-red-500'}`}>
                                         {trx.status}
                                     </p>
@@ -110,7 +110,7 @@ export default function RevenuePage() {
                             </div>
                         ))}
                     </div>
-                    <button className="w-full mt-4 py-2 text-sm font-bold text-muted-foreground hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
+                    <button className="w-full mt-4 py-2 text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
                         View All Transactions
                     </button>
                 </div>

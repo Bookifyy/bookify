@@ -114,14 +114,14 @@ export default function GroupNotesPage() {
                 {notes.length === 0 ? (
                     <div className="col-span-full text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
                         <FileText className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-                        <h3 className="text-lg font-medium text-white mb-1">No notes yet</h3>
+                        <h3 className="text-lg font-medium text-foreground mb-1">No notes yet</h3>
                         <p className="text-muted-foreground text-sm">Share study notes with your group.</p>
                     </div>
                 ) : (
                     notes.map(note => (
                         <div key={note.id} className="bg-card border border-border rounded-xl p-5 flex flex-col group hover:border-zinc-700 transition-colors">
                             <div className="flex justify-between items-start mb-3">
-                                <h3 className="text-lg font-bold text-white line-clamp-1">{note.title}</h3>
+                                <h3 className="text-lg font-bold text-foreground line-clamp-1">{note.title}</h3>
                                 {note.user.id === user?.id && (
                                     <button
                                         onClick={() => handleDelete(note.id)}
@@ -149,8 +149,8 @@ export default function GroupNotesPage() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
                     <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl p-6">
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-bold text-white">Create Note</h2>
-                            <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-white">
+                            <h2 className="text-xl font-bold text-foreground">Create Note</h2>
+                            <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground">
                                 <X size={24} />
                             </button>
                         </div>
@@ -162,7 +162,7 @@ export default function GroupNotesPage() {
                                     required
                                     value={title}
                                     onChange={e => setTitle(e.target.value)}
-                                    className="w-full bg-background border border-border rounded-lg px-4 py-2 text-white focus:border-indigo-500 outline-none"
+                                    className="w-full bg-background border border-border rounded-lg px-4 py-2 text-foreground focus:border-indigo-500 outline-none"
                                     placeholder="Chapter 1 Summary"
                                 />
                             </div>
@@ -173,7 +173,7 @@ export default function GroupNotesPage() {
                                     rows={5}
                                     value={content}
                                     onChange={e => setContent(e.target.value)}
-                                    className="w-full bg-background border border-border rounded-lg px-4 py-2 text-white focus:border-indigo-500 outline-none resize-none"
+                                    className="w-full bg-background border border-border rounded-lg px-4 py-2 text-foreground focus:border-indigo-500 outline-none resize-none"
                                     placeholder="Write your notes here..."
                                 />
                             </div>
@@ -181,7 +181,7 @@ export default function GroupNotesPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowModal(false)}
-                                    className="px-4 py-2 text-muted-foreground hover:text-white"
+                                    className="px-4 py-2 text-muted-foreground hover:text-foreground"
                                 >
                                     Cancel
                                 </button>

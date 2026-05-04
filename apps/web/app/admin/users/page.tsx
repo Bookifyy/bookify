@@ -94,7 +94,7 @@ export default function AdminUsersPage() {
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">User Management</h1>
+                    <h1 className="text-3xl font-bold text-foreground tracking-tight">User Management</h1>
                     <p className="text-muted-foreground text-sm">Manage user access, roles, and status.</p>
                 </div>
 
@@ -103,7 +103,7 @@ export default function AdminUsersPage() {
                     <input
                         type="text"
                         placeholder="Search users..."
-                        className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
+                        className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -131,14 +131,14 @@ export default function AdminUsersPage() {
                                 <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">No users found.</td></tr>
                             ) : (
                                 filteredUsers.map(user => (
-                                    <tr key={user.id} className="group hover:bg-zinc-800/30 transition-colors">
+                                    <tr key={user.id} className="group hover:bg-muted/30 transition-colors">
                                         <td className="p-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-9 h-9 rounded-full bg-indigo-500/10 text-indigo-500 flex items-center justify-center font-bold text-sm">
                                                     {user.name.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div>
-                                                    <p className="font-medium text-white text-sm">{user.name}</p>
+                                                    <p className="font-medium text-foreground text-sm">{user.name}</p>
                                                     <p className="text-xs text-muted-foreground">{user.email}</p>
                                                 </div>
                                             </div>
@@ -163,7 +163,7 @@ export default function AdminUsersPage() {
                                         </td>
                                         <td className="p-4 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button className="p-2 hover:bg-zinc-800 rounded-lg text-muted-foreground hover:text-white transition-colors" title="Edit">
+                                                <button className="p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors" title="Edit">
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button

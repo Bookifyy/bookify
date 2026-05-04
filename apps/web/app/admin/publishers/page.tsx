@@ -22,7 +22,7 @@ export default function PublishersPage() {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Publisher Management</h1>
+                    <h1 className="text-3xl font-bold text-foreground tracking-tight">Publisher Management</h1>
                     <p className="text-muted-foreground text-sm">Manage publishing partners and content sources.</p>
                 </div>
 
@@ -32,7 +32,7 @@ export default function PublishersPage() {
                         <input
                             type="text"
                             placeholder="Search publishers..."
-                            className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
+                            className="bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground focus:ring-2 focus:ring-indigo-600 outline-none w-full md:w-64"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -50,15 +50,15 @@ export default function PublishersPage() {
                 {filteredPublishers.map((publisher) => (
                     <div key={publisher.id} className="bg-card border border-border rounded-2xl p-6 group hover:border-zinc-700 transition-all">
                         <div className="flex justify-between items-start mb-4">
-                            <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-muted-foreground">
+                            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
                                 <Building2 size={24} />
                             </div>
-                            <button className="text-muted-foreground hover:text-white">
+                            <button className="text-muted-foreground hover:text-foreground">
                                 <MoreVertical size={20} />
                             </button>
                         </div>
 
-                        <h3 className="text-lg font-bold text-white mb-1">{publisher.name}</h3>
+                        <h3 className="text-lg font-bold text-foreground mb-1">{publisher.name}</h3>
                         <p className="text-xs text-muted-foreground mb-4">{publisher.country}</p>
 
                         <div className="space-y-2 mb-6">
@@ -73,7 +73,7 @@ export default function PublishersPage() {
                         <div className="flex items-center justify-between pt-4 border-t border-border">
                             <div className="text-xs">
                                 <span className="block text-muted-foreground">Books</span>
-                                <span className="font-bold text-white">{publisher.books}</span>
+                                <span className="font-bold text-foreground">{publisher.books}</span>
                             </div>
                             <div className="text-xs">
                                 <span className="block text-muted-foreground">Status</span>

@@ -49,7 +49,7 @@ export function RemoveMemberModal({ isOpen, onClose, groupId, userId, userName, 
             <div className="bg-card border border-border rounded-2xl w-full max-w-sm shadow-2xl p-6 relative">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-muted-foreground hover:text-white transition-colors"
+                    className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
                 >
                     <X size={20} />
                 </button>
@@ -59,15 +59,15 @@ export function RemoveMemberModal({ isOpen, onClose, groupId, userId, userName, 
                         <AlertTriangle className="text-red-500" size={24} />
                     </div>
 
-                    <h2 className="text-xl font-bold text-white mb-2">Remove Member?</h2>
+                    <h2 className="text-xl font-bold text-foreground mb-2">Remove Member?</h2>
                     <p className="text-muted-foreground mb-6">
-                        Are you sure you want to remove <span className="text-white font-semibold">{userName}</span> from the group? This action cannot be undone.
+                        Are you sure you want to remove <span className="text-foreground font-semibold">{userName}</span> from the group? This action cannot be undone.
                     </p>
 
                     <div className="flex gap-3 w-full">
                         <button
                             onClick={onClose}
-                            className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-bold transition-colors"
+                            className="flex-1 py-3 bg-muted hover:bg-zinc-700 text-foreground rounded-xl font-bold transition-colors"
                         >
                             Cancel
                         </button>

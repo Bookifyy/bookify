@@ -127,14 +127,14 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
             <div className="bg-[#0a0a0a] border border-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl relative">
                 <div className="p-6">
                     <div className="mb-6">
-                        <h2 className="text-xl font-bold text-white mb-1">Share Collection</h2>
+                        <h2 className="text-xl font-bold text-foreground mb-1">Share Collection</h2>
                         <p className="text-sm text-muted-foreground">Share &quot;{collectionName}&quot; with others</p>
                     </div>
 
                     <div className="space-y-6">
                         {/* Search and Invite Section */}
                         <div className="space-y-3">
-                            <label className="text-sm font-medium text-white block">Invite Users</label>
+                            <label className="text-sm font-medium text-foreground block">Invite Users</label>
                             
                             <div className="flex gap-3">
                                 <div className="flex-1 relative">
@@ -143,7 +143,7 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         placeholder="Search by name or email..."
-                                        className="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 pr-10 text-white transition-all placeholder:text-zinc-600 focus:outline-none focus:border-[#0ea5e9]"
+                                        className="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 pr-10 text-foreground transition-all placeholder:text-zinc-600 focus:outline-none focus:border-[#0ea5e9]"
                                         autoFocus
                                     />
                                     {searchTerm && (
@@ -169,13 +169,13 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                                             <button
                                                                 key={user.id}
                                                                 onClick={() => handleInviteDBUser(user)}
-                                                                className="w-full flex items-center gap-3 p-3 hover:bg-zinc-800/50 transition-colors text-left"
+                                                                className="w-full flex items-center gap-3 p-3 hover:bg-muted/50 transition-colors text-left"
                                                             >
                                                                 <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold uppercase">
                                                                     {user.name.charAt(0)}
                                                                 </div>
                                                                 <div>
-                                                                    <p className="text-sm font-medium text-white">{user.name}</p>
+                                                                    <p className="text-sm font-medium text-foreground">{user.name}</p>
                                                                     <p className="text-xs text-muted-foreground">{user.email}</p>
                                                                 </div>
                                                             </button>
@@ -188,13 +188,13 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                                     {isEmailFormat && (
                                                         <button 
                                                             onClick={handleInviteEmail}
-                                                            className="w-full flex items-center gap-3 p-3 hover:bg-zinc-800/50 transition-colors border-t border-border"
+                                                            className="w-full flex items-center gap-3 p-3 hover:bg-muted/50 transition-colors border-t border-border"
                                                         >
                                                             <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">
                                                                 <Send size={14} />
                                                             </div>
                                                             <div className="text-left">
-                                                                <p className="text-sm font-medium text-white">Send Email Invite</p>
+                                                                <p className="text-sm font-medium text-foreground">Send Email Invite</p>
                                                                 <p className="text-xs text-emerald-500">{searchTerm}</p>
                                                             </div>
                                                         </button>
@@ -207,7 +207,7 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                 <select 
                                     value={role}
                                     onChange={(e) => setRole(e.target.value)}
-                                    className="bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-[#0ea5e9]"
+                                    className="bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-[#0ea5e9]"
                                 >
                                     <option value="Viewer">Viewer</option>
                                     <option value="Editor">Editor</option>
@@ -225,7 +225,7 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                         {/* Allowed Users List */}
                         {invitedUsers.length > 0 && (
                             <div className="pt-6 border-t border-border">
-                                <h4 className="text-sm font-medium text-white mb-3">People with access</h4>
+                                <h4 className="text-sm font-medium text-foreground mb-3">People with access</h4>
                                 <div className="space-y-3">
                                     {invitedUsers.map(user => (
                                         <div key={user.id} className="flex items-center justify-between">
@@ -234,7 +234,7 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                                                     {user.type === 'db' ? user.name.charAt(0) : '@'}
                                                 </div>
                                                 <div>
-                                                    <p className="text-sm font-medium text-white">{user.name}</p>
+                                                    <p className="text-sm font-medium text-foreground">{user.name}</p>
                                                     <p className="text-xs text-muted-foreground">{user.email}</p>
                                                 </div>
                                             </div>
@@ -252,7 +252,7 @@ export function ShareCollectionModal({ isOpen, onClose, collectionId, collection
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-white border border-transparent hover:border-border transition-colors"
+                        className="px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground border border-transparent hover:border-border transition-colors"
                     >
                         Cancel
                     </button>

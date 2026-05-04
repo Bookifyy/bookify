@@ -93,8 +93,8 @@ export function InviteMemberModal({ isOpen, onClose, groupId }: { isOpen: boolea
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
             <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
                 <div className="flex items-center justify-between p-6 border-b border-border">
-                    <h2 className="text-xl font-bold text-white">Invite Members</h2>
-                    <button onClick={onClose} className="text-muted-foreground hover:text-white transition-colors">
+                    <h2 className="text-xl font-bold text-foreground">Invite Members</h2>
+                    <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
                         <X size={24} />
                     </button>
                 </div>
@@ -106,7 +106,7 @@ export function InviteMemberModal({ isOpen, onClose, groupId }: { isOpen: boolea
                             type="text"
                             value={search}
                             onChange={(e) => handleSearch(e.target.value)}
-                            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-foreground focus:outline-none focus:border-indigo-500"
                             placeholder="Search contacts..."
                         />
                     </div>
@@ -125,13 +125,13 @@ export function InviteMemberModal({ isOpen, onClose, groupId }: { isOpen: boolea
                                     <button
                                         key={user.id}
                                         onClick={() => toggleUser(user.id)}
-                                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all ${isSelected ? 'bg-indigo-600/10 border border-indigo-500/50' : 'hover:bg-zinc-800 border border-transparent'}`}
+                                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all ${isSelected ? 'bg-indigo-600/10 border border-indigo-500/50' : 'hover:bg-muted border border-transparent'}`}
                                     >
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${isSelected ? 'bg-indigo-600 text-white' : 'bg-zinc-800 text-muted-foreground'}`}>
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${isSelected ? 'bg-indigo-600 text-white' : 'bg-muted text-muted-foreground'}`}>
                                             {user.name.charAt(0)}
                                         </div>
                                         <div className="flex-1 text-left">
-                                            <div className={`font-medium ${isSelected ? 'text-indigo-400' : 'text-white'}`}>{user.name}</div>
+                                            <div className={`font-medium ${isSelected ? 'text-indigo-400' : 'text-foreground'}`}>{user.name}</div>
                                             <div className="text-xs text-muted-foreground">{user.email}</div>
                                         </div>
                                         <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-zinc-600'}`}>

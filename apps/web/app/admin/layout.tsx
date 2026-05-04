@@ -98,7 +98,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
             `}>
                 <div className="p-6 border-b border-border flex items-center justify-between">
-                    <div className="flex items-center gap-2 font-serif font-bold text-xl tracking-tighter text-white">
+                    <div className="flex items-center gap-2 font-serif font-bold text-xl tracking-tighter text-foreground">
                         <span className="w-8 h-8 bg-white text-black rounded-lg flex items-center justify-center font-sans text-lg">B</span>
                         <span>Bookify Admin</span>
                     </div>
@@ -125,7 +125,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                                 flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors
                                                 ${isActive
                                                     ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)]'
-                                                    : 'text-muted-foreground hover:text-white hover:bg-zinc-800'}
+                                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'}
                                             `}
                                         >
                                             <item.icon size={18} />
@@ -145,13 +145,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 {user?.name?.charAt(0) || 'A'}
                             </div>
                             <div className="overflow-hidden">
-                                <p className="text-sm font-medium text-white truncate">{user?.name}</p>
+                                <p className="text-sm font-medium text-foreground truncate">{user?.name}</p>
                                 <p className="text-xs text-muted-foreground truncate">Administrator</p>
                             </div>
                         </div>
                         <Link
                             href="/"
-                            className="w-full flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground hover:text-white hover:bg-zinc-800 py-2 rounded-lg transition-colors mb-1"
+                            className="w-full flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted py-2 rounded-lg transition-colors mb-1"
                         >
                             <LogOut size={14} className="rotate-180" />
                             Back to App
@@ -174,7 +174,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <button onClick={() => setIsSidebarOpen(true)} className="text-muted-foreground">
                         <Menu size={24} />
                     </button>
-                    <span className="ml-4 font-bold text-white">Admin Panel</span>
+                    <span className="ml-4 font-bold text-foreground">Admin Panel</span>
                 </header>
 
                 <div className="p-4 md:p-8 max-w-7xl mx-auto">

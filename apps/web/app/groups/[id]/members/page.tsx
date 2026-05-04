@@ -94,7 +94,7 @@ export default function GroupMembersPage() {
                 {currentUserRole !== 'owner' && (
                     <button
                         onClick={handleLeaveGroup}
-                        className="px-4 py-3 bg-zinc-800 hover:bg-red-500/20 hover:text-red-500 text-muted-foreground rounded-xl font-bold transition-all flex items-center justify-center gap-2 border border-zinc-700 hover:border-red-500/50"
+                        className="px-4 py-3 bg-muted hover:bg-red-500/20 hover:text-red-500 text-muted-foreground rounded-xl font-bold transition-all flex items-center justify-center gap-2 border border-zinc-700 hover:border-red-500/50"
                         title="Leave Group"
                     >
                         <UserX size={20} />
@@ -105,12 +105,12 @@ export default function GroupMembersPage() {
             <div className="space-y-4">
                 {members.map(member => (
                     <div key={member.id} className="bg-card border border-border rounded-xl p-4 flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-white">
+                        <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center font-bold text-foreground">
                             {member.user.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                                <h3 className="font-bold text-white truncate">{member.user.name}</h3>
+                                <h3 className="font-bold text-foreground truncate">{member.user.name}</h3>
                                 {member.role === 'owner' && <span className="text-[10px] bg-indigo-500/20 text-indigo-400 px-1.5 py-0.5 rounded uppercase tracking-wide">Owner</span>}
                                 {member.user.id === user?.id && <span className="text-[10px] bg-zinc-700 text-muted-foreground px-1.5 py-0.5 rounded uppercase tracking-wide">You</span>}
                                 {member.status === 'pending' && <span className="text-[10px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded uppercase tracking-wide">Pending</span>}

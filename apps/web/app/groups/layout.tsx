@@ -77,7 +77,7 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
             `}>
                 <div className="p-4 border-b border-border">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold text-white">Groups</h2>
+                        <h2 className="text-xl font-bold text-foreground">Groups</h2>
                         <button
                             onClick={() => setShowCreateModal(true)}
                             className="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors"
@@ -93,7 +93,7 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                             placeholder="Search groups..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-sm text-foreground focus:outline-none focus:border-indigo-500"
                         />
                     </div>
                 </div>
@@ -124,14 +124,14 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
                                 >
                                     <div className="flex items-start gap-3">
                                         <div className={`
-                                            w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-white
-                                            ${isActive ? 'bg-indigo-600' : 'bg-zinc-800'}
+                                            w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-foreground
+                                            ${isActive ? 'bg-indigo-600' : 'bg-muted'}
                                         `}>
                                             <Users size={20} />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between items-start">
-                                                <h3 className={`font-medium truncate ${isActive ? 'text-white' : 'text-muted-foreground'}`}>
+                                                <h3 className={`font-medium truncate ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
                                                     {group.name}
                                                 </h3>
                                             </div>

@@ -124,7 +124,7 @@ export default function CollectionsPage() {
                             <Layers className="text-blue-500" size={24} />
                         </div>
                         <div>
-                            <h1 className="text-xl font-medium text-white tracking-wide">Collections</h1>
+                            <h1 className="text-xl font-medium text-foreground tracking-wide">Collections</h1>
                             <p className="text-sm text-muted-foreground mt-0.5">Curated playlists and smart collections</p>
                         </div>
                     </div>
@@ -146,7 +146,7 @@ export default function CollectionsPage() {
                         onClick={() => setActiveTab('my')}
                         className={`flex-1 py-3 text-sm font-medium rounded-full transition-all ${
                             activeTab === 'my'
-                                ? 'bg-[#18181b] text-white shadow-sm'
+                                ? 'bg-[#18181b] text-foreground shadow-sm'
                                 : 'text-muted-foreground hover:text-muted-foreground'
                         }`}
                     >
@@ -156,7 +156,7 @@ export default function CollectionsPage() {
                         onClick={() => setActiveTab('smart')}
                         className={`flex-1 py-3 text-sm font-medium rounded-full transition-all ${
                             activeTab === 'smart'
-                                ? 'bg-[#18181b] text-white shadow-sm'
+                                ? 'bg-[#18181b] text-foreground shadow-sm'
                                 : 'text-muted-foreground hover:text-muted-foreground'
                         }`}
                     >
@@ -208,7 +208,7 @@ export default function CollectionsPage() {
                                                 )}
 
                                                 {/* Item Count Badge */}
-                                                <div className="absolute bottom-3 left-4 bg-background/80 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide">
+                                                <div className="absolute bottom-3 left-4 bg-background/80 backdrop-blur-md text-foreground px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide">
                                                     {collection.bookIds.length} items
                                                 </div>
                                             </div>
@@ -216,10 +216,10 @@ export default function CollectionsPage() {
                                             {/* Content */}
                                             <div className="p-5 flex-1 flex flex-col">
                                                 <div className="flex items-start justify-between gap-4 mb-2">
-                                                    <h3 className="font-serif text-lg font-medium text-white line-clamp-1 leading-snug">
+                                                    <h3 className="font-serif text-lg font-medium text-foreground line-clamp-1 leading-snug">
                                                         {collection.name}
                                                     </h3>
-                                                    <button className="text-muted-foreground hover:text-white transition-colors p-1 -mr-1">
+                                                    <button className="text-muted-foreground hover:text-foreground transition-colors p-1 -mr-1">
                                                         <MoreVertical size={16} />
                                                     </button>
                                                 </div>
@@ -229,7 +229,7 @@ export default function CollectionsPage() {
 
                                                 <div className="flex items-center gap-3 mt-auto">
                                                     {/* Default Status Badge */}
-                                                    <div className="flex items-center gap-1.5 bg-[#0ea5e9] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                                    <div className="flex items-center gap-1.5 bg-[#0ea5e9] text-foreground px-3 py-1 rounded-full text-xs font-semibold">
                                                         <Lock size={12} className="text-yellow-300" />
                                                         <span>Private</span>
                                                     </div>
@@ -263,7 +263,7 @@ export default function CollectionsPage() {
                             <div className="bg-card p-4 rounded-full mb-4">
                                 <BookOpen size={32} className="text-zinc-700" />
                             </div>
-                            <h3 className="text-lg font-medium text-white mb-2 font-serif">No collections yet</h3>
+                            <h3 className="text-lg font-medium text-foreground mb-2 font-serif">No collections yet</h3>
                             <p className="text-muted-foreground text-sm max-w-md">
                                 You haven't created any collections yet. Go to your Library to create your first collection and organize your books!
                             </p>
@@ -273,7 +273,7 @@ export default function CollectionsPage() {
                             <div className="w-16 h-16 bg-card rounded-2xl flex items-center justify-center mb-4 border border-border">
                                 <Layers className="text-muted-foreground" size={32} />
                             </div>
-                            <h3 className="text-lg font-medium text-white mb-2 font-serif">Smart Collections</h3>
+                            <h3 className="text-lg font-medium text-foreground mb-2 font-serif">Smart Collections</h3>
                             <p className="text-muted-foreground text-sm max-w-md">
                                 Smart collections automatically organize your books based on tags, reading status, and authors. You haven't created any yet!
                             </p>

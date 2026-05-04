@@ -95,7 +95,7 @@ function ResetPasswordForm() {
                         required
                         readOnly
                         value={email}
-                        className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 bg-zinc-100 dark:bg-zinc-800 dark:border-zinc-700 dark:text-muted-foreground sm:text-sm"
+                        className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 bg-zinc-100 dark:bg-muted dark:border-zinc-700 dark:text-muted-foreground sm:text-sm"
                     />
                 </div>
             </div>
@@ -112,7 +112,7 @@ function ResetPasswordForm() {
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 placeholder-zinc-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+                        className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 placeholder-zinc-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-muted dark:border-zinc-700 dark:text-foreground"
                     />
                 </div>
             </div>
@@ -129,7 +129,7 @@ function ResetPasswordForm() {
                         required
                         value={passwordConfirmation}
                         onChange={(e) => setPasswordConfirmation(e.target.value)}
-                        className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 placeholder-zinc-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+                        className="block w-full appearance-none rounded-md border border-zinc-300 px-3 py-2 placeholder-zinc-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm dark:bg-muted dark:border-zinc-700 dark:text-foreground"
                     />
                 </div>
             </div>

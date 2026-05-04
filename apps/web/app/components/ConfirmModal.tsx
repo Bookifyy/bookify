@@ -51,7 +51,7 @@ export function ConfirmModal({
             <div className="relative bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl scale-100 animate-in fade-in zoom-in duration-200">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-muted-foreground hover:text-white transition-colors"
+                    className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
                 >
                     <X size={20} />
                 </button>
@@ -62,7 +62,7 @@ export function ConfirmModal({
                     </div>
 
                     <div className="space-y-2">
-                        <h3 className="text-xl font-bold text-white">{title}</h3>
+                        <h3 className="text-xl font-bold text-foreground">{title}</h3>
                         <p className="text-sm text-muted-foreground leading-relaxed">
                             {message}
                         </p>
@@ -71,7 +71,7 @@ export function ConfirmModal({
                     <div className="flex items-center gap-3 w-full mt-4">
                         <button
                             onClick={onClose}
-                            className="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white font-medium rounded-xl transition-colors"
+                            className="flex-1 py-2.5 bg-muted hover:bg-zinc-700 text-foreground font-medium rounded-xl transition-colors"
                         >
                             {cancelText}
                         </button>
@@ -80,7 +80,7 @@ export function ConfirmModal({
                                 onConfirm();
                                 onClose();
                             }}
-                            className={`flex-1 py-2.5 font-bold text-white rounded-xl transition-colors shadow-lg ${isDestructive
+                            className={`flex-1 py-2.5 font-bold text-foreground rounded-xl transition-colors shadow-lg ${isDestructive
                                     ? 'bg-red-600 hover:bg-red-700 shadow-red-500/20'
                                     : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20'
                                 }`}

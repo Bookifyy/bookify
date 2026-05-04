@@ -116,7 +116,7 @@ export default function AdminQuizzesPage() {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-white mb-1">Quizzes</h1>
+                    <h1 className="text-2xl font-bold text-foreground mb-1">Quizzes</h1>
                     <p className="text-muted-foreground text-sm">Manage quizzes, add questions, and track student performance.</p>
                 </div>
                 <Link
@@ -134,7 +134,7 @@ export default function AdminQuizzesPage() {
                 <input
                     type="text"
                     placeholder="Search quizzes by title or book..."
-                    className="w-full bg-card border border-border text-white pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                    className="w-full bg-card border border-border text-foreground pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -145,7 +145,7 @@ export default function AdminQuizzesPage() {
                 {filteredQuizzes.length === 0 ? (
                     <div className="text-center py-12 bg-card/50 rounded-xl border border-border border-dashed">
                         <FileText className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-                        <h3 className="text-lg font-medium text-white mb-1">No quizzes found</h3>
+                        <h3 className="text-lg font-medium text-foreground mb-1">No quizzes found</h3>
                         <p className="text-muted-foreground text-sm">Create your first quiz to get started.</p>
                     </div>
                 ) : (
@@ -153,7 +153,7 @@ export default function AdminQuizzesPage() {
                         <div key={quiz.id} className="bg-card border border-border rounded-xl p-5 hover:border-zinc-700 transition-colors flex flex-col md:flex-row gap-6 md:items-center">
                             <div className="flex-1">
                                 <div className="flex items-start justify-between mb-2">
-                                    <h3 className="text-lg font-bold text-white">{quiz.title}</h3>
+                                    <h3 className="text-lg font-bold text-foreground">{quiz.title}</h3>
                                     {quiz.book && (
                                         <span className="flex items-center gap-1.5 text-xs font-medium text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full border border-blue-400/20">
                                             <BookOpen size={12} />
@@ -186,7 +186,7 @@ export default function AdminQuizzesPage() {
                             <div className="flex items-center gap-3 border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-6">
                                 <Link
                                     href={`/admin/quizzes/${quiz.id}`}
-                                    className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                                    className="flex items-center gap-2 bg-muted hover:bg-zinc-700 text-foreground px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                                 >
                                     <Edit size={16} />
                                     Manage
@@ -222,7 +222,7 @@ export default function AdminQuizzesPage() {
                             <>
                                 <button
                                     onClick={() => setShowModal(false)}
-                                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                                    className="flex-1 bg-muted hover:bg-zinc-700 text-foreground py-3 rounded-lg font-bold transition-colors"
                                 >
                                     Cancel
                                 </button>
@@ -236,7 +236,7 @@ export default function AdminQuizzesPage() {
                         ) : (
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-bold transition-colors"
+                                className="w-full bg-muted hover:bg-zinc-700 text-foreground py-3 rounded-lg font-bold transition-colors"
                             >
                                 Close
                             </button>

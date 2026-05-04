@@ -86,8 +86,8 @@ export function AddBookModal({ isOpen, onClose, groupId, onBookAdded }: { isOpen
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
             <div className="bg-card border border-border rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
                 <div className="flex items-center justify-between p-6 border-b border-border">
-                    <h2 className="text-xl font-bold text-white">Add Books from Library</h2>
-                    <button onClick={onClose} className="text-muted-foreground hover:text-white transition-colors">
+                    <h2 className="text-xl font-bold text-foreground">Add Books from Library</h2>
+                    <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
                         <X size={24} />
                     </button>
                 </div>
@@ -99,7 +99,7 @@ export function AddBookModal({ isOpen, onClose, groupId, onBookAdded }: { isOpen
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-foreground focus:outline-none focus:border-indigo-500"
                             placeholder="Search books..."
                         />
                     </div>
@@ -113,7 +113,7 @@ export function AddBookModal({ isOpen, onClose, groupId, onBookAdded }: { isOpen
                     ) : filteredBooks.length > 0 ? (
                         filteredBooks.map(book => (
                             <div key={book.id} className="bg-background border border-border rounded-xl p-3 flex gap-4 hover:border-zinc-700 transition-colors">
-                                <div className="w-12 h-16 bg-zinc-800 rounded flex-shrink-0 relative overflow-hidden">
+                                <div className="w-12 h-16 bg-muted rounded flex-shrink-0 relative overflow-hidden">
                                     {book.cover_image ? (
                                         <Image
                                             src={book.cover_image.startsWith('http') ? book.cover_image : `${getApiUrl()}${book.cover_image}`}
@@ -128,10 +128,10 @@ export function AddBookModal({ isOpen, onClose, groupId, onBookAdded }: { isOpen
                                     )}
                                 </div>
                                 <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                    <h4 className="font-bold text-white truncate">{book.title}</h4>
+                                    <h4 className="font-bold text-foreground truncate">{book.title}</h4>
                                     <p className="text-muted-foreground text-sm truncate">{book.author}</p>
                                     {book.progress && (
-                                        <div className="w-full h-1 bg-zinc-800 rounded-full mt-2 overflow-hidden">
+                                        <div className="w-full h-1 bg-muted rounded-full mt-2 overflow-hidden">
                                             <div
                                                 className="h-full bg-indigo-500"
                                                 style={{ width: `${book.progress.percentage}%` }}
@@ -158,7 +158,7 @@ export function AddBookModal({ isOpen, onClose, groupId, onBookAdded }: { isOpen
                 {error && <div className="p-4 bg-red-500/10 text-red-500 text-sm text-center border-t border-red-500/20">{error}</div>}
 
                 <div className="p-4 border-t border-border bg-background flex justify-end">
-                    <button onClick={onClose} className="px-6 py-2 text-muted-foreground hover:text-white transition-colors">
+                    <button onClick={onClose} className="px-6 py-2 text-muted-foreground hover:text-foreground transition-colors">
                         Cancel
                     </button>
                     {/* Add to Group button is per-item in the list */}

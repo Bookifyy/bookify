@@ -92,7 +92,7 @@ export default function VerifyEmailPage() {
 
                         <button
                             onClick={() => window.location.reload()}
-                            className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-muted-foreground dark:hover:text-zinc-200"
+                            className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-muted-foreground dark:hover:text-foreground"
                         >
                             Already verified? Refresh page
                         </button>

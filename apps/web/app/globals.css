@@ -2,14 +2,14 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #d4f1f9;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
   --card: #ffffff;
-  --card-foreground: #171717;
-  --border: #e5e7eb;
-  --muted: #f3f4f6;
-  --muted-foreground: #6b7280;
-  --primary: #3b82f6;
+  --card-foreground: #0f172a;
+  --border: #e2e8f0;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --primary: #4f46e5;
   --nav: #ffffff;
 }
 
