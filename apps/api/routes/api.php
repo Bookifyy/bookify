@@ -151,9 +151,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['role:Admin']], function () {
         Route::get('/admin/users', [AdminController::class, 'index']);
         Route::post('/admin/users/{id}/role', [AdminController::class, 'assignRole']);
+        Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser']);
 
         // Book Management
         Route::post('/books', [\App\Http\Controllers\BookController::class, 'store']);
+        Route::delete('/books/{book}', [\App\Http\Controllers\BookController::class, 'destroy']);
     });
 
     // General Book & Subject Routes

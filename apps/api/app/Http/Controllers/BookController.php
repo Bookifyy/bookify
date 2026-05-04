@@ -119,4 +119,20 @@ class BookController extends Controller
         //
     }
 
+    public function destroy(Book $book)
+    {
+        // Delete associated files if any
+        if ($book->file_path) {
+            $path = str_replace('/storage/', '', $book->file_path);
+            Storage::disk('public')->delete(ltrim($path, '/'));
+        }
+        if ($book->cover_image) {
+            $path = str_replace('/storage/', '', $book->cover_image);
+            Storage::disk('public')->delete(ltrim($path, '/'));
+        }
+
+        $book->delete();
+
+        return response()->json(['message' => 'Book deleted successfully']);
+    }
 }

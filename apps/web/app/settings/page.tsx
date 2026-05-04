@@ -52,7 +52,7 @@ export default function SettingsPage() {
     const [university, setUniversity] = useState('UC Berkeley');
 
     // Dynamic Settings State
-    const [theme, setTheme] = useState('dark');
+    const [theme, setTheme] = useState(activeTheme || 'dark');
     const [readerFontSize, setReaderFontSize] = useState('medium');
     const [language, setLanguage] = useState('english');
     const [emailNotifications, setEmailNotifications] = useState(true);
@@ -81,8 +81,9 @@ export default function SettingsPage() {
             if (user.settings) {
                 const s = typeof user.settings === 'string' ? JSON.parse(user.settings) : user.settings;
                 if (s.theme !== undefined) {
-                    setTheme(s.theme);
-                    setActiveTheme(s.theme);
+                    // We DO NOT call setActiveTheme here because ThemeProvider manages it globally via localStorage
+                    // We just sync our local form state with what the current active theme is.
+                    setTheme(activeTheme || s.theme);
                 }
                 if (s.readerFontSize !== undefined) setReaderFontSize(s.readerFontSize);
                 if (s.language !== undefined) setLanguage(s.language);
@@ -128,9 +129,8 @@ export default function SettingsPage() {
 
             if (res.ok) {
                 toast.success('Settings securely updated 🚀');
-                if (theme !== activeTheme) {
-                    setActiveTheme(theme as 'dark'|'light');
-                }
+                // Apply the theme globally and save implicitly to localStorage via ThemeProvider
+                setActiveTheme(theme as 'dark'|'light');
             } else {
                 toast.error('Failed to save settings');
             }

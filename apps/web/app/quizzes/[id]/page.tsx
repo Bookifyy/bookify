@@ -7,6 +7,7 @@ import { Clock, ArrowLeft, CheckCircle, AlertTriangle, Loader2, Home, Download, 
 import { getApiUrl } from '../../lib/utils';
 import Link from 'next/link';
 import { Modal } from '../../components/Modal';
+import { toast } from 'sonner';
 
 interface Question {
     id: number;
@@ -134,7 +135,7 @@ export default function QuizTakingPage() {
                 await fetchQuizDetails();
             } else {
                 const data = await res.json();
-                alert(data.message || 'Failed to start quiz');
+                toast.error(data.message || 'Failed to start quiz');
                 setLoading(false);
             }
         } catch (err) {
@@ -208,12 +209,12 @@ export default function QuizTakingPage() {
                     // No, manual submit should be allowed.
                     setError(errData.message || 'Time expired. Submission failed (Missing File?). Please upload and submit manually.');
                 } else {
-                    alert(`Submission failed: ${errData.message || 'Unknown error'}`);
+                    toast.error(`Submission failed: ${errData.message || 'Unknown error'}`);
                 }
             }
         } catch (err) {
             console.error(err);
-            if (!auto) alert('Connection error during submission');
+            if (!auto) toast.error('Connection error during submission');
             else setError('Time expired. Connection error. Please try submitting manually.');
         } finally {
             setSubmitting(false);

@@ -63,16 +63,25 @@ export default function AdminUsersPage() {
     const handleBanUser = async () => {
         if (!userToBan) return;
 
-        // Placeholder for API call
-        // In a real implementation: await fetch(`/api/admin/users/${userToBan.id}/ban`, ...)
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const res = await fetch(`${apiUrl}/api/admin/users/${userToBan.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-        console.log(`Banning user: ${userToBan.email}`);
+            if (!res.ok) throw new Error('Failed to ban user');
 
-        // Simulating UI update
-        // setUsers(users.map(u => u.id === userToBan.id ? { ...u, is_active: !u.is_active } : u));
-
-        setBanModalOpen(false);
-        setUserToBan(null);
+            setUsers(users.filter(u => u.id !== userToBan.id));
+            setBanModalOpen(false);
+            setUserToBan(null);
+        } catch (err: any) {
+            console.error('Failed to ban user:', err);
+            setError('Failed to ban user. Please try again.');
+            setBanModalOpen(false);
+        }
     };
 
     const filteredUsers = users.filter(user =>

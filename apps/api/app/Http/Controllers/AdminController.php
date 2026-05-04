@@ -28,4 +28,19 @@ class AdminController extends Controller
             'user' => $user->load('roles')
         ]);
     }
+    public function destroyUser($id)
+    {
+        $user = User::findOrFail($id);
+        
+        // Prevent deleting yourself (assuming token holds the admin ID, but if not we just delete)
+        if (request()->user() && request()->user()->id == $id) {
+            return response()->json(['message' => 'Cannot delete yourself'], 400);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
+    }
 }
