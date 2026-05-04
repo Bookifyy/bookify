@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { BookCard } from '../components/BookCard';
 import { LibraryTabs } from '../components/LibraryTabs';
@@ -16,6 +16,7 @@ interface Book {
     title: string;
     author: string;
     cover_image: string;
+    subject_id?: number;
 }
 
 interface LibraryItem {
@@ -34,6 +35,8 @@ interface Collection {
 export default function LibraryPage() {
     const { token } = useAuth();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const subjectFilter = searchParams.get('subject');
     const [books, setBooks] = useState<LibraryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('all');
@@ -155,6 +158,11 @@ export default function LibraryPage() {
             }
         }
 
+        // 3. Subject Filter
+        if (subjectFilter && !viewingCollectionId) {
+            filtered = filtered.filter(item => item.book?.subject_id === parseInt(subjectFilter, 10));
+        }
+
         // 3. Sorting
         filtered.sort((a, b) => {
             switch (sortBy) {
@@ -171,7 +179,7 @@ export default function LibraryPage() {
         });
 
         return filtered;
-    }, [books, searchQuery, activeTab, sortBy, viewingCollectionId, collections]);
+    }, [books, searchQuery, activeTab, sortBy, viewingCollectionId, collections, subjectFilter]);
 
     return (
         <div className="min-h-screen bg-background text-muted-foreground">
@@ -285,7 +293,11 @@ export default function LibraryPage() {
                                     </div>
                                     <h3 className="text-lg font-medium text-foreground mb-1">No books found</h3>
                                     <p className="text-muted-foreground text-sm">
-                                        {viewingCollectionId ? "This collection is empty." : "Your library is waiting for its first story."}
+                                        {viewingCollectionId 
+                                            ? "This collection is empty." 
+                                            : subjectFilter
+                                                ? "There are no books for this subject yet."
+                                                : "Your library is waiting for its first story."}
                                     </p>
                                 </div>
                             )

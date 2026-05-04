@@ -99,7 +99,7 @@ export default function OnboardingPage() {
 
                         <button
                             onClick={handleStart}
-                            className="bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-zinc-100 text-foreground dark:text-zinc-950 px-5 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-black/5 dark:shadow-white/5"
+                            className="bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-zinc-100 text-white dark:text-zinc-950 px-5 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-black/5 dark:shadow-white/5"
                         >
                             Get Started
                         </button>
@@ -292,7 +292,7 @@ export default function OnboardingPage() {
                         <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                             <button
                                 onClick={handlePlans}
-                                className="w-full sm:w-auto bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-zinc-100 text-foreground dark:text-zinc-950 px-8 py-4 rounded-xl font-semibold text-lg transition-all active:scale-[0.98] shadow-lg shadow-black/10 dark:shadow-white/5"
+                                className="w-full sm:w-auto bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-zinc-100 text-white dark:text-zinc-950 px-8 py-4 rounded-xl font-semibold text-lg transition-all active:scale-[0.98] shadow-lg shadow-black/10 dark:shadow-white/5"
                             >
                                 View Pricing Plans
                             </button>

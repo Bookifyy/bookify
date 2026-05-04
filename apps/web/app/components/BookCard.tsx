@@ -24,10 +24,10 @@ export function BookCard({ id, title, author, coverImage, progress, isDownloaded
     return (
         <Link
             href={`/books/${id}`}
-            className={`block group cursor-pointer transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`block group cursor-pointer transition-all duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'} bg-card rounded-xl overflow-hidden border border-border hover:shadow-md hover:border-foreground/20 flex flex-col`}
             onClick={onClick}
         >
-            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-card shadow-lg mb-3">
+            <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
                 <img
                     src={resolveAssetUrl(coverImage)}
                     alt={title}
@@ -37,27 +37,29 @@ export function BookCard({ id, title, author, coverImage, progress, isDownloaded
                 />
 
                 {/* Download Icon Overlay */}
-                <div className="absolute top-2 left-2 z-10">
-                    <div className="bg-blue-600 rounded-full p-1 shadow-lg">
-                        <Download size={10} className="text-foreground" strokeWidth={3} />
+                <div className="absolute top-2 left-2 z-10 transition-opacity duration-300">
+                    <div className="bg-blue-600 rounded-full p-1 shadow-lg border border-blue-500/30">
+                        <Download size={10} className="text-white" strokeWidth={3} />
                     </div>
                 </div>
             </div>
 
-            <div className="mt-3 px-0.5">
-                <h3 className="text-[15px] font-bold text-foreground truncate font-serif tracking-normal leading-tight">{title}</h3>
-                <p className="text-[11px] text-blue-500 font-medium truncate mt-0.5">{author}</p>
+            <div className="p-3.5 flex-1 flex flex-col justify-between">
+                <div>
+                    <h3 className="text-[14px] font-bold text-foreground line-clamp-1 font-serif tracking-normal leading-tight group-hover:text-blue-600 transition-colors">{title}</h3>
+                    <p className="text-[11px] text-muted-foreground font-medium line-clamp-1 mt-0.5">{author}</p>
+                </div>
 
                 {/* Progress Bar (Bottom) */}
                 {progress !== undefined && (
-                    <div className="flex items-center gap-2 mt-2">
-                        <div className="flex-1 h-[2px] bg-muted rounded-full overflow-hidden">
+                    <div className="flex items-center gap-2 mt-4">
+                        <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-blue-600"
+                                className="h-full bg-blue-600 rounded-full"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
-                        <span className="text-[10px] font-medium text-muted-foreground tabular-nums">{progress}%</span>
+                        <span className="text-[10px] font-medium text-muted-foreground tabular-nums leading-none">{progress}%</span>
                     </div>
                 )}
             </div>
