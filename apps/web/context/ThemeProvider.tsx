@@ -19,29 +19,43 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     // Read initial theme and font from user settings and observe changes
     useEffect(() => {
-        if (user && user.settings) {
+        const storedTheme = localStorage.getItem('bookify_theme');
+        const storedFont = localStorage.getItem('bookify_font');
+        
+        let initialTheme = 'dark';
+        let initialFont = 'medium';
+
+        if (storedTheme === 'light' || storedTheme === 'dark') {
+            initialTheme = storedTheme;
+        } else if (user && user.settings) {
             try {
                 const s = typeof user.settings === 'string' ? JSON.parse(user.settings) : user.settings;
-                if (s.theme === 'light') {
-                    setThemeState('light');
-                } else {
-                    setThemeState('dark');
-                }
-                
-                if (s.readerFontSize === 'small' || s.readerFontSize === 'large') {
-                    setFontSizeState(s.readerFontSize);
-                } else {
-                    setFontSizeState('medium');
-                }
-            } catch (e) {
-                // Keep default
-            }
-        } else {
-            // Default to dark and medium
-            setThemeState('dark');
-            setFontSizeState('medium');
+                if (s.theme === 'light') initialTheme = 'light';
+            } catch (e) {}
         }
+        
+        if (storedFont === 'small' || storedFont === 'large' || storedFont === 'medium') {
+            initialFont = storedFont;
+        } else if (user && user.settings) {
+            try {
+                const s = typeof user.settings === 'string' ? JSON.parse(user.settings) : user.settings;
+                if (s.readerFontSize === 'small' || s.readerFontSize === 'large') initialFont = s.readerFontSize;
+            } catch (e) {}
+        }
+
+        setThemeState(initialTheme as 'light' | 'dark');
+        setFontSizeState(initialFont as 'small' | 'medium' | 'large');
     }, [user]);
+
+    const handleSetTheme = (newTheme: 'light' | 'dark') => {
+        setThemeState(newTheme);
+        localStorage.setItem('bookify_theme', newTheme);
+    };
+
+    const handleSetFontSize = (newSize: 'small' | 'medium' | 'large') => {
+        setFontSizeState(newSize);
+        localStorage.setItem('bookify_font', newSize);
+    };
 
     // Apply the active theme to document.html root class securely overriding hardcoded attributes
     useEffect(() => {
@@ -68,7 +82,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }, [fontSize]);
 
     return (
-        <ThemeContext.Provider value={{ theme, setTheme: setThemeState, fontSize, setFontSize: setFontSizeState }}>
+        <ThemeContext.Provider value={{ theme, setTheme: handleSetTheme, fontSize, setFontSize: handleSetFontSize }}>
             {children}
         </ThemeContext.Provider>
     );
